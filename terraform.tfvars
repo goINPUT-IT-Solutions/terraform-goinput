@@ -12,9 +12,9 @@
 
 hetzner_servercount = {
     dns_server            = 0,
-    db_server             = 1,
+    db_server             = 2,
     communications_server = 1,
-    web_server            = 0
+    web_server            = 0,
 }
 
 ssh_key                     = "./ssh/hetzner_cloud"

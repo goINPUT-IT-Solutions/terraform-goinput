@@ -65,12 +65,43 @@ variable "hetzner_servertypes" {
 
 variable "ip_range_dns" {
     default = "192.168.100.0/24"
+    type = string
 }
 
 variable "ip_range_db" {
     default = "192.168.110.0/24"
+    type = string
 }
 
-variable "netcup_customer_id" {}
-variable "netcup_ccp_api_key" {}
-variable "netcup_ccp_api_pw" {}
+variable "ip_range_internal_1" {
+    default = "192.168.120.0/24"
+    type = string
+}
+
+variable "db-server-name" {
+  default = "db"
+  type = string
+}
+
+variable "bastion-server-name" {
+  default = "bastion"
+  type = string
+}
+
+variable "domain" {
+  default = "goitservers.com"
+    type = string
+}
+
+variable "netcup_customer_id" {
+    type = string
+    sensitive = true
+}
+variable "netcup_ccp_api_key" {
+    type = string
+    sensitive = true
+}
+variable "netcup_ccp_api_pw" {
+    type = string
+    sensitive = true
+}
