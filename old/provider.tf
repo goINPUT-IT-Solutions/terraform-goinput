@@ -21,9 +21,6 @@ terraform {
         source = "rincedd/netcup-ccp"
     }
 
-    betteruptime = {
-      source = "BetterStackHQ/better-uptime"
-    }
   }
 }
 
@@ -33,15 +30,7 @@ provider "netcup-ccp" {
     ccp_api_password = var.netcup_ccp_api_pw    # API key password
 }
 
-provider "betteruptime" {
-  api_token = var.betteruptime_api
-}
-
 provider "hcloud" {
     token   = var.hetzner_token
 }
 
-resource "hcloud_ssh_key" "default" {
-    name       = "hetzner_key"
-    public_key = file("${var.ssh_key}.pub")
-}
