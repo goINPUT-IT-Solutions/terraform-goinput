@@ -14,66 +14,17 @@
 ### Hetzner
 ##############################
 
-variable "hcloud_token" {
-  type      = string
-  sensitive = true
-}
-
-variable "nameserver_network_name" {
+variable "terraform_ssh_key_id" {
   type      = string
   sensitive = false
 }
 
-variable "nameserver_network_ip_range" {
+variable "network_webservice_id" {
   type      = string
   sensitive = false
 }
 
-variable "mailserver_network_name" {
-  type      = string
-  sensitive = false
-}
-
-variable "mailserver_network_ip_range" {
-  type      = string
-  sensitive = false
-}
-
-variable "webservice_network_name" {
-  type      = string
-  sensitive = false
-}
-
-variable "webservice_network_ip_range" {
-  type      = string
-  sensitive = false
-}
-
-##############################
-### Bitwarden
-##############################
-
-variable "bitwarden_master_password" {
-  type      = string
-  sensitive = true
-}
-
-variable "bitwarden_client_id" {
-  type      = string
-  sensitive = true
-}
-
-variable "bitwarden_client_secret" {
-  type      = string
-  sensitive = true
-}
-
-variable "bitwarden_email" {
-  type      = string
-  sensitive = false
-}
-
-variable "bitwarden_server" {
+variable "firewall_default_id" {
   type      = string
   sensitive = false
 }
@@ -82,13 +33,19 @@ variable "bitwarden_server" {
 ### Defaults
 ##############################
 
-variable "terraform_ssh_key" {
+variable "server_count" {
+  default   = 1
+  type      = number
+  sensitive = false
+}
+
+variable "service_name" {
+  default   = "saltbastion"
   type      = string
   sensitive = false
 }
 
 variable "domain" {
-  default   = "goitservers.com"
   type      = string
   sensitive = false
 }

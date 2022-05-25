@@ -14,11 +14,6 @@
 ### Hetzner
 ##############################
 
-variable "hcloud_token" {
-  type      = string
-  sensitive = true
-}
-
 variable "nameserver_network_name" {
   type      = string
   sensitive = false
@@ -49,46 +44,3 @@ variable "webservice_network_ip_range" {
   sensitive = false
 }
 
-##############################
-### Bitwarden
-##############################
-
-variable "bitwarden_master_password" {
-  type      = string
-  sensitive = true
-}
-
-variable "bitwarden_client_id" {
-  type      = string
-  sensitive = true
-}
-
-variable "bitwarden_client_secret" {
-  type      = string
-  sensitive = true
-}
-
-variable "bitwarden_email" {
-  type      = string
-  sensitive = false
-}
-
-variable "bitwarden_server" {
-  type      = string
-  sensitive = false
-}
-
-##############################
-### Defaults
-##############################
-
-variable "terraform_ssh_key" {
-  type      = string
-  sensitive = false
-}
-
-variable "domain" {
-  default   = "goitservers.com"
-  type      = string
-  sensitive = false
-}

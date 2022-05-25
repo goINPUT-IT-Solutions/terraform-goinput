@@ -1,9 +1,0 @@
-#cloud-config
-package_update: true
-package_upgrade: true
-packkages:
-  - software-properties-common
-  - ansible
-sources:
-  ansible-ppa:
-    source: ppa:ansible/ansible
