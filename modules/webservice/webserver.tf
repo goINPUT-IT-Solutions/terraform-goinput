@@ -14,6 +14,10 @@
 ### Random names and passwords
 ##############################
 
+
+/*
+
+
 resource "random_pet" "webserver_names" {
   length = 2
   count  = 3
@@ -40,6 +44,7 @@ resource "hcloud_server" "webserver" {
     var.firewall_default_id
   ]
 }
+
 
 ///////////////////////////////////////////////////////////
 // Webserver config
@@ -102,7 +107,7 @@ resource "null_resource" "webserver_config" {
  }
  # Add or update web server host name to local hosts file
  provisioner "local-exec" {
-   command = "grep -q '${element(profitbricks_server.web.*.name, count.index)}' salt/srv/salt/common/hosts && sed -i '' 's/^${element(profitbricks_server.web.*.primary_ip, count.index)}.*/${element(profitbricks_server.web.*.primary_ip, count.index)} ${element(profitbricks_server.web.*.name, count.index)}/' salt/srv/salt/common/hosts || echo '${element(profitbricks_server.web.*.primary_ip, count.index)} ${element(profitbricks_server.web.*.name, count.index)}' >> salt/srv/salt/common/hosts"
+   command = "grep -q '${element(profitbricks_server.web.*.name, count.index)}' salt/srv/salt/common/hosts && sed -i '' 's/^${element(profitbricks_server.web.*.primary_ip, count.index)}.${element(profitbricks_server.web.*.primary_ip, count.index)} ${element(profitbricks_server.web.*.name, count.index)}/' salt/srv/salt/common/hosts || echo '${element(profitbricks_server.web.*.primary_ip, count.index)} ${element(profitbricks_server.web.*.name, count.index)}' >> salt/srv/salt/common/hosts"
  }
  # delete minion key on master when destroying
  provisioner "remote-exec" {
@@ -128,3 +133,4 @@ resource "null_resource" "webserver_config" {
    command = "sed -i '' '/${element(profitbricks_server.web.*.name, count.index)}/d' salt/srv/salt/common/hosts"
  }
 }
+*/

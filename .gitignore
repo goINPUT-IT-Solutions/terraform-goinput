@@ -30,4 +30,6 @@ override.tf.json
 
 /ssh/
 
-secrets.auto.tfvars
+*.auto.tfvars
+keys/
+.bitwarden/

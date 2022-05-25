@@ -66,7 +66,7 @@ provider "powerdns" {
 
 provider "bitwarden" {
   master_password = var.bitwarden_master_password
-  client_id       = var.bitwarden.client_id
+  client_id       = var.bitwarden_client_id
   client_secret   = var.bitwarden_client_secret
   email           = var.bitwarden_email
   server          = var.bitwarden_server
