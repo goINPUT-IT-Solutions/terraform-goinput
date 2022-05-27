@@ -78,6 +78,7 @@ resource "null_resource" "database_config" {
   triggers = {
     saltmaster_public_ip = var.saltmaster_public_ip
     server_name          = hcloud_server.database[count.index].name
+    private_key          = var.terraform_private_ssh_key
   }
 
   # make the magic happen on web server
@@ -96,7 +97,7 @@ resource "null_resource" "database_config" {
     ]
 
     connection {
-      private_key = var.terraform_private_ssh_key
+      private_key = self.triggers.private_key
       host        = hcloud_server.database[count.index].ipv4_address
       user        = "root"
     }
@@ -109,7 +110,7 @@ resource "null_resource" "database_config" {
     ]
 
     connection {
-      private_key = var.terraform_private_ssh_key
+      private_key = self.triggers.private_key
       host        = self.triggers.saltmaster_public_ip
       user        = "root"
     }
@@ -124,7 +125,7 @@ resource "null_resource" "database_config" {
     ]
 
     connection {
-      private_key = var.terraform_private_ssh_key
+      private_key = self.triggers.private_key
       host        = self.triggers.saltmaster_public_ip
       user        = "root"
     }

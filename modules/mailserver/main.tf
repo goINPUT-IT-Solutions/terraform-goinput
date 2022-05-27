@@ -95,6 +95,7 @@ resource "null_resource" "mailserver_config" {
   triggers = {
     saltmaster_public_ip = var.saltmaster_public_ip
     server_name          = hcloud_server.mailserver.name
+    private_key          = var.terraform_private_ssh_key
   }
 
 
@@ -113,7 +114,7 @@ resource "null_resource" "mailserver_config" {
     ]
 
     connection {
-      private_key = var.terraform_private_ssh_key
+      private_key = self.triggers.private_key
       host        = hcloud_server.mailserver.ipv4_address
       user        = "root"
     }
@@ -125,7 +126,7 @@ resource "null_resource" "mailserver_config" {
     ]
 
     connection {
-      private_key = var.terraform_private_ssh_key
+      private_key = self.triggers.private_key
       host        = var.saltmaster_public_ip
       user        = "root"
     }
@@ -140,7 +141,7 @@ resource "null_resource" "mailserver_config" {
     ]
 
     connection {
-      private_key = var.terraform_private_ssh_key
+      private_key = self.triggers.private_key
       host        = self.triggers.saltmaster_public_ip
       user        = "root"
     }

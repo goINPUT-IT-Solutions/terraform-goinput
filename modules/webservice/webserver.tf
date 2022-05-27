@@ -32,7 +32,7 @@ resource "hcloud_server" "webserver" {
 
   ssh_keys = [
     "${var.terraform_ssh_key_id}",
-    "${terraform_private_ssh_key_id}"
+    "${var.terraform_private_ssh_key_id}"
   ]
   location = "fsn1"
 
@@ -60,6 +60,7 @@ resource "null_resource" "webserver_config" {
   triggers = {
     saltmaster_public_ip = var.saltmaster_public_ip
     server_name          = hcloud_server.webserver[count.index].name
+    private_key          = var.terraform_private_ssh_key
   }
 
 
@@ -85,7 +86,7 @@ resource "null_resource" "webserver_config" {
     ]
 
     connection {
-      private_key = var.terraform_private_ssh_key
+      private_key = self.triggers.private_key
       host        = hcloud_server.webserver[count.index].ipv4_address
       user        = "root"
     }
@@ -97,7 +98,7 @@ resource "null_resource" "webserver_config" {
     ]
 
     connection {
-      private_key = var.terraform_private_ssh_key
+      private_key = self.triggers.private_key
       host        = var.saltmaster_public_ip
       user        = "root"
     }
@@ -116,7 +117,7 @@ resource "null_resource" "webserver_config" {
     ]
 
     connection {
-      private_key = var.terraform_private_ssh_key
+      private_key = self.triggers.private_key
       host        = self.triggers.saltmaster_public_ip
       user        = "root"
     }

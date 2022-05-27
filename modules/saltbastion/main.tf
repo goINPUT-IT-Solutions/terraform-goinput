@@ -69,10 +69,11 @@ resource "null_resource" "saltmaster_config" {
   triggers = {
     saltmasterid = "${hcloud_server.saltbastion.id}"
     saltmasterip = hcloud_server.saltbastion.ipv4_address
+    private_key  = var.terraform_private_ssh_key
   }
 
   connection {
-    private_key = var.terraform_private_ssh_key
+    private_key = self.triggers.private_key
     host        = self.triggers.saltmasterip
     user        = "root"
   }
@@ -111,7 +112,7 @@ resource "null_resource" "saltmaster_config" {
     ]
 
     connection {
-      private_key = var.terraform_private_ssh_key
+      private_key = self.triggers.private_key
       host        = self.triggers.saltmasterip
       user        = "root"
     }
