@@ -11,6 +11,20 @@
 ######################################################
 
 ##############################
+### Cloudflare
+##############################
+
+variable "cloudflare_email" {
+  type      = string
+  sensitive = false
+}
+
+variable "cloudflare_api_key" {
+  type      = string
+  sensitive = true
+}
+
+##############################
 ### Hetzner
 ##############################
 

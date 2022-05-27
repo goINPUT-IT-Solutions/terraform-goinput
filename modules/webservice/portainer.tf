@@ -9,22 +9,3 @@
 #    |___/                                           #
 #                                                    #
 ######################################################
-
-##############################
-### Required providers
-##############################
-
-terraform {
-  required_providers {
-    hcloud = {
-      source  = "hetznercloud/hcloud"
-      version = "~> 1.33.2"
-    }
-
-    bitwarden = {
-      source  = "maxlaverse/bitwarden"
-      version = "~> 0.2.0"
-    }
-  }
-}
-

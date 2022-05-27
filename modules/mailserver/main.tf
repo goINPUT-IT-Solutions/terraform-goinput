@@ -12,14 +12,9 @@
 
 terraform {
   required_providers {
-    powerdns = {
-      source  = "pan-net/powerdns"
-      version = "~> 1.5"
-    }
-
-    acme = {
-      source  = "vancluever/acme"
-      version = "~> 2.0"
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 3.15.0"
     }
 
     hcloud = {
@@ -72,21 +67,6 @@ resource "hcloud_server" "mailserver" {
     var.firewall_default_id,
     var.firewall_mailserver_id
   ]
-
-  # Note: Cloud-Init is no longer in use
-  /*user_data = templatefile(abspath("${path.root}/scripts/cloud-init/init-mailserver.yml"), {
-    root_pw    = random_password.mailserver_random_root_pw.result
-    mailcow_pw = random_password.mailserver_random_mailcow_pw.result
-
-    # Volumes
-    log_volume_linux_device  = "${hcloud_volume.log_volume.linux_device}"
-    mail_volume_linux_device = "${hcloud_volume.mail_volume.linux_device}"
-
-    depends_on = [
-      hcloud_volume.log_volume,
-      hcloud_volume.mail_volume
-    ]
-  })*/
 }
 
 resource "hcloud_volume_attachment" "log_volume" {
@@ -178,6 +158,26 @@ resource "hcloud_rdns" "mailserver_rdns_ipv6" {
   server_id  = hcloud_server.mailserver.id
   ip_address = hcloud_server.mailserver.ipv6_address
   dns_ptr    = hcloud_server.mailserver.name
+}
+
+##############################
+### DNS
+##############################
+
+resource "cloudflare_record" "mailserver_dns_ipv4" {
+  zone_id = var.cloudflare_goitservers_com_zone_id
+  name    = hcloud_server.mailserver.name
+  value   = hcloud_server.mailserver.ipv4_address
+  type    = "A"
+  ttl     = 3600
+}
+
+resource "cloudflare_record" "mailserver_dns_ipv6" {
+  zone_id = var.cloudflare_goitservers_com_zone_id
+  name    = hcloud_server.mailserver.name
+  value   = hcloud_server.mailserver.ipv6_address
+  type    = "AAAA"
+  ttl     = 3600
 }
 
 ##############################

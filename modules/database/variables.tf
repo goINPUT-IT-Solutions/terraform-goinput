@@ -30,6 +30,16 @@ variable "firewall_default_id" {
 }
 
 ##############################
+### Cloudflare
+##############################
+
+variable "cloudflare_goitservers_com_zone_id" {
+  type      = string
+  sensitive = false
+}
+
+
+##############################
 ### Defaults
 ##############################
 

@@ -1,13 +1,20 @@
+######################################################
+#               _____ _   _ _____  _    _ _______    #
+#              |_   _| \ | |  __ \| |  | |__   __|   #
+#     __ _  ___  | | |  \| | |__) | |  | |  | |      #
+#    / _` |/ _ \ | | | . ` |  ___/| |  | |  | |      #
+#   | (_| | (_) || |_| |\  | |    | |__| |  | |      #
+#    \__, |\___/_____|_| \_|_|     \____/   |_|      #
+#     __/ |                                          #
+#    |___/                                           #
+#                                                    #
+######################################################
+
 terraform {
   required_providers {
-    powerdns = {
-      source  = "pan-net/powerdns"
-      version = "~> 1.5"
-    }
-
-    acme = {
-      source  = "vancluever/acme"
-      version = "~> 2.0"
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 3.15.0"
     }
 
     hcloud = {
@@ -27,7 +34,7 @@ terraform {
 ##############################
 
 resource "random_pet" "database_names" {
-  length = 2
+  length = 1
   count  = var.server_count
 }
 
@@ -54,9 +61,9 @@ resource "hcloud_server" "database" {
 }
 
 
-///////////////////////////////////////////////////////////
-// Database config
-///////////////////////////////////////////////////////////
+##############################
+### Database Config
+##############################
 resource "null_resource" "database_config" {
 
   depends_on = [
@@ -126,4 +133,49 @@ resource "null_resource" "database_config" {
     command = "sed -i '' '/${element(hcloud_server.webserver.*.name, count.index)}/d' salt/srv/salt/common/hosts"
   }*/
 }
+
+##############################
+### REVERSE DNS
+##############################
+
+resource "hcloud_rdns" "database_rdns_ipv4" {
+  count = length(hcloud_server.database)
+
+  server_id  = hcloud_server.database[count.index].id
+  ip_address = hcloud_server.database[count.index].ipv4_address
+  dns_ptr    = hcloud_server.database[count.index].name
+}
+
+resource "hcloud_rdns" "database_rdns_ipv6" {
+  count = length(hcloud_server.database)
+
+  server_id  = hcloud_server.database[count.index].id
+  ip_address = hcloud_server.database[count.index].ipv6_address
+  dns_ptr    = hcloud_server.database[count.index].name
+}
+
+##############################
+### DNS
+##############################
+
+resource "cloudflare_record" "database_dns_ipv4" {
+  count = length(hcloud_server.database)
+
+  zone_id = var.cloudflare_goitservers_com_zone_id
+  name    = hcloud_server.database[count.index].name
+  value   = hcloud_server.database[count.index].ipv4_address
+  type    = "A"
+  ttl     = 3600
+}
+
+resource "cloudflare_record" "database_dns_ipv6" {
+  count = length(hcloud_server.database)
+
+  zone_id = var.cloudflare_goitservers_com_zone_id
+  name    = hcloud_server.database[count.index].name
+  value   = hcloud_server.database[count.index].ipv6_address
+  type    = "AAAA"
+  ttl     = 3600
+}
+
 

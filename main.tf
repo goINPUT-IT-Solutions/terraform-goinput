@@ -16,11 +16,6 @@
 
 terraform {
   required_providers {
-    powerdns = {
-      source  = "pan-net/powerdns"
-      version = "~> 1.5"
-    }
-
     acme = {
       source  = "vancluever/acme"
       version = "~> 2.0"
@@ -35,7 +30,21 @@ terraform {
       source  = "maxlaverse/bitwarden"
       version = "~> 0.2.0"
     }
+
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 3.15.0"
+    }
   }
+}
+
+##############################
+### Cloudflare
+##############################
+
+provider "cloudflare" {
+  email   = var.cloudflare_email
+  api_key = var.cloudflare_api_key
 }
 
 ##############################
@@ -46,18 +55,8 @@ provider "hcloud" {
   token = var.hcloud_token
 }
 
-resource "hcloud_ssh_key" "hcloud_terraform_ssh_key" {
-  name       = "Terraform"
-  public_key = file(abspath("${path.root}/${var.terraform_ssh_key}.pub"))
-}
-
-##############################
-### PowerDNS
-##############################
-
-provider "powerdns" {
-  api_key    = ""
-  server_url = ""
+data "hcloud_ssh_key" "hcloud_terraform_ssh_key" {
+  name = "Javik OpenSSH Key for Hikari"
 }
 
 ##############################
@@ -110,7 +109,7 @@ module "saltbastion" {
 
   ###### Variables
 
-  terraform_ssh_key_id  = hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  terraform_ssh_key_id  = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
   domain                = var.domain
   firewall_default_id   = module.firewall.firewall_default_id
   network_webservice_id = module.networks.webservice_network_id
@@ -128,13 +127,16 @@ module "database" {
 
   ###### Variables
 
-  terraform_ssh_key_id = hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  terraform_ssh_key_id = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
   service_name         = "db"
   domain               = var.domain
   server_count         = 1
 
   saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
   saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
+
+  // Cloudflare
+  cloudflare_goitservers_com_zone_id = data.cloudflare_zone.goitservers_com.zone_id
 
   /// Networks and Firewall configuration
   network_webservice_id = module.networks.webservice_network_id
@@ -154,7 +156,7 @@ module "nameserver" {
 
   ###### Variables
 
-  terraform_ssh_key_id = hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  terraform_ssh_key_id = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
   service_name         = "ns"
   domain               = "goitdns.com"
   server_count         = 0
@@ -174,7 +176,7 @@ module "mailserver" {
 
   ###### Variables
 
-  terraform_ssh_key_id = hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  terraform_ssh_key_id = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
   service_name         = "mail"
   domain               = var.domain
   server_count         = 1
@@ -186,6 +188,10 @@ module "mailserver" {
 
   saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
   saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
+
+  // Cloudflare
+  cloudflare_goitservers_com_zone_id = data.cloudflare_zone.goitservers_com.zone_id
+  cloudflare_goinput_de_zone_id      = data.cloudflare_zone.goinput_de.zone_id
 
   ##### Dependencies
 
@@ -203,7 +209,7 @@ module "webservice" {
 
   ###### Variables
 
-  terraform_ssh_key_id = hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  terraform_ssh_key_id = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
   service_name         = "web"
   domain               = var.domain
   server_count         = 1

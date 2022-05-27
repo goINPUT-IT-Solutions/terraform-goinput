@@ -35,6 +35,20 @@ variable "firewall_mailserver_id" {
 }
 
 ##############################
+### Cloudflare
+##############################
+
+variable "cloudflare_goitservers_com_zone_id" {
+  type      = string
+  sensitive = false
+}
+
+variable "cloudflare_goinput_de_zone_id" {
+  type      = string
+  sensitive = false
+}
+
+##############################
 ### Defaults
 ##############################
 

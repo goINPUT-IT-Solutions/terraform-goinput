@@ -12,11 +12,6 @@
 
 terraform {
   required_providers {
-    powerdns = {
-      source  = "pan-net/powerdns"
-      version = "~> 1.5"
-    }
-
     acme = {
       source  = "vancluever/acme"
       version = "~> 2.0"
