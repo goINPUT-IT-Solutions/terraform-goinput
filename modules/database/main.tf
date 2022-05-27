@@ -1,32 +1,43 @@
-######################################################
-#               _____ _   _ _____  _    _ _______    #
-#              |_   _| \ | |  __ \| |  | |__   __|   #
-#     __ _  ___  | | |  \| | |__) | |  | |  | |      #
-#    / _` |/ _ \ | | | . ` |  ___/| |  | |  | |      #
-#   | (_| | (_) || |_| |\  | |    | |__| |  | |      #
-#    \__, |\___/_____|_| \_|_|     \____/   |_|      #
-#     __/ |                                          #
-#    |___/                                           #
-#                                                    #
-######################################################
+terraform {
+  required_providers {
+    powerdns = {
+      source  = "pan-net/powerdns"
+      version = "~> 1.5"
+    }
+
+    acme = {
+      source  = "vancluever/acme"
+      version = "~> 2.0"
+    }
+
+    hcloud = {
+      source  = "hetznercloud/hcloud"
+      version = "~> 1.33.2"
+    }
+
+    bitwarden = {
+      source  = "maxlaverse/bitwarden"
+      version = "~> 0.2.0"
+    }
+  }
+}
 
 ##############################
 ### Random names and passwords
 ##############################
 
-
-resource "random_pet" "webserver_names" {
+resource "random_pet" "database_names" {
   length = 2
   count  = var.server_count
 }
 
 ##############################
-### Webserver
+### Database Server
 ##############################
 
-resource "hcloud_server" "webserver" {
+resource "hcloud_server" "database" {
   count       = var.server_count
-  name        = "${random_pet.webserver_names[count.index].id}.${var.service_name}.${var.domain}"
+  name        = "${random_pet.database_names[count.index].id}.${var.service_name}.${var.domain}"
   image       = "ubuntu-20.04"
   server_type = "cx11"
 
@@ -44,27 +55,20 @@ resource "hcloud_server" "webserver" {
 
 
 ///////////////////////////////////////////////////////////
-// Webserver config
+// Database config
 ///////////////////////////////////////////////////////////
-resource "null_resource" "webserver_config" {
+resource "null_resource" "database_config" {
 
   depends_on = [
-    hcloud_server.webserver
+    hcloud_server.database
   ]
 
-  count = length(hcloud_server.webserver)
+  count = length(hcloud_server.database)
 
   triggers = {
     saltmaster_public_ip = var.saltmaster_public_ip
-    server_name          = hcloud_server.webserver[count.index].name
+    server_name          = hcloud_server.database[count.index].name
   }
-
-
-  # copy etc/hosts file to web server
-  /*provisioner "file" {
-    source      = "salt/srv/salt/common/hosts"
-    destination = "/etc/hosts"
-  }*/
 
   # make the magic happen on web server
   provisioner "remote-exec" {
@@ -83,10 +87,11 @@ resource "null_resource" "webserver_config" {
 
     connection {
       private_key = file(abspath("${path.root}/keys/terraform_ssh_key"))
-      host        = hcloud_server.webserver[count.index].ipv4_address
+      host        = hcloud_server.database[count.index].ipv4_address
       user        = "root"
     }
   }
+
   # Accept minion key on master
   provisioner "remote-exec" {
     inline = [
@@ -95,14 +100,10 @@ resource "null_resource" "webserver_config" {
 
     connection {
       private_key = file(abspath("${path.root}/keys/terraform_ssh_key"))
-      host        = var.saltmaster_public_ip
+      host        = self.triggers.saltmaster_public_ip
       user        = "root"
     }
   }
-
-  # Add or update web server host name to local hosts file
-  /*provisioner "local-exec" {
-  }*/
 
   # delete minion key on master when destroying
   provisioner "remote-exec" {

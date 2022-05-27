@@ -54,3 +54,17 @@ variable "domain" {
   type      = string
   sensitive = false
 }
+
+##############################
+### Saltstack
+##############################
+
+variable "saltmaster_ip" {
+  type      = string
+  sensitive = false
+}
+
+variable "saltmaster_public_ip" {
+  type      = string
+  sensitive = false
+}

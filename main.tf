@@ -123,6 +123,32 @@ module "saltbastion" {
   ]
 }
 
+module "database" {
+  source = "./modules/database"
+
+  ###### Variables
+
+  terraform_ssh_key_id = hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  service_name         = "db"
+  domain               = var.domain
+  server_count         = 1
+
+  saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
+  saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
+
+  /// Networks and Firewall configuration
+  network_webservice_id = module.networks.webservice_network_id
+  firewall_default_id   = module.firewall.firewall_default_id
+
+  ##### Dependencies
+
+  depends_on = [
+    module.firewall,
+    module.networks,
+    module.saltbastion
+  ]
+}
+
 module "nameserver" {
   source = "./modules/nameserver"
 
@@ -138,7 +164,8 @@ module "nameserver" {
   depends_on = [
     module.firewall,
     module.networks,
-    module.saltbastion
+    module.saltbastion,
+    module.database
   ]
 }
 
@@ -157,13 +184,17 @@ module "mailserver" {
   firewall_default_id    = module.firewall.firewall_default_id
   firewall_mailserver_id = module.firewall.firewall_mailserver_id
 
+  saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
+  saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
+
   ##### Dependencies
 
   depends_on = [
     module.firewall,
     module.networks,
     module.nameserver,
-    module.saltbastion
+    module.saltbastion,
+    module.database
   ]
 }
 
@@ -172,6 +203,17 @@ module "webservice" {
 
   ###### Variables
 
+  terraform_ssh_key_id = hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  service_name         = "web"
+  domain               = var.domain
+  server_count         = 1
+
+  saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
+  saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
+
+  /// Networks and Firewall configuration
+  network_webservice_id = module.networks.webservice_network_id
+  firewall_default_id   = module.firewall.firewall_default_id
 
   ##### Dependencies
 
@@ -180,6 +222,7 @@ module "webservice" {
     module.networks,
     module.nameserver,
     module.mailserver,
-    module.saltbastion
+    module.saltbastion,
+    module.database
   ]
 }

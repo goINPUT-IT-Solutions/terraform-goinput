@@ -16,11 +16,6 @@
 
 terraform {
   required_providers {
-    powerdns = {
-      source  = "pan-net/powerdns"
-      version = "~> 1.5"
-    }
-
     hcloud = {
       source  = "hetznercloud/hcloud"
       version = "~> 1.33.2"
@@ -37,29 +32,26 @@ terraform {
 ### Random names and passwords
 ##############################
 
-resource "random_pet" "saltbastion_name" {
-  length = 2
-}
-
 ##############################
 ### Salt Bastion server
 ##############################
 
 resource "hcloud_server" "saltbastion" {
-  name        = "${random_pet.saltbastion_name.id}.${var.service_name}.${var.domain}"
+  name        = "master.${var.service_name}.${var.domain}"
   image       = "ubuntu-20.04"
   server_type = "cx21"
 
   ssh_keys = ["${var.terraform_ssh_key_id}"]
   location = "fsn1"
 
-  network {
-    network_id = var.network_webservice_id
-  }
-
   firewall_ids = [
     var.firewall_default_id
   ]
+}
+
+resource "hcloud_server_network" "saltbastion_webserive_network" {
+  server_id  = hcloud_server.saltbastion.id
+  network_id = var.network_webservice_id
 }
 
 ##############################
@@ -73,21 +65,19 @@ resource "null_resource" "saltmaster_config" {
 
   triggers = {
     saltmasterid = "${hcloud_server.saltbastion.id}"
+    saltmasterip = hcloud_server.saltbastion.ipv4_address
   }
 
   connection {
     private_key = file(abspath("${path.root}/keys/terraform_ssh_key"))
-    host        = hcloud_server.saltbastion.ipv4_address
+    host        = self.triggers.saltmasterip
     user        = "root"
   }
 
   # make the magic happen on salt master
   provisioner "remote-exec" {
     inline = [
-      "echo master > /etc/hostname",
-      "hostnamectl set-hostname master --static",
-      "hostnamectl set-hostname master --pretty",
-      "hostnamectl set-hostname master --transient",
+      "apt-get autoremove -y",
       "echo 'net.ipv4.ip_forward = 1' >> /etc/sysctl.conf",
       "sysctl -p",
 
@@ -107,6 +97,21 @@ resource "null_resource" "saltmaster_config" {
       "sleep 10",
       "salt '*' test.ping",
     ]
+  }
+
+  # delete minion key on master when destroying
+  provisioner "remote-exec" {
+    when = destroy
+
+    inline = [
+      "salt-key -y -d 'master'",
+    ]
+
+    connection {
+      private_key = file(abspath("${path.root}/keys/terraform_ssh_key"))
+      host        = self.triggers.saltmasterip
+      user        = "root"
+    }
   }
 }
 
