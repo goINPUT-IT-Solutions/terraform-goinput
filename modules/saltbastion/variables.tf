@@ -19,6 +19,16 @@ variable "terraform_ssh_key_id" {
   sensitive = false
 }
 
+variable "terraform_private_ssh_key_id" {
+  type      = string
+  sensitive = false
+}
+
+variable "terraform_private_ssh_key" {
+  type      = string
+  sensitive = true
+}
+
 variable "network_webservice_id" {
   type      = string
   sensitive = false

@@ -30,7 +30,10 @@ resource "hcloud_server" "webserver" {
   image       = "ubuntu-20.04"
   server_type = "cx11"
 
-  ssh_keys = ["${var.terraform_ssh_key_id}"]
+  ssh_keys = [
+    "${var.terraform_ssh_key_id}",
+    "${terraform_private_ssh_key_id}"
+  ]
   location = "fsn1"
 
   network {
@@ -82,7 +85,7 @@ resource "null_resource" "webserver_config" {
     ]
 
     connection {
-      private_key = file(abspath("${path.root}/keys/terraform_ssh_key"))
+      private_key = var.terraform_private_ssh_key
       host        = hcloud_server.webserver[count.index].ipv4_address
       user        = "root"
     }
@@ -94,7 +97,7 @@ resource "null_resource" "webserver_config" {
     ]
 
     connection {
-      private_key = file(abspath("${path.root}/keys/terraform_ssh_key"))
+      private_key = var.terraform_private_ssh_key
       host        = var.saltmaster_public_ip
       user        = "root"
     }
@@ -113,7 +116,7 @@ resource "null_resource" "webserver_config" {
     ]
 
     connection {
-      private_key = file(abspath("${path.root}/keys/terraform_ssh_key"))
+      private_key = var.terraform_private_ssh_key
       host        = self.triggers.saltmaster_public_ip
       user        = "root"
     }

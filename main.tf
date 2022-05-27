@@ -59,6 +59,15 @@ data "hcloud_ssh_key" "hcloud_terraform_ssh_key" {
   name = "Javik OpenSSH Key for Hikari"
 }
 
+resource "tls_private_key" "terraform_private_key" {
+  algorithm = "ED25519"
+}
+
+resource "hcloud_ssh_key" "terraform_private_key" {
+  name       = "Terraform Private Key"
+  public_key = tls_private_key.terraform_private_key.public_key_openssh
+}
+
 ##############################
 ### Bitwarden
 ##############################
@@ -109,7 +118,11 @@ module "saltbastion" {
 
   ###### Variables
 
-  terraform_ssh_key_id  = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  // SSH
+  terraform_ssh_key_id         = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  terraform_private_ssh_key_id = hcloud_ssh_key.terraform_private_key.id
+  terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
+
   domain                = var.domain
   firewall_default_id   = module.firewall.firewall_default_id
   network_webservice_id = module.networks.webservice_network_id
@@ -127,10 +140,14 @@ module "database" {
 
   ###### Variables
 
-  terraform_ssh_key_id = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
-  service_name         = "db"
-  domain               = var.domain
-  server_count         = 1
+  // SSH
+  terraform_ssh_key_id         = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  terraform_private_ssh_key_id = hcloud_ssh_key.terraform_private_key.id
+  terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
+
+  service_name = "db"
+  domain       = var.domain
+  server_count = 1
 
   saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
   saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
@@ -151,35 +168,19 @@ module "database" {
   ]
 }
 
-module "nameserver" {
-  source = "./modules/nameserver"
-
-  ###### Variables
-
-  terraform_ssh_key_id = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
-  service_name         = "ns"
-  domain               = "goitdns.com"
-  server_count         = 0
-
-  ##### Dependencies
-
-  depends_on = [
-    module.firewall,
-    module.networks,
-    module.saltbastion,
-    module.database
-  ]
-}
-
 module "mailserver" {
   source = "./modules/mailserver"
 
   ###### Variables
 
-  terraform_ssh_key_id = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
-  service_name         = "mail"
-  domain               = var.domain
-  server_count         = 1
+  // SSH
+  terraform_ssh_key_id         = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  terraform_private_ssh_key_id = hcloud_ssh_key.terraform_private_key.id
+  terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
+
+  service_name = "mail"
+  domain       = var.domain
+  server_count = 1
 
   /// Networks and Firewall configuration
   network_webservice_id  = module.networks.webservice_network_id
@@ -198,7 +199,6 @@ module "mailserver" {
   depends_on = [
     module.firewall,
     module.networks,
-    module.nameserver,
     module.saltbastion,
     module.database
   ]
@@ -209,10 +209,14 @@ module "webservice" {
 
   ###### Variables
 
-  terraform_ssh_key_id = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
-  service_name         = "web"
-  domain               = var.domain
-  server_count         = 1
+  // SSH
+  terraform_ssh_key_id         = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  terraform_private_ssh_key_id = hcloud_ssh_key.terraform_private_key.id
+  terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
+
+  service_name = "web"
+  domain       = var.domain
+  server_count = 1
 
   saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
   saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
@@ -226,7 +230,6 @@ module "webservice" {
   depends_on = [
     module.firewall,
     module.networks,
-    module.nameserver,
     module.mailserver,
     module.saltbastion,
     module.database

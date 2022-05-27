@@ -41,7 +41,10 @@ resource "hcloud_server" "saltbastion" {
   image       = "ubuntu-20.04"
   server_type = "cx21"
 
-  ssh_keys = ["${var.terraform_ssh_key_id}"]
+  ssh_keys = [
+    "${var.terraform_ssh_key_id}",
+    "${var.terraform_private_ssh_key_id}"
+  ]
   location = "fsn1"
 
   firewall_ids = [
@@ -69,7 +72,7 @@ resource "null_resource" "saltmaster_config" {
   }
 
   connection {
-    private_key = file(abspath("${path.root}/keys/terraform_ssh_key"))
+    private_key = var.terraform_private_ssh_key
     host        = self.triggers.saltmasterip
     user        = "root"
   }
@@ -108,7 +111,7 @@ resource "null_resource" "saltmaster_config" {
     ]
 
     connection {
-      private_key = file(abspath("${path.root}/keys/terraform_ssh_key"))
+      private_key = var.terraform_private_ssh_key
       host        = self.triggers.saltmasterip
       user        = "root"
     }
