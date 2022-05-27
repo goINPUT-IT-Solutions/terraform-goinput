@@ -96,11 +96,6 @@ variable "bitwarden_server" {
 ### Defaults
 ##############################
 
-variable "terraform_ssh_key" {
-  type      = string
-  sensitive = false
-}
-
 variable "domain" {
   default   = "goitservers.com"
   type      = string
