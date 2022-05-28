@@ -16,6 +16,11 @@
 
 terraform {
   required_providers {
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 3.15.0"
+    }
+
     hcloud = {
       source  = "hetznercloud/hcloud"
       version = "~> 1.33.2"
@@ -138,6 +143,22 @@ resource "hcloud_rdns" "saltbastion_rdns_ipv6" {
 ##############################
 ### DNS
 ##############################
+
+resource "cloudflare_record" "saltbastion_dns_ipv4" {
+  zone_id = var.cloudflare_goitservers_com_zone_id
+  name    = hcloud_server.saltbastion.name
+  value   = hcloud_server.saltbastion.ipv4_address
+  type    = "A"
+  ttl     = 3600
+}
+
+resource "cloudflare_record" "saltbastion_dns_ipv6" {
+  zone_id = var.cloudflare_goitservers_com_zone_id
+  name    = hcloud_server.saltbastion.name
+  value   = hcloud_server.saltbastion.ipv6_address
+  type    = "AAAA"
+  ttl     = 3600
+}
 
 ##############################
 ### Bitwarden

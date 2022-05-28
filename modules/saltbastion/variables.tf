@@ -59,3 +59,12 @@ variable "domain" {
   type      = string
   sensitive = false
 }
+
+##############################
+### Cloudflare
+##############################
+
+variable "cloudflare_goitservers_com_zone_id" {
+  type      = string
+  sensitive = false
+}

@@ -123,9 +123,10 @@ module "saltbastion" {
   terraform_private_ssh_key_id = hcloud_ssh_key.terraform_private_key.id
   terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
 
-  domain                = var.domain
-  firewall_default_id   = module.firewall.firewall_default_id
-  network_webservice_id = module.networks.webservice_network_id
+  domain                             = var.domain
+  firewall_default_id                = module.firewall.firewall_default_id
+  network_webservice_id              = module.networks.webservice_network_id
+  cloudflare_goitservers_com_zone_id = data.cloudflare_zone.dns_zones[var.domain].zone_id
 
   ##### Dependencies
 
