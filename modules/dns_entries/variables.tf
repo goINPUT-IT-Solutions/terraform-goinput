@@ -14,7 +14,7 @@
 ### Cloudflare
 ##############################
 
-variable "domains_zone_id" {
+variable "zone_id" {
   type      = string
   sensitive = false
 }
