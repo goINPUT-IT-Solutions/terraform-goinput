@@ -42,7 +42,7 @@ terraform {
 ##############################
 
 resource "hcloud_server" "saltbastion" {
-  name        = "master.${var.service_name}.${var.domain}"
+  name        = "master.${var.service_name}.${var.environment}.${var.domain}"
   image       = "ubuntu-20.04"
   server_type = "cx21"
 

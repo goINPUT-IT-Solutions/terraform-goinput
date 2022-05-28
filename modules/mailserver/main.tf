@@ -52,7 +52,7 @@ resource "random_password" "mailserver_random_mailcow_pw" {
 ##############################
 
 resource "hcloud_server" "mailserver" {
-  name        = "${random_pet.mailserver_names.id}.${var.service_name}.${var.domain}"
+  name        = "${random_pet.mailserver_names.id}.${var.service_name}.${var.environment}.${var.domain}"
   image       = "ubuntu-22.04"
   server_type = "cx31"
 

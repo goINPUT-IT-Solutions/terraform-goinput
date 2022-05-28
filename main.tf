@@ -19,7 +19,7 @@ terraform {
     organization = "goINPUT"
 
     workspaces {
-      name = "terraform-goinput"
+      name = "infrastructure-main"
     }
   }
 
@@ -105,13 +105,13 @@ module "networks" {
 
   ###### Variables
 
-  nameserver_network_name     = var.nameserver_network_name
+  nameserver_network_name     = "${var.nameserver_network_name}-${var.environment}"
   nameserver_network_ip_range = var.nameserver_network_ip_range
 
-  mailserver_network_name     = var.mailserver_network_name
+  mailserver_network_name     = "${var.mailserver_network_name}-${var.environment}"
   mailserver_network_ip_range = var.mailserver_network_ip_range
 
-  webservice_network_name     = var.webservice_network_name
+  webservice_network_name     = "${var.webservice_network_name}-${var.environment}"
   webservice_network_ip_range = var.webservice_network_ip_range
 
   ##### Dependencies
@@ -132,6 +132,7 @@ module "saltbastion" {
   terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
 
   domain                             = var.domain
+  environment = var.environment
   firewall_default_id                = module.firewall.firewall_default_id
   network_webservice_id              = module.networks.webservice_network_id
   cloudflare_goitservers_com_zone_id = data.cloudflare_zone.dns_zones[var.domain].zone_id
@@ -156,6 +157,7 @@ module "database" {
 
   service_name = "db"
   domain       = var.domain
+  environment = var.environment
   server_count = 1
 
   saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
@@ -189,6 +191,7 @@ module "mailserver" {
 
   service_name = "mail"
   domain       = var.domain
+  environment = var.environment
   server_count = 1
 
   /// Networks and Firewall configuration

@@ -102,6 +102,11 @@ variable "domain" {
   sensitive = false
 }
 
+variable "environment" {
+  type      = string
+  sensitive = false
+}
+
 variable "domains" {
   type      = set(string)
   sensitive = false

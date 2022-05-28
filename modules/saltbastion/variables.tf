@@ -60,6 +60,11 @@ variable "domain" {
   sensitive = false
 }
 
+variable "environment" {
+  type      = string
+  sensitive = false
+}
+
 ##############################
 ### Cloudflare
 ##############################

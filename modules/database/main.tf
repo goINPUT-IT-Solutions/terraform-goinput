@@ -44,7 +44,7 @@ resource "random_pet" "database_names" {
 
 resource "hcloud_server" "database" {
   count       = var.server_count
-  name        = "${random_pet.database_names[count.index].id}.${var.service_name}.${var.domain}"
+  name        = "${random_pet.database_names[count.index].id}.${var.service_name}.${var.environment}.${var.domain}"
   image       = "ubuntu-20.04"
   server_type = "cx11"
 

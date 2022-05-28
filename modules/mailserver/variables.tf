@@ -79,6 +79,11 @@ variable "domain" {
   sensitive = false
 }
 
+variable "environment" {
+  type      = string
+  sensitive = false
+}
+
 variable "domains_zone_id" {
   type      = set(string)
   sensitive = false
