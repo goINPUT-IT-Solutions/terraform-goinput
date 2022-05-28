@@ -90,7 +90,7 @@ resource "hcloud_volume_attachment" "mail_volume" {
 module "dns_zones" {
   for_each = var.domains_zone_id
 
-  source = "../dns_entries"
+  source = "./modules/dns_entries"
 
   # Variables
   zone_id             = each.key
