@@ -132,7 +132,7 @@ module "saltbastion" {
   terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
 
   domain                             = var.domain
-  environment = var.environment
+  environment                        = var.environment
   firewall_default_id                = module.firewall.firewall_default_id
   network_webservice_id              = module.networks.webservice_network_id
   cloudflare_goitservers_com_zone_id = data.cloudflare_zone.dns_zones[var.domain].zone_id
@@ -157,7 +157,7 @@ module "database" {
 
   service_name = "db"
   domain       = var.domain
-  environment = var.environment
+  environment  = var.environment
   server_count = 1
 
   saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
@@ -191,7 +191,7 @@ module "mailserver" {
 
   service_name = "mail"
   domain       = var.domain
-  environment = var.environment
+  environment  = var.environment
   server_count = 1
 
   /// Networks and Firewall configuration
@@ -232,6 +232,7 @@ module "webservice" {
 
   service_name = "web"
   domain       = var.domain
+  environment  = var.environment
   server_count = 1
 
   saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
