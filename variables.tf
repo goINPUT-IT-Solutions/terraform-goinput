@@ -101,3 +101,8 @@ variable "domain" {
   type      = string
   sensitive = false
 }
+
+variable "domains" {
+  type      = set(string)
+  sensitive = false
+}

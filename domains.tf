@@ -18,10 +18,7 @@ data "cloudflare_zone" "goitservers_com" {
   name = "goitservers.com"
 }
 
-data "cloudflare_zone" "goitcdn_com" {
-  name = "goitcdn.com"
-}
-
-data "cloudflare_zone" "goitdns_com" {
-  name = "goitdns.com"
+data "cloudflare_zone" "dns_zones" {
+  for_each = var.domains
+  name = each.key
 }

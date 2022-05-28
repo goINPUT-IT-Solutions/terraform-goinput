@@ -153,7 +153,7 @@ module "database" {
   saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
 
   // Cloudflare
-  cloudflare_goitservers_com_zone_id = data.cloudflare_zone.goitservers_com.zone_id
+  cloudflare_goitservers_com_zone_id = data.cloudflare_zone.dns_zones[var.domain].zone_id
 
   /// Networks and Firewall configuration
   network_webservice_id = module.networks.webservice_network_id
@@ -191,13 +191,11 @@ module "mailserver" {
   saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
 
   // Cloudflare
-  cloudflare_goitservers_com_zone_id = data.cloudflare_zone.goitservers_com.zone_id
+  cloudflare_goitservers_com_zone_id = data.cloudflare_zone.dns_zones[var.domain].zone_id
   cloudflare_goinput_de_zone_id      = data.cloudflare_zone.goinput_de.zone_id
 
   domains_zone_id = [
-    data.cloudflare_zone.goitservers_com.zone_id,
-    data.cloudflare_zone.goitcdn_com.zone_id,
-    data.cloudflare_zone.goitdns_com.zone_id,
+    for domain in data.cloudflare_zone.dns_zones : domain.zone_id
   ]
 
   ##### Dependencies
