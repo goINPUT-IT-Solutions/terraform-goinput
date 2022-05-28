@@ -36,13 +36,16 @@ resource "hcloud_server" "webserver" {
   ]
   location = "fsn1"
 
-  network {
-    network_id = var.network_webservice_id
-  }
-
   firewall_ids = [
     var.firewall_default_id
   ]
+}
+
+resource "hcloud_server_network" "webserver_network" {
+  count = length(hcloud_server.webserver)
+
+  server_id = hcloud_server.webserver[count.index].id
+  network_id = var.network_webservice_id
 }
 
 
