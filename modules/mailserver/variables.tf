@@ -79,7 +79,7 @@ variable "domain" {
   sensitive = false
 }
 
-variable "domains" {
+variable "domains_zone_id" {
   type      = list(string)
   sensitive = false
 }
