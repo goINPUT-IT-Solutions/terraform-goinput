@@ -15,6 +15,14 @@
 ##############################
 
 terraform {
+  cloud {
+    organization = "goINPUT"
+
+    workspaces {
+      name = "terraform-goinput"
+    }
+  }
+
   required_providers {
     acme = {
       source  = "vancluever/acme"
@@ -56,7 +64,7 @@ provider "hcloud" {
 }
 
 data "hcloud_ssh_key" "hcloud_terraform_ssh_key" {
-  name = "Javik OpenSSH Key for Hikari"
+  name = "Javik OpenSSH Key for Stargazer"
 }
 
 resource "tls_private_key" "terraform_private_key" {
