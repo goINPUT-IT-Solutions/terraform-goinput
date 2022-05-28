@@ -80,7 +80,7 @@ variable "domain" {
 }
 
 variable "domains_zone_id" {
-  type      = list(string)
+  type      = set(string)
   sensitive = false
 }
 
