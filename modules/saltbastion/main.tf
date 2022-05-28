@@ -105,33 +105,6 @@ resource "null_resource" "saltmaster_config" {
       "systemctl enable salt-minion",
       "sleep 10",
       "salt '*' test.ping",
-
-      # Additional salt config
-      "git clone https://github.com/goINPUT-IT-Solutions/salt-deployhook.git /srv/salt-deployhook",
-      "echo '# Ensure that our custom state tree can be found in addition'      > /etc/salt/master.d/reactor.conf'",
-      "echo '# to our default salt states'                                      >> /etc/salt/master.d/reactor.conf'",
-      "echo 'file_roots:'                                                       >> /etc/salt/master.d/reactor.conf'",
-      "echo '  base:'                                                           >> /etc/salt/master.d/reactor.conf'",
-      "echo '    - /srv/salt'                                                   >> /etc/salt/master.d/reactor.conf'",
-      "echo '    - /srv/salt-deployhook'                                        >> /etc/salt/master.d/reactor.conf'",
-      "echo ' '                                                                 >> /etc/salt/master.d/reactor.conf'",
-      "echo '# For our example, enable the webhook engine with default values'  >> /etc/salt/master.d/reactor.conf'",
-      "echo 'engines:'                                                          >> /etc/salt/master.d/reactor.conf'",
-      "echo '  - webhook: {}'                                                   >> /etc/salt/master.d/reactor.conf'",
-      "echo ' '                                                                 >> /etc/salt/master.d/reactor.conf'",
-      "echo '# A post to our salt master ( https://salt.example.com/github )'   >> /etc/salt/master.d/reactor.conf'",
-      "echo '# Will map to our reactor ( salt://_reactor/autodeploy.sls) '      >> /etc/salt/master.d/reactor.conf'",
-      "echo 'reactor:'                                                          >> /etc/salt/master.d/reactor.conf'",
-      "echo '  - 'salt/engines/hook/github':'                                   >> /etc/salt/master.d/reactor.conf'",
-      "echo '    - salt://_reactor/autodeploy.sls'                              >> /etc/salt/master.d/reactor.conf'",
-
-      # Systemd example
-      # Reload salt-master to pick up our new file_roots
-      "systemctl restart salt-master",
-      # Sync our modules to the salt master
-      "salt-run saltutil.sync_all",
-      # Restart our salt-master once more to ensure our modules are loaded
-      "systemctl restart salt-master"
     ]
   }
 
