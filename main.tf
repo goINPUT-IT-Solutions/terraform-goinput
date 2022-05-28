@@ -194,6 +194,12 @@ module "mailserver" {
   cloudflare_goitservers_com_zone_id = data.cloudflare_zone.goitservers_com.zone_id
   cloudflare_goinput_de_zone_id      = data.cloudflare_zone.goinput_de.zone_id
 
+  domains_zone_id = [
+    data.cloudflare_zone.goitservers_com.zone_id,
+    data.cloudflare_zone.goitcdn_com.zone_id,
+    data.cloudflare_zone.goitdns_com.zone_id,
+  ]
+
   ##### Dependencies
 
   depends_on = [

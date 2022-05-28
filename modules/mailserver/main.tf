@@ -62,14 +62,15 @@ resource "hcloud_server" "mailserver" {
   ]
   location = "fsn1"
 
-  network {
-    network_id = var.network_webservice_id
-  }
-
   firewall_ids = [
     var.firewall_default_id,
     var.firewall_mailserver_id
   ]
+}
+
+resource "hcloud_server_network" "mailserver_network" {
+  server_id  = hcloud_server.mailserver.id
+  network_id = var.network_webservice_id
 }
 
 resource "hcloud_volume_attachment" "log_volume" {
@@ -80,6 +81,20 @@ resource "hcloud_volume_attachment" "log_volume" {
 resource "hcloud_volume_attachment" "mail_volume" {
   volume_id = hcloud_volume.mail_volume.id
   server_id = hcloud_server.mailserver.id
+}
+
+##############################
+### DNS ENTRIES
+##############################
+
+module "dns_zones" {
+  for_each = var.domains_zone_id
+
+  source = "../dns_entries"
+
+  # Variables
+  zone_id             = each.key
+  mailserver_hostname = hcloud_server.mailserver.name
 }
 
 ##############################

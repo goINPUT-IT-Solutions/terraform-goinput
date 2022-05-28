@@ -79,6 +79,11 @@ variable "domain" {
   sensitive = false
 }
 
+variable "domains" {
+  type      = list(string)
+  sensitive = false
+}
+
 ##############################
 ### Saltstack
 ##############################

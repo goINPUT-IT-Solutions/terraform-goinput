@@ -44,7 +44,7 @@ resource "hcloud_server" "webserver" {
 resource "hcloud_server_network" "webserver_network" {
   count = length(hcloud_server.webserver)
 
-  server_id = hcloud_server.webserver[count.index].id
+  server_id  = hcloud_server.webserver[count.index].id
   network_id = var.network_webservice_id
 }
 

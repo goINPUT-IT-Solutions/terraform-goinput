@@ -10,18 +10,16 @@
 #                                                    #
 ######################################################
 
-data "cloudflare_zone" "goinput_de" {
-  name = "goinput.de"
+##############################
+### Cloudflare
+##############################
+
+variable "domains_zone_id" {
+  type      = string
+  sensitive = false
 }
 
-data "cloudflare_zone" "goitservers_com" {
-  name = "goitservers.com"
-}
-
-data "cloudflare_zone" "goitcdn_com" {
-  name = "goitcdn.com"
-}
-
-data "cloudflare_zone" "goitdns_com" {
-  name = "goitdns.com"
+variable "mailserver_hostname" {
+  type      = string
+  sensitive = false
 }

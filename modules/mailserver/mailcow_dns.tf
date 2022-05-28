@@ -12,6 +12,8 @@
 
 /// Mailcow DNS Settings
 
+
+/*
 # DOMAIN: goitservers.com
 resource "cloudflare_record" "mailserver_dns_goitservers_com_mail_cnames" {
   zone_id = var.cloudflare_goitservers_com_zone_id
@@ -89,8 +91,7 @@ resource "cloudflare_record" "mailserver_dns_goitservers_com_mail_srvs" {
   }
 }
 
-
-/*# DOMAIN: goinput.de
+# DOMAIN: goinput.de
 resource "cloudflare_record" "mailserver_dns_cname_goinput_de_mails" {
   zone_id = var.cloudflare_goinput_de_zone_id
   name    = "mails.goinput.de"
