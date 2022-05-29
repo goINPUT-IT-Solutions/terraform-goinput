@@ -51,6 +51,7 @@ resource "null_resource" "saltmaster_config" {
   triggers = {
     saltmasterid = "${hcloud_server.saltbastion.id}"
     saltmasterip = hcloud_server.saltbastion.ipv4_address
+    server_name  = hcloud_server.saltbastion.name
     private_key  = var.terraform_private_ssh_key
   }
 
@@ -67,6 +68,19 @@ resource "null_resource" "saltmaster_config" {
     private_key = self.triggers.private_key
     host        = self.triggers.saltmasterip
     user        = "root"
+  }
+
+  # Accept minion key on master
+  provisioner "remote-exec" {
+    inline = [
+      "salt-key -y -a '${self.triggers.server_name}'"
+    ]
+
+    connection {
+      private_key = self.triggers.private_key
+      host        = self.triggers.saltmaster_public_ip
+      user        = "root"
+    }
   }
 
   # make the magic happen on salt master

@@ -19,7 +19,7 @@ chmod +x /tmp/install-salt.sh
 git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner /srv/salt
 
 # Enable Reactor
-cat <<EOT >> /etc/salt/master.d/reactor.conf
+cat <<EOT > /etc/salt/master.d/reactor.conf
 reactor:
     - 'salt/auth':
     - /srv/salt/reactor/auth-pending.sls

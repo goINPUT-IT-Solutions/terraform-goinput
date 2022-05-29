@@ -38,7 +38,7 @@ resource "null_resource" "database_config" {
   }
 
   # Accept minion key on master
-  /*provisioner "remote-exec" {
+  provisioner "remote-exec" {
     inline = [
       "salt-key -y -a '${self.triggers.server_name}'"
     ]
@@ -48,7 +48,7 @@ resource "null_resource" "database_config" {
       host        = self.triggers.saltmaster_public_ip
       user        = "root"
     }
-  }*/
+  }
 
   # delete minion key on master when destroying
   provisioner "remote-exec" {
