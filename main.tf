@@ -145,6 +145,7 @@ module "saltbastion" {
   ]
 }
 
+/*
 module "database" {
   source = "./modules/database"
 
@@ -252,3 +253,4 @@ module "webservice" {
     module.database
   ]
 }
+*/
