@@ -59,6 +59,18 @@ resource "null_resource" "webserver_config" {
   provisioner "remote-exec" {
     inline = [
       "salt-key -y -a '${self.triggers.server_name}'",
+    ]
+
+    connection {
+      private_key = self.triggers.private_key
+      host        = var.saltmaster_public_ip
+      user        = "root"
+    }
+  }
+
+  # Apply state
+  provisioner "remote-exec" {
+    inline = [
       "salt '${self.triggers.server_name}' state.apply"
     ]
 
