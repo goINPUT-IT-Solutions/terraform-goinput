@@ -22,7 +22,7 @@ git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner /srv/salt
 cat <<EOT > /etc/salt/master.d/reactor.conf
 reactor:
     - 'salt/auth':
-    - /srv/salt/reactor/new_minion.sls
+        - /srv/salt/reactor/new_minion.sls
 EOT
 
 # Restart Salt-Master
