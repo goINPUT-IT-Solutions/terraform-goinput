@@ -52,7 +52,8 @@ resource "null_resource" "database_config" {
   # Accept minion key on master
   provisioner "remote-exec" {
     inline = [
-      "salt-key -y -a '${self.triggers.server_name}'"
+      "salt-key -y -a '${self.triggers.server_name}'",
+      "salt '${self.triggers.server_name}' state.apply",
     ]
 
     connection {
