@@ -22,8 +22,10 @@ git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner /srv/salt
 cat <<EOT > /etc/salt/master.d/reactor.conf
 reactor:
     - 'salt/auth':
-    - /srv/salt/reactor/auth-pending.sls
+    - /srv/salt/reactor/new_minion.sls
 EOT
 
 # Restart Salt-Master
 systemctl restart salt-master
+
+sleep 10 # Wait 10 seconds to propagate

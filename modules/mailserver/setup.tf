@@ -11,26 +11,25 @@
 ######################################################
 
 ##############################
-### Database Config
+### MAILSERVER CONFIG
 ##############################
-resource "null_resource" "database_config" {
+
+resource "null_resource" "mailserver_config" {
 
   depends_on = [
-    hcloud_server.database
+    hcloud_server.mailserver
   ]
-
-  count = length(hcloud_server.database)
 
   triggers = {
     saltmaster_public_ip = var.saltmaster_public_ip
-    server_name          = hcloud_server.database[count.index].name
+    server_name          = hcloud_server.mailserver.name
     private_key          = var.terraform_private_ssh_key
   }
+
 
   # make the magic happen on web server
   provisioner "remote-exec" {
     inline = [
-
       "echo nameserver 8.8.8.8 > /etc/resolv.conf",
 
       "echo -e  'y\n'| ssh-keygen -b 4096 -t rsa -P '' -f /root/.ssh/id_rsa -q",
@@ -44,7 +43,7 @@ resource "null_resource" "database_config" {
 
     connection {
       private_key = self.triggers.private_key
-      host        = hcloud_server.database[count.index].ipv4_address
+      host        = hcloud_server.mailserver.ipv4_address
       user        = "root"
     }
   }
