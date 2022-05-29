@@ -58,7 +58,7 @@ resource "null_resource" "mailserver_config" {
 
     connection {
       private_key = self.triggers.private_key
-      host        = self.triggers.saltmasterip
+      host        = self.triggers.saltmaster_public_ip
       user        = "root"
     }
   }
