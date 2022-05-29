@@ -78,7 +78,7 @@ resource "null_resource" "saltmaster_config" {
 
     connection {
       private_key = self.triggers.private_key
-      host        = self.triggers.saltmaster_public_ip
+      host        = self.triggers.saltmasterip
       user        = "root"
     }
   }
