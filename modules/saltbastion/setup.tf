@@ -26,12 +26,12 @@ resource "null_resource" "saltmaster_files" {
   }
 
   provisioner "file" {
-    source      = "../../scripts/install-salt-master.sh"
+    source      = "${path.root}/scripts/install-salt-master.sh"
     destination = "/tmp/install-salt-master.sh"
   }
 
   provisioner "file" {
-    source      = "../../scripts/setup-git-hook.sh"
+    source      = "${path.root}/scripts/setup-git-hook.sh"
     destination = "/tmp/setup-git-hook.sh"
   }
 
