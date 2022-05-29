@@ -39,6 +39,11 @@ variable "firewall_default_id" {
   sensitive = false
 }
 
+variable "firewall_webservice_id" {
+  type      = string
+  sensitive = false
+}
+
 ##############################
 ### Defaults
 ##############################

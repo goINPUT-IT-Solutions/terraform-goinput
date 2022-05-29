@@ -17,3 +17,8 @@ output "firewall_default_id" {
 output "firewall_mailserver_id" {
   value = hcloud_firewall.firewall_mailserver.id
 }
+
+output "firewall_webservice_id" {
+  value = hcloud_firewall.firewall_webservice.id
+}
+

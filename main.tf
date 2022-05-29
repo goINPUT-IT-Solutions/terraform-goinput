@@ -239,8 +239,9 @@ module "webservice" {
   saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
 
   /// Networks and Firewall configuration
-  network_webservice_id = module.networks.webservice_network_id
-  firewall_default_id   = module.firewall.firewall_default_id
+  network_webservice_id  = module.networks.webservice_network_id
+  firewall_default_id    = module.firewall.firewall_default_id
+  firewall_webservice_id = module.firewall.firewall_webservice_id
 
   ##### Dependencies
 
