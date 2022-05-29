@@ -71,7 +71,7 @@ resource "null_resource" "webserver_config" {
   # Apply state
   provisioner "remote-exec" {
     inline = [
-      "salt '${self.triggers.server_name}' state.apply"
+      "salt --async '${self.triggers.server_name}' state.apply"
     ]
 
     connection {
