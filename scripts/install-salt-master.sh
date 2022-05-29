@@ -15,3 +15,15 @@ chmod +x /tmp/install-salt.sh
                                     # Pass the salt-master DNS name or IP. This will be stored under ${BS_SALT_ETC_DIR}/minion.d/99-master-address.conf
 
 
+# Clone git repo
+git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner /srv/salt
+
+# Enable Reactor
+cat <<EOT >> /etc/salt/master.d/reactor.conf
+reactor:
+    - 'salt/auth':
+    - /srv/reactor/auth-pending.sls
+EOT
+
+# Restart Salt-Master
+systemctl restart salt-master
