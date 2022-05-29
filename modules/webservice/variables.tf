@@ -48,7 +48,7 @@ variable "firewall_webservice_id" {
 ### Defaults
 ##############################
 
-variable "server_count" {
+variable "webserver_count" {
   default   = 1
   type      = number
   sensitive = false

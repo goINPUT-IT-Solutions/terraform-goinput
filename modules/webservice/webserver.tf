@@ -17,7 +17,7 @@
 
 resource "random_pet" "webserver_names" {
   length = 2
-  count  = var.server_count
+  count  = var.webserver_count
 }
 
 ##############################
@@ -25,7 +25,7 @@ resource "random_pet" "webserver_names" {
 ##############################
 
 resource "hcloud_server" "webserver" {
-  count       = var.server_count
+  count       = var.webserver_count
   name        = "${random_pet.webserver_names[count.index].id}.${var.service_name}.${var.environment}.${var.domain}"
   image       = "ubuntu-20.04"
   server_type = "cx11"

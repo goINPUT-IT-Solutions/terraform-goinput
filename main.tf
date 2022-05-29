@@ -158,7 +158,7 @@ module "database" {
   service_name = "db"
   domain       = var.domain
   environment  = var.environment
-  server_count = 2
+  server_count = 1
 
   saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
   saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
@@ -233,7 +233,9 @@ module "webservice" {
   service_name = "web"
   domain       = var.domain
   environment  = var.environment
-  server_count = 1
+
+  # Server Counts
+  webserver_count = 2
 
   saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
   saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
