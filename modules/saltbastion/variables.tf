@@ -77,12 +77,12 @@ variable "environment" {
 ##############################
 
 variable "cloudflare_email" {
-  type = string
+  type      = string
   sensitive = false
 }
 
 variable "cloudflare_api_key" {
-  type = string
+  type      = string
   sensitive = true
 }
 

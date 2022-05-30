@@ -27,7 +27,7 @@ resource "null_resource" "saltmaster_files" {
 
   provisioner "file" {
     content = templatefile("${path.root}/files/cloudflare.ini", {
-      cloudflare_email = var.cloudflare_email
+      cloudflare_email   = var.cloudflare_email
       cloudflare_api_key = var.cloudflare_api_key
     })
     destination = "/root/cloudflare.ini"
