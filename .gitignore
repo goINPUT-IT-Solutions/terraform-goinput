@@ -56,3 +56,5 @@ variables.auto.tfvars
 
 #### Secrets
 keys/
+.terraform.lock.hcl
+.vscode/

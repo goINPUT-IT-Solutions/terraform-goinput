@@ -22,3 +22,7 @@ output "firewall_webservice_id" {
   value = hcloud_firewall.firewall_webservice.id
 }
 
+output "firewallsaltbastion_id" {
+  value = hcloud_firewall.firewall_saltbastion.id
+}
+

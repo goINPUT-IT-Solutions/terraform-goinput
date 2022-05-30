@@ -53,7 +53,8 @@ resource "hcloud_server" "saltbastion" {
   location = "fsn1"
 
   firewall_ids = [
-    var.firewall_default_id
+    var.firewall_default_id,
+    var.firewall_saltbastion_id
   ]
 }
 

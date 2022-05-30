@@ -34,7 +34,14 @@ variable "network_webservice_id" {
   sensitive = false
 }
 
+#### FIREWALLS
+
 variable "firewall_default_id" {
+  type      = string
+  sensitive = false
+}
+
+variable "firewall_saltbastion_id" {
   type      = string
   sensitive = false
 }
@@ -68,6 +75,16 @@ variable "environment" {
 ##############################
 ### Cloudflare
 ##############################
+
+variable "cloudflare_email" {
+  type = string
+  sensitive = false
+}
+
+variable "cloudflare_api_key" {
+  type = string
+  sensitive = true
+}
 
 variable "cloudflare_goitservers_com_zone_id" {
   type      = string

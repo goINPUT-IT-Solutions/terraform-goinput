@@ -1,7 +1,14 @@
 #!/bin/bash
 
 # Install needed packages
-apt-get install git wget
+apt-get install git wget snapd
+
+# Install certbot
+snap install certbot certbot-dns-cloudflare --classic
+
+# Optain certificate
+chmod 600 /root/cloudflare.ini
+certbot certonly --dns-cloudflare --dns-cloudflare-credentials /root/cloudflare.ini --dns-cloudflare-propagation-seconds 60 --non-interactive --agree-tos -m admin@goinput.de -d $(hostname -f)
 
 # Get Salt Bootstrap
 wget -O /tmp/install-salt.sh https://bootstrap.saltstack.com
@@ -16,13 +23,30 @@ chmod +x /tmp/install-salt.sh
 
 
 # Clone git repo
-git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner /srv/salt
+git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner      /srv/salt
+git clone https://github.com/goINPUT-IT-Solutions/salt-deployhook   /srv/salt-deployhook
 
 # Enable Reactor
 cat <<EOT > /etc/salt/master.d/reactor.conf
+file_roots:
+    base:
+        - /srv/salt
+        - /srv/salt-deployhook
+
 reactor:
     - 'salt/auth':
         - /srv/salt/reactor/new_minion.sls
+    - 'salt/engines/hook/github':
+        - salt://_reactor/autodeploy.sls
+EOT
+
+# Enable Webhook
+cat <<EOT > /etc/salt/master.d/webook.conf
+engines:
+    - webhook:
+        port: 9999
+        ssl_crt: /etc/letsencrypt/live/$(hostname -f)/fullchain.pem
+        ssl_key: /etc/letsencrypt/live/$(hostname -f)/privkey.pem
 EOT
 
 # Restart Salt-Master
