@@ -5,7 +5,7 @@ apt-get upgrade -y
 apt-get autoremove -y
 
 # Install needed packages
-apt-get install -y git wget snapd
+apt-get install git wget snapd -y
 
 # Install certbot
 snap install certbot certbot-dns-cloudflare --classic
