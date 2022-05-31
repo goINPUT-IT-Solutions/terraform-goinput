@@ -62,9 +62,9 @@ reactor:
     - 'salt/engines/hook/hook/github':
         - salt://reactor/autodeploy.sls
         - salt://top.sls
-    - 'salt/presence/present'
+    - 'salt/presence/present':
         - salt://top.sls
-    - 'salt/presence/change'
+    - 'salt/presence/change':
         - salt://top.sls
 
 EOT
