@@ -24,24 +24,22 @@ chmod +x /tmp/install-salt.sh
 
 # Clone git repo
 git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner      /srv/salt
-git clone https://github.com/goINPUT-IT-Solutions/salt-deployhook   /srv/salt-deployhook
 
 # Enable Reactor
 cat <<EOT > /etc/salt/master.d/reactor.conf
 file_roots:
     base:
         - /srv/salt
-        - /srv/salt-deployhook
 
 reactor:
     - 'salt/auth':
-        - /srv/salt/reactor/new_minion.sls
+        - salt://reactor/new_minion.sls
     - 'salt/engines/hook/github':
-        - salt://_reactor/autodeploy.sls
+        - salt://reactor/autodeploy.sls
 EOT
 
 # Enable Webhook
-cat <<EOT > /etc/salt/master.d/webook.conf
+cat <<EOT > /etc/salt/master.d/webhook.conf
 engines:
     - webhook:
         port: 9999
