@@ -10,6 +10,8 @@
 #                                                    #
 ######################################################
 
+# File: install-salt-master.sh
+
 #!/bin/bash
 # Update system
 apt-get update
