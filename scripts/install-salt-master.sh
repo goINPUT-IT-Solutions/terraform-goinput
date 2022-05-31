@@ -58,13 +58,13 @@ file_roots:
 
 reactor:
     - 'salt/auth':
-        - salt://reactor/new_minion.sls
+        - /srv/salt/reactor/new_minion.sls
     - 'salt/engines/hook/hook/github':
-        - salt://reactor/autodeploy.sls
+        - /srv/salt/reactor/autodeploy.sls
     - 'salt/presence/present':
-        - salt://reactor/apply_state.sls
+        - /srv/salt/reactor/apply_state.sls
     - 'salt/presence/change':
-        - salt://reactor/apply_state.sls
+        - /srv/salt/reactor/apply_state.sls
 
 EOT
 
