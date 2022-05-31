@@ -61,11 +61,10 @@ reactor:
         - salt://reactor/new_minion.sls
     - 'salt/engines/hook/hook/github':
         - salt://reactor/autodeploy.sls
-        - salt://top.sls
     - 'salt/presence/present':
-        - salt://top.sls
+        - salt://reactor/apply_state.sls
     - 'salt/presence/change':
-        - salt://top.sls
+        - salt://reactor/apply_state.sls
 
 EOT
 
