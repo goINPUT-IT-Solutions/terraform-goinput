@@ -30,7 +30,7 @@ resource "null_resource" "saltmaster_files" {
       cloudflare_api_key = var.cloudflare_api_key
     })
 
-    file_install_saltmaster = "${path.root}/scripts/install-salt-master.sh"
+    file_install_saltmaster = file("${path.root}/scripts/install-salt-master.sh")
   }
 
   provisioner "file" {
@@ -39,7 +39,7 @@ resource "null_resource" "saltmaster_files" {
   }
 
   provisioner "file" {
-    source      = self.triggers.file_install_saltmaster
+    content     = self.triggers.file_install_saltmaster
     destination = "/tmp/install-salt-master.sh"
   }
 
@@ -66,9 +66,7 @@ resource "null_resource" "saltmaster_config" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/install-salt-master.sh",
-      "/tmp/install-salt-master.sh",
-      "chmod +x /tmp/setup-git-hook.sh",
-      "/tmp/setup-git-hook.sh"
+      "/tmp/install-salt-master.sh"
     ]
 
     connection {
