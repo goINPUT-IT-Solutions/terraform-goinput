@@ -83,6 +83,11 @@ cat <<EOT > /etc/salt/master.d/presence.conf
 presence_events: True
 EOT
 
+# Enable Debug
+cat <<EOT > /etc/salt/master.d/debug.conf
+log_level: debug
+EO
+
 # Restart Salt-Master
 systemctl restart salt-master
 
