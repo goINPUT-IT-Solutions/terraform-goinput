@@ -22,8 +22,9 @@ apt-get autoremove -y
 # Install needed packages
 apt-get install git wget snapd -y
 
-# Install certbot
+# Install certbot (ufff snap)
 snap install certbot --classic
+snap set certbot trust-plugin-with-root=ok
 snap install certbot-dns-cloudflare --classic
 
 # Optain certificate
