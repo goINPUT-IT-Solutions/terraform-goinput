@@ -23,7 +23,8 @@ apt-get autoremove -y
 apt-get install git wget snapd -y
 
 # Install certbot
-snap install certbot certbot-dns-cloudflare --classic
+snap install certbot --classic
+snap install certbot-dns-cloudflare --classic
 
 # Optain certificate
 chmod 600 /root/cloudflare.ini
