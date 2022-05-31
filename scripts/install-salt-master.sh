@@ -62,10 +62,6 @@ reactor:
     - 'salt/engines/hook/hook/github':
         - salt://reactor/autodeploy.sls
         - salt://top.sls
-    - 'salt/presence/present'
-        - salt://top.sls
-    - 'salt/presence/change'
-        - salt://top.sls
 
 EOT
 
@@ -78,10 +74,10 @@ engines:
         ssl_key: /etc/letsencrypt/live/$(hostname -f)/privkey.pem
 EOT
 
-# Enable Presence
-cat <<EOT > /etc/salt/master.d/presence.conf
-presence_events: True
-EOT
+## Enable Presence
+#cat <<EOT > /etc/salt/master.d/presence.conf
+#presence_events: True
+#EOT
 
 # Enable Debug
 cat <<EOT > /etc/salt/master.d/debug.conf
