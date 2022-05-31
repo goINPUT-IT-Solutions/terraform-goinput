@@ -44,7 +44,11 @@ chmod +x /tmp/install-salt.sh
 
 
 # Clone git repo
-git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner /srv/salt
+if [ -d "/srv/salt/.git" ]; then
+  echo "Repo is already here. Doing nothing..."
+else
+  git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner /srv/salt
+fi
 
 # Enable Reactor
 cat <<EOT > /etc/salt/master.d/reactor.conf
@@ -55,8 +59,14 @@ file_roots:
 reactor:
     - 'salt/auth':
         - salt://reactor/new_minion.sls
-    - 'salt/engines/hook/github':
+    - 'salt/engines/hook/hook/github':
         - salt://reactor/autodeploy.sls
+        - salt://top.sls
+    - 'salt/presence/present'
+        - salt://top.sls
+    - 'salt/presence/change'
+        - salt://top.sls
+
 EOT
 
 # Enable Webhook
@@ -66,6 +76,11 @@ engines:
         port: 9999
         ssl_crt: /etc/letsencrypt/live/$(hostname -f)/fullchain.pem
         ssl_key: /etc/letsencrypt/live/$(hostname -f)/privkey.pem
+EOT
+
+# Enable Presence
+cat <<EOT > /etc/salt/master.d/presence.conf
+presence_events: True
 EOT
 
 # Restart Salt-Master
