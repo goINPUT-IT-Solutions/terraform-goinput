@@ -82,7 +82,7 @@ EOT
 # Enable Debug
 cat <<EOT > /etc/salt/master.d/debug.conf
 log_level: debug
-EO
+EOT
 
 # Restart Salt-Master
 systemctl restart salt-master
