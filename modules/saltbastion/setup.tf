@@ -20,9 +20,10 @@ resource "null_resource" "saltmaster_files" {
   ]
 
   triggers = {
-    saltmasterid = "${hcloud_server.saltbastion.id}"
-    saltmasterip = hcloud_server.saltbastion.ipv4_address
-    private_key  = var.terraform_private_ssh_key
+    saltbastion_id = join(",", hcloud_server.saltbastion.*.id)
+    saltmasterid   = "${hcloud_server.saltbastion.id}"
+    saltmasterip   = hcloud_server.saltbastion.ipv4_address
+    private_key    = var.terraform_private_ssh_key
   }
 
   provisioner "file" {
@@ -57,10 +58,11 @@ resource "null_resource" "saltmaster_config" {
   ]
 
   triggers = {
-    saltmasterid = "${hcloud_server.saltbastion.id}"
-    saltmasterip = hcloud_server.saltbastion.ipv4_address
-    server_name  = hcloud_server.saltbastion.name
-    private_key  = var.terraform_private_ssh_key
+    saltbastion_id = join(",", hcloud_server.saltbastion.*.id)
+    saltmasterid   = "${hcloud_server.saltbastion.id}"
+    saltmasterip   = hcloud_server.saltbastion.ipv4_address
+    server_name    = hcloud_server.saltbastion.name
+    private_key    = var.terraform_private_ssh_key
   }
 
   provisioner "remote-exec" {
