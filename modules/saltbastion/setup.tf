@@ -20,28 +20,27 @@ resource "null_resource" "saltmaster_files" {
   ]
 
   triggers = {
-    saltbastion_id = join(",", hcloud_server.saltbastion.*.id)
     saltmasterid   = "${hcloud_server.saltbastion.id}"
     saltmasterip   = hcloud_server.saltbastion.ipv4_address
     private_key    = var.terraform_private_ssh_key
-  }
 
-  provisioner "file" {
-    content = templatefile("${path.root}/files/cloudflare.ini", {
+    # Load files and watch for changes on disk
+    file_cloudflare_ini = templatefile("${path.root}/files/cloudflare.ini", {
       cloudflare_email   = var.cloudflare_email
       cloudflare_api_key = var.cloudflare_api_key
     })
+
+    file_install_saltmaster = "${path.root}/scripts/install-salt-master.sh"
+  }
+
+  provisioner "file" {
+    content = self.triggers.file_cloudflare_ini
     destination = "/root/cloudflare.ini"
   }
 
   provisioner "file" {
-    source      = "${path.root}/scripts/install-salt-master.sh"
+    source      = self.triggers.file_install_saltmaster
     destination = "/tmp/install-salt-master.sh"
-  }
-
-  provisioner "file" {
-    source      = "${path.root}/scripts/setup-git-hook.sh"
-    destination = "/tmp/setup-git-hook.sh"
   }
 
   connection {
@@ -58,7 +57,6 @@ resource "null_resource" "saltmaster_config" {
   ]
 
   triggers = {
-    saltbastion_id = join(",", hcloud_server.saltbastion.*.id)
     saltmasterid   = "${hcloud_server.saltbastion.id}"
     saltmasterip   = hcloud_server.saltbastion.ipv4_address
     server_name    = hcloud_server.saltbastion.name
