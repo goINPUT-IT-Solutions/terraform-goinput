@@ -16,6 +16,7 @@
 # Update system
 apt-get update
 apt-get upgrade -y
+apt-get dist-upgrade -y
 apt-get autoremove -y
 
 # Install needed packages

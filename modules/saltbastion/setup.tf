@@ -61,6 +61,9 @@ resource "null_resource" "saltmaster_config" {
     saltmasterip = hcloud_server.saltbastion.ipv4_address
     server_name  = hcloud_server.saltbastion.name
     private_key  = var.terraform_private_ssh_key
+
+    # Watch files for change, if change rerun setup
+    salt_files = null_resource.saltmaster_files.id
   }
 
   provisioner "remote-exec" {
