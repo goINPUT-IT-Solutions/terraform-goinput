@@ -78,19 +78,4 @@ resource "null_resource" "saltmaster_config" {
       user        = "root"
     }
   }
-
-  # Remove key on destruction
-  provisioner "remote-exec" {
-    when = destroy
-
-    inline = [
-      "salt-key -y -d '${self.triggers.server_name}'"
-    ]
-
-    connection {
-      private_key = self.triggers.private_key
-      host        = self.triggers.saltmasterip
-      user        = "root"
-    }
-  }
 }
