@@ -1,4 +1,8 @@
 #!/bin/bash
+# Update system
+apt-get update
+apt-get upgrade -y
+apt-get autoremove -y
 
 # Install needed packages
 apt-get install git wget snapd
@@ -23,7 +27,7 @@ chmod +x /tmp/install-salt.sh
 
 
 # Clone git repo
-git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner      /srv/salt
+git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner /srv/salt
 
 # Enable Reactor
 cat <<EOT > /etc/salt/master.d/reactor.conf
