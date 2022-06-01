@@ -13,26 +13,19 @@
 ///////////////////////////////////////////////////////////
 // Webserver config
 ///////////////////////////////////////////////////////////
-resource "null_resource" "webserver_config" {
+resource "null_resource" "apache_config" {
 
   depends_on = [
-    hcloud_server.webserver
+    hcloud_server.apache
   ]
 
-  count = length(hcloud_server.webserver)
+  count = length(hcloud_server.apache)
 
   triggers = {
     saltmaster_public_ip = var.saltmaster_public_ip
-    server_name          = hcloud_server.webserver[count.index].name
+    server_name          = hcloud_server.apache[count.index].name
     private_key          = var.terraform_private_ssh_key
   }
-
-
-  # copy etc/hosts file to web server
-  /*provisioner "file" {
-    source      = "salt/srv/salt/common/hosts"
-    destination = "/etc/hosts"
-  }*/
 
   # make the magic happen on web server
   provisioner "remote-exec" {
@@ -51,7 +44,7 @@ resource "null_resource" "webserver_config" {
 
     connection {
       private_key = self.triggers.private_key
-      host        = hcloud_server.webserver[count.index].ipv4_address
+      host        = hcloud_server.apache[count.index].ipv4_address
       user        = "root"
     }
   }

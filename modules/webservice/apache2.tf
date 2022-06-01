@@ -14,27 +14,22 @@
 ### Random names and passwords
 ##############################
 
-
-resource "random_pet" "webserver_names" {
-  length = 2
-  count  = var.webserver_count
-}
-
 ##############################
-### Webserver
+### Apache2 Server
 ##############################
 
-resource "hcloud_server" "webserver" {
-  count       = var.webserver_count
-  name        = "${random_pet.webserver_names[count.index].id}.${var.service_name}.${var.environment}.${var.domain}"
-  image       = "ubuntu-20.04"
+resource "hcloud_server" "apache" {
+  count       = var.apache_count
+  name        = (count.index >= 9 ? "apache${count.index + 1}.${var.environment}.${var.domain}" : "apache0${count.index + 1}.${var.environment}.${var.domain}")
+  image       = "debian-11"
   server_type = "cx11"
 
   ssh_keys = [
     "${var.terraform_ssh_key_id}",
     "${var.terraform_private_ssh_key_id}"
   ]
-  location = "fsn1"
+
+  location = (count.index % 2 == 0 ? "fsn1" : "nbg1")
 
   firewall_ids = [
     var.firewall_default_id,
@@ -42,9 +37,9 @@ resource "hcloud_server" "webserver" {
   ]
 }
 
-resource "hcloud_server_network" "webserver_network" {
-  count = length(hcloud_server.webserver)
+resource "hcloud_server_network" "apache_network" {
+  count = length(hcloud_server.apache)
 
-  server_id  = hcloud_server.webserver[count.index].id
+  server_id  = hcloud_server.apache[count.index].id
   network_id = var.network_webservice_id
 }

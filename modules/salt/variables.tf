@@ -57,7 +57,7 @@ variable "server_count" {
 }
 
 variable "service_name" {
-  default   = "saltbastion"
+  default   = "salt"
   type      = string
   sensitive = false
 }

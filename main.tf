@@ -121,8 +121,8 @@ module "networks" {
   ]
 }
 
-module "saltbastion" {
-  source = "./modules/saltbastion"
+module "salt" {
+  source = "./modules/salt"
 
   ###### Variables
 
@@ -169,8 +169,8 @@ module "database" {
   environment  = var.environment
   server_count = 1
 
-  saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
-  saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
+  saltmaster_ip        = module.salt.saltstack_webservice_network_ip
+  saltmaster_public_ip = module.salt.saltstack_public_ipv4
 
   // Cloudflare
   cloudflare_goitservers_com_zone_id = data.cloudflare_zone.dns_zones[var.domain].zone_id
@@ -184,7 +184,7 @@ module "database" {
   depends_on = [
     module.firewall,
     module.networks,
-    module.saltbastion
+    module.salt
   ]
 }
 
@@ -208,8 +208,8 @@ module "mailserver" {
   firewall_default_id    = module.firewall.firewall_default_id
   firewall_mailserver_id = module.firewall.firewall_mailserver_id
 
-  saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
-  saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
+  saltmaster_ip        = module.salt.saltstack_webservice_network_ip
+  saltmaster_public_ip = module.salt.saltstack_public_ipv4
 
   // Cloudflare
   cloudflare_goitservers_com_zone_id = data.cloudflare_zone.dns_zones[var.domain].zone_id
@@ -224,7 +224,7 @@ module "mailserver" {
   depends_on = [
     module.firewall,
     module.networks,
-    module.saltbastion,
+    module.salt,
     module.database
   ]
 }
@@ -244,10 +244,10 @@ module "webservice" {
   environment  = var.environment
 
   # Server Counts
-  webserver_count = 3
+  apache_count = 3
 
-  saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
-  saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
+  saltmaster_ip        = module.salt.saltstack_webservice_network_ip
+  saltmaster_public_ip = module.salt.saltstack_public_ipv4
 
   /// Networks and Firewall configuration
   network_webservice_id  = module.networks.webservice_network_id
@@ -260,7 +260,7 @@ module "webservice" {
     module.firewall,
     module.networks,
     module.mailserver,
-    module.saltbastion,
+    module.salt,
     module.database
   ]
 }

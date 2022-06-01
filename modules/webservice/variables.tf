@@ -48,7 +48,7 @@ variable "firewall_webservice_id" {
 ### Defaults
 ##############################
 
-variable "webserver_count" {
+variable "apache_count" {
   default   = 1
   type      = number
   sensitive = false
