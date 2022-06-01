@@ -25,6 +25,8 @@ resource "null_resource" "nextcloud_config" {
     saltmaster_public_ip = var.saltmaster_public_ip
     server_name          = hcloud_server.nextcloud[count.index].name
     private_key          = var.terraform_private_ssh_key
+
+    server_id            = hcloud_server.apache[count.index].id # Force rebuild if server changes
   }
 
   # make the magic happen on web server
