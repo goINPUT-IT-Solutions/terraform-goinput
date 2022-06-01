@@ -35,8 +35,8 @@ resource "null_resource" "jitsi_config" {
 
       "echo -e  'y\n'| ssh-keygen -b 4096 -t rsa -P '' -f /root/.ssh/id_rsa -q",
 
-      "wget -O /tmp/bootstrap-salt.sh stable https://bootstrap.saltstack.com",
-      "sh /tmp/bootstrap-salt.sh -L -X -A ${var.saltmaster_ip}",
+      "wget -O /tmp/bootstrap-salt.sh https://bootstrap.saltstack.com",
+      "sh /tmp/bootstrap-salt.sh -L -X -A ${var.saltmaster_ip} stable",
       "echo '${self.triggers.server_name}' > /etc/salt/minion_id",
       "systemctl restart salt-minion",
       "systemctl enable salt-minion",
