@@ -10,20 +10,20 @@
 #                                                    #
 ######################################################
 
-##############################
-### Database Config
-##############################
-resource "null_resource" "mariadb_config" {
+///////////////////////////////////////////////////////////
+// Nextloud config
+///////////////////////////////////////////////////////////
+resource "null_resource" "nextcloud_config" {
 
   depends_on = [
-    hcloud_server.mariadb
+    hcloud_server.nextcloud
   ]
 
-  count = length(hcloud_server.mariadb)
+  count = length(hcloud_server.nextcloud)
 
   triggers = {
     saltmaster_public_ip = var.saltmaster_public_ip
-    server_name          = hcloud_server.mariadb[count.index].name
+    server_name          = hcloud_server.nextcloud[count.index].name
     private_key          = var.terraform_private_ssh_key
   }
 
@@ -44,7 +44,7 @@ resource "null_resource" "mariadb_config" {
 
     connection {
       private_key = self.triggers.private_key
-      host        = hcloud_server.mariadb[count.index].ipv4_address
+      host        = hcloud_server.nextcloud[count.index].ipv4_address
       user        = "root"
     }
   }

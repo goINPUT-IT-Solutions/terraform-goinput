@@ -25,6 +25,11 @@ terraform {
       source  = "maxlaverse/bitwarden"
       version = "~> 0.2.0"
     }
+
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 3.15.0"
+    }
   }
 }
 

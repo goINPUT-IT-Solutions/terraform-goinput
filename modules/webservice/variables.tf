@@ -48,12 +48,6 @@ variable "firewall_webservice_id" {
 ### Defaults
 ##############################
 
-variable "apache_count" {
-  default   = 1
-  type      = number
-  sensitive = false
-}
-
 variable "service_name" {
   default   = "web"
   type      = string
@@ -70,7 +64,6 @@ variable "domain" {
   sensitive = false
 }
 
-
 ##############################
 ### Saltstack
 ##############################
@@ -85,3 +78,33 @@ variable "saltmaster_public_ip" {
   sensitive = false
 }
 
+##############################
+### Cloudflare
+##############################
+
+variable "dns_zone" {
+  type      = string
+  sensitive = false
+}
+
+##############################
+### Server-Count
+##############################
+
+variable "apache_count" {
+  default   = 1
+  type      = number
+  sensitive = false
+}
+
+variable "jitsi_count" {
+  default   = 1
+  type      = number
+  sensitive = false
+}
+
+variable "nextcloud_count" {
+  default   = 1
+  type      = number
+  sensitive = false
+}

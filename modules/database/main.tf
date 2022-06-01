@@ -33,18 +33,13 @@ terraform {
 ### Random names and passwords
 ##############################
 
-resource "random_pet" "database_names" {
-  length = 1
-  count  = var.server_count
-}
-
 ##############################
 ### Database Server
 ##############################
 
-resource "hcloud_server" "database" {
+resource "hcloud_server" "mariadb" {
   count       = var.server_count
-  name        = "${random_pet.database_names[count.index].id}.${var.service_name}.${var.environment}.${var.domain}"
+  name        = (count.index >= 9 ? "mariadb${count.index + 1}.${var.environment}.${var.domain}" : "mariadb0${count.index + 1}.${var.environment}.${var.domain}")
   image       = "ubuntu-20.04"
   server_type = "cx11"
 
@@ -60,9 +55,9 @@ resource "hcloud_server" "database" {
 }
 
 resource "hcloud_server_network" "database_network" {
-  count = length(hcloud_server.database)
+  count = length(hcloud_server.mariadb)
 
-  server_id  = hcloud_server.database[count.index].id
+  server_id  = hcloud_server.mariadb[count.index].id
   network_id = var.network_webservice_id
 }
 
@@ -70,42 +65,42 @@ resource "hcloud_server_network" "database_network" {
 ### REVERSE DNS
 ##############################
 
-resource "hcloud_rdns" "database_rdns_ipv4" {
-  count = length(hcloud_server.database)
+resource "hcloud_rdns" "mariadb_rdns_ipv4" {
+  count = length(hcloud_server.mariadb)
 
-  server_id  = hcloud_server.database[count.index].id
-  ip_address = hcloud_server.database[count.index].ipv4_address
-  dns_ptr    = hcloud_server.database[count.index].name
+  server_id  = hcloud_server.mariadb[count.index].id
+  ip_address = hcloud_server.mariadb[count.index].ipv4_address
+  dns_ptr    = hcloud_server.mariadb[count.index].name
 }
 
-resource "hcloud_rdns" "database_rdns_ipv6" {
-  count = length(hcloud_server.database)
+resource "hcloud_rdns" "mariadb_rdns_ipv6" {
+  count = length(hcloud_server.mariadb)
 
-  server_id  = hcloud_server.database[count.index].id
-  ip_address = hcloud_server.database[count.index].ipv6_address
-  dns_ptr    = hcloud_server.database[count.index].name
+  server_id  = hcloud_server.mariadb[count.index].id
+  ip_address = hcloud_server.mariadb[count.index].ipv6_address
+  dns_ptr    = hcloud_server.mariadb[count.index].name
 }
 
 ##############################
 ### DNS
 ##############################
 
-resource "cloudflare_record" "database_dns_ipv4" {
-  count = length(hcloud_server.database)
+resource "cloudflare_record" "mariadb_dns_ipv4" {
+  count = length(hcloud_server.mariadb)
 
   zone_id = var.cloudflare_goitservers_com_zone_id
-  name    = hcloud_server.database[count.index].name
-  value   = hcloud_server.database[count.index].ipv4_address
+  name    = hcloud_server.mariadb[count.index].name
+  value   = hcloud_server.mariadb[count.index].ipv4_address
   type    = "A"
   ttl     = 3600
 }
 
-resource "cloudflare_record" "database_dns_ipv6" {
-  count = length(hcloud_server.database)
+resource "cloudflare_record" "mariadb_dns_ipv6" {
+  count = length(hcloud_server.mariadb)
 
   zone_id = var.cloudflare_goitservers_com_zone_id
-  name    = hcloud_server.database[count.index].name
-  value   = hcloud_server.database[count.index].ipv6_address
+  name    = hcloud_server.mariadb[count.index].name
+  value   = hcloud_server.mariadb[count.index].ipv6_address
   type    = "AAAA"
   ttl     = 3600
 }

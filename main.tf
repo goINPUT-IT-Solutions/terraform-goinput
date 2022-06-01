@@ -239,9 +239,11 @@ module "webservice" {
   terraform_private_ssh_key_id = hcloud_ssh_key.terraform_private_key.id
   terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
 
-  service_name = "web"
-  domain       = var.domain
-  environment  = var.environment
+  domain      = var.domain
+  environment = var.environment
+
+  # Cloudflare
+  dns_zone = data.cloudflare_zone.dns_zones[var.domain].zone_id
 
   # Server Counts
   apache_count = 3
