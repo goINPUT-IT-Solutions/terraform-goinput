@@ -245,9 +245,10 @@ module "webservice" {
   dns_zone = data.cloudflare_zone.dns_zones[var.domain].zone_id
 
   # Server Counts
-  apache_count = 3
+  apache_count    = 3
   nextcloud_count = 1
-  jitsi_count = 1
+  jitsi_count     = 1
+  wireguard_count = 1
 
   saltmaster_ip        = module.salt.saltstack_webservice_network_ip
   saltmaster_public_ip = module.salt.saltstack_public_ipv4

@@ -102,3 +102,10 @@ variable "nextcloud_count" {
   type      = number
   sensitive = false
 }
+
+variable "wireguard_count" {
+  default   = 1
+  type      = number
+  sensitive = false
+}
+

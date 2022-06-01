@@ -11,19 +11,19 @@
 ######################################################
 
 ///////////////////////////////////////////////////////////
-// Nextloud config
+// Wireguard config
 ///////////////////////////////////////////////////////////
-resource "null_resource" "nextcloud_config" {
+resource "null_resource" "wireguard_config" {
 
   depends_on = [
-    hcloud_server.nextcloud
+    hcloud_server.wireguard
   ]
 
-  count = length(hcloud_server.nextcloud)
+  count = length(hcloud_server.wireguard)
 
   triggers = {
     saltmaster_public_ip = var.saltmaster_public_ip
-    server_name          = hcloud_server.nextcloud[count.index].name
+    server_name          = hcloud_server.wireguard[count.index].name
     private_key          = var.terraform_private_ssh_key
   }
 
@@ -44,7 +44,7 @@ resource "null_resource" "nextcloud_config" {
 
     connection {
       private_key = self.triggers.private_key
-      host        = hcloud_server.nextcloud[count.index].ipv4_address
+      host        = hcloud_server.wireguard[count.index].ipv4_address
       user        = "root"
     }
   }
