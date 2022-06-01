@@ -39,6 +39,11 @@ resource "null_resource" "saltmaster_files" {
   }
 
   provisioner "file" {
+    content     = self.triggers.file_cloudflare_ini
+    destination = "/root/.secrets/cloudflare.ini"
+  }
+
+  provisioner "file" {
     content     = self.triggers.file_install_saltmaster
     destination = "/tmp/install-salt-master.sh"
   }

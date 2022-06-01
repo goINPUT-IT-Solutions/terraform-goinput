@@ -33,10 +33,6 @@ terraform {
 ### Names and passwords
 ##############################
 
-resource "random_pet" "mailserver_names" {
-  length = 1
-}
-
 resource "random_password" "mailserver_random_root_pw" {
   length  = 64
   special = false
@@ -52,7 +48,7 @@ resource "random_password" "mailserver_random_mailcow_pw" {
 ##############################
 
 resource "hcloud_server" "mailserver" {
-  name        = "${random_pet.mailserver_names.id}.${var.service_name}.${var.environment}.${var.domain}"
+  name        = "mail01.${var.environment}.${var.domain}"
   image       = "ubuntu-22.04"
   server_type = "cx31"
 
