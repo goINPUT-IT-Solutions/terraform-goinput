@@ -244,7 +244,7 @@ module "webservice" {
   environment  = var.environment
 
   # Server Counts
-  webserver_count = 4
+  webserver_count = 3
 
   saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
   saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
