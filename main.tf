@@ -246,8 +246,8 @@ module "webservice" {
 
   # Server Counts
   apache_count = 3
-  nextcloud_count = 3
-  jitsi_count = 3
+  nextcloud_count = 1
+  jitsi_count = 1
 
   saltmaster_ip        = module.salt.saltstack_webservice_network_ip
   saltmaster_public_ip = module.salt.saltstack_public_ipv4

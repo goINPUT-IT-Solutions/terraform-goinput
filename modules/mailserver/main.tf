@@ -56,6 +56,13 @@ resource "hcloud_server" "mailserver" {
     "${var.terraform_ssh_key_id}",
     "${var.terraform_private_ssh_key_id}"
   ]
+
+  labels = {
+    distribution = "ubuntu-22.04"
+    service      = "mail"
+    terraform    = true
+  }
+
   location = "fsn1"
 
   firewall_ids = [
