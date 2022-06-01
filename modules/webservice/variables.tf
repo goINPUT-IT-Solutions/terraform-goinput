@@ -48,12 +48,6 @@ variable "firewall_webservice_id" {
 ### Defaults
 ##############################
 
-variable "service_name" {
-  default   = "web"
-  type      = string
-  sensitive = false
-}
-
 variable "environment" {
   type      = string
   sensitive = false

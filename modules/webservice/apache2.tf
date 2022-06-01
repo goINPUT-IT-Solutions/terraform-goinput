@@ -29,6 +29,12 @@ resource "hcloud_server" "apache" {
     "${var.terraform_private_ssh_key_id}"
   ]
 
+  labels = {
+    distribution = "debian-11"
+    service      = "apache2"
+    terraform    = true
+  }
+
   location = (count.index % 2 == 0 ? "fsn1" : "nbg1")
 
   firewall_ids = [

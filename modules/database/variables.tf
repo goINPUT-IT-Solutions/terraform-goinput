@@ -59,12 +59,6 @@ variable "server_count" {
   sensitive = false
 }
 
-variable "service_name" {
-  default   = "web"
-  type      = string
-  sensitive = false
-}
-
 variable "environment" {
   type      = string
   sensitive = false

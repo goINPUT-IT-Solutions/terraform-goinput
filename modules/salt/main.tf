@@ -46,6 +46,12 @@ resource "hcloud_server" "saltbastion" {
   image       = "ubuntu-20.04"
   server_type = "cx21"
 
+  labels = {
+    distribution = "ubuntu-20.04"
+    service      = "salt-master"
+    terraform    = true
+  }
+
   ssh_keys = [
     "${var.terraform_ssh_key_id}",
     "${var.terraform_private_ssh_key_id}"

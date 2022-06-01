@@ -47,6 +47,13 @@ resource "hcloud_server" "mariadb" {
     "${var.terraform_ssh_key_id}",
     "${var.terraform_private_ssh_key_id}",
   ]
+
+  labels = {
+    distribution = "ubuntu-20.04"
+    service      = "mariadb"
+    terraform    = true
+  }
+
   location = "fsn1"
 
   firewall_ids = [

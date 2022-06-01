@@ -164,10 +164,9 @@ module "database" {
   terraform_private_ssh_key_id = hcloud_ssh_key.terraform_private_key.id
   terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
 
-  service_name = "db"
   domain       = var.domain
   environment  = var.environment
-  server_count = 1
+  server_count = 3
 
   saltmaster_ip        = module.salt.saltstack_webservice_network_ip
   saltmaster_public_ip = module.salt.saltstack_public_ipv4
@@ -247,6 +246,8 @@ module "webservice" {
 
   # Server Counts
   apache_count = 3
+  nextcloud_count = 3
+  jitsi_count = 3
 
   saltmaster_ip        = module.salt.saltstack_webservice_network_ip
   saltmaster_public_ip = module.salt.saltstack_public_ipv4
