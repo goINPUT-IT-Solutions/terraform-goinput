@@ -63,7 +63,7 @@ reactor:
     - 'salt/engines/hook/hook/github':
         - /srv/salt/reactor/autodeploy.sls
     - 'salt/minion/*/start':     
-        - /srv/reactor/apply_state.sls
+        - /srv/salt/reactor/apply_state.sls
 
 EOT
 
