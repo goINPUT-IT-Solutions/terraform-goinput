@@ -43,7 +43,19 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 3.15.0"
     }
+
+    github = {
+      source  = "integrations/github"
+      version = "~> 4.0"
+    }
   }
+}
+
+##############################
+### GitHub
+##############################
+provider "github" {
+  token = var.github_token
 }
 
 ##############################

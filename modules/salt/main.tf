@@ -30,6 +30,11 @@ terraform {
       source  = "maxlaverse/bitwarden"
       version = "~> 0.2.0"
     }
+
+    github = {
+      source  = "integrations/github"
+      version = "~> 4.0"
+    }
   }
 }
 
@@ -108,3 +113,27 @@ resource "cloudflare_record" "saltbastion_dns_ipv6" {
 ##############################
 ### Bitwarden
 ##############################
+
+##############################
+### GitHub
+##############################
+
+data "github_repository" "goinput-terraform" {
+  full_name = "goINPUT-IT-Solutions/terraform-goinput"
+}
+
+resource "github_repository_webhook" "goinput-terraform_salt_hook" {
+  repository = data.github_repository.goinput-terraform.name
+
+  name = "Salt Hook"
+
+  configuration {
+    url          = "https://${hcloud_server.saltbastion.name}/hook/github"
+    content_type = "json"
+    insecure_ssl = false
+  }
+
+  active = true
+
+  events = ["push"]
+}

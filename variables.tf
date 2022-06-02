@@ -93,6 +93,15 @@ variable "bitwarden_server" {
 }
 
 ##############################
+### GitHub
+##############################
+
+variable "github_token" {
+  type      = string
+  sensitive = false
+}
+
+##############################
 ### Defaults
 ##############################
 
