@@ -1,13 +1,26 @@
 # goINPUT Terraform Infrastructure
 Repo beinhaltet die Definition unserer derzeitigen Infrastruktur.
 
+Powered by Terraform and SaltStack
+
+---
+
 ## Module
-* database
-* firewall
-* mailserver
-* networks
-* saltbastion
-* webservice
+
+### - database
+Beinhaltet alle notwendigen Resourcen um unsere Datenbank-Server aufzubauen.
+### - firewall
+Definiert alle von dem Servern verwendete Firewalls in der Hetzner Infrastruktur.
+### - mailserver
+Beinhaltet alle notwendigen Resourcen um unsere Mail-Server aufzubauen.
+### - networks
+Definiert alle von dem Servern verwendete Firewalls in der Hetzner Infrastruktur.
+### - salt
+Herzstück der Infrastruktur: Modul um unseren Salt-Master zu bauen.
+### - webservice
+Modul baut alle Webservices auf.
+
+---
 
 ## Provider
 * [hetznercloud/hcloud](https://github.com/hetznercloud/terraform-provider-hcloud)
@@ -15,4 +28,5 @@ Repo beinhaltet die Definition unserer derzeitigen Infrastruktur.
 * [cloudflare/cloudflare](https://github.com/cloudflare/terraform-provider-cloudflare)
 
 ## ToDo
-* Salt Reactor anstelle von Terraform Provisioner nutzen, um u. A. states anzuwenden und Minion Keys zu akzeptieren.
+- Minion Auto Acception absichern.
+- [github.com/salt-hetzner](https://github.com/goINPUT-IT-Solutions/salt-hetzner) Repo bei Commit automatisch pullen
