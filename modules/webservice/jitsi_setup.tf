@@ -26,7 +26,7 @@ resource "null_resource" "jitsi_config" {
     server_name          = hcloud_server.jitsi[count.index].name
     private_key          = var.terraform_private_ssh_key
 
-    server_id            = hcloud_server.apache[count.index].id # Force rebuild if server changes
+    server_id = hcloud_server.apache[count.index].id # Force rebuild if server changes
   }
 
   # make the magic happen on web server
