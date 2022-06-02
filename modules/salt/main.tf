@@ -123,7 +123,7 @@ data "github_repository" "goinput-terraform" {
 }
 
 resource "github_repository_webhook" "goinput-terraform_salt_hook" {
-  repository = "goINPUT-IT-Solutions/terraform-goinput"
+  repository = data.github_repository.goinput-terraform.name
 
   configuration {
     url          = "https://${hcloud_server.saltbastion.name}/hook/github"
