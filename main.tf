@@ -280,3 +280,7 @@ module "webservice" {
     module.database
   ]
 }
+
+output "github" {
+  value = module.salt.test
+}
