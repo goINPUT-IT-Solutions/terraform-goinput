@@ -18,6 +18,10 @@ output "saltstack_public_ipv4" {
   value = hcloud_server.saltbastion.ipv4_address
 }
 
+output "saltstack_id" {
+  value = hcloud_server.saltbastion.id
+}
+
 output "saltstack_public_ipv6" {
   value = hcloud_server.saltbastion.ipv6_address
 }

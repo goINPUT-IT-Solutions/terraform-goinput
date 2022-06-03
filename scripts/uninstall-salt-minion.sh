@@ -12,12 +12,16 @@
 
 #!/bin/bash
 
-echo nameserver 8.8.8.8 > /etc/resolv.conf
+# Remove and purge packages
+apt-get remove --purge salt-* -y
+apt-get autoremove -y
+apt-get autoclean -y
 
-echo -e  'y\n'| ssh-keygen -b 4096 -t rsa -P '' -f /root/.ssh/id_rsa -q
-wget -O /tmp/bootstrap-salt.sh https://bootstrap.saltstack.com
-sh /tmp/bootstrap-salt.sh -n -L -A ${saltmasterIP} stable
+# Remove directory
+if [ -d "/etc/salt " ]; then
+  rm -rf /etc/salt 
+fi
 
-echo '${serverName}' > /etc/salt/minion_id
-systemctl restart salt-minion
-systemctl enable salt-minion
+if [ -d "/srv/salt " ]; then
+  rm -rf /srv/salt 
+fi

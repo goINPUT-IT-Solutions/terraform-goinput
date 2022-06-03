@@ -243,34 +243,40 @@ module "mailserver" {
 module "webservice" {
   source = "./modules/webservice"
 
-  ###### Variables
-
-  // SSH
-  terraform_ssh_key_id         = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
-  terraform_private_ssh_key_id = hcloud_ssh_key.terraform_private_key.id
-  terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
-
+  # Variables
+  ## Domain and Environment
   domain      = var.domain
   environment = var.environment
 
-  # Cloudflare
+  ## SSH
+  ssh_key = [
+    data.hcloud_ssh_key.hcloud_terraform_ssh_key.id,
+    hcloud_ssh_key.terraform_private_key.id
+  ]
+
+  private_key = tls_private_key.terraform_private_key.private_key_openssh
+
+  ## Saltmaster
+  saltmaster_id        = module.salt.saltstack_id
+  saltmaster_ip        = module.salt.saltstack_webservice_network_ip
+  saltmaster_public_ip = module.salt.saltstack_public_ipv4
+
+  ## Cloudflare
   dns_zone = data.cloudflare_zone.dns_zones[var.domain].zone_id
 
-  # Server Counts
+  ## Networks and firewalls
+  network_id             = module.networks.webservice_network_id
+  firewall_default_id    = module.firewall.firewall_default_id
+  firewall_webservice_id = module.firewall.firewall_webservice_id
+
+  ## Server Counts
   apache_count    = 3
   nextcloud_count = 1
   jitsi_count     = 1
   wireguard_count = 1
+  bitwarden_count = 1
 
-  saltmaster_ip        = module.salt.saltstack_webservice_network_ip
-  saltmaster_public_ip = module.salt.saltstack_public_ipv4
-
-  /// Networks and Firewall configuration
-  network_webservice_id  = module.networks.webservice_network_id
-  firewall_default_id    = module.firewall.firewall_default_id
-  firewall_webservice_id = module.firewall.firewall_webservice_id
-
-  ##### Dependencies
+  ### Dependencies
 
   depends_on = [
     module.firewall,

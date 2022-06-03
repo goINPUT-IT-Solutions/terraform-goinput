@@ -24,57 +24,32 @@ variable "domain" {
   sensitive = false
 }
 
+variable "server_name" {
+  type      = string
+  sensitive = false
+}
+variable "server_count" {
+  type      = number
+  sensitive = false
+}
+
+variable "server_type" {
+  type      = string
+  sensitive = false
+}
+
+variable "server_backup" {
+  type      = bool
+  sensitive = false
+}
+
+variable "server_image" {
+  type      = string
+  sensitive = false
+}
+
 variable "network_id" {
   type      = string
-  sensitive = false
-}
-
-variable "firewall_default_id" {
-  type      = string
-  sensitive = false
-}
-
-variable "firewall_webservice_id" {
-  type      = string
-  sensitive = false
-}
-
-variable "dns_zone" {
-  type      = string
-  sensitive = false
-}
-
-##############################
-### Server counts
-##############################
-
-variable "apache_count" {
-  default   = 1
-  type      = number
-  sensitive = false
-}
-
-variable "nextcloud_count" {
-  default   = 1
-  type      = number
-  sensitive = false
-}
-
-variable "jitsi_count" {
-  default   = 1
-  type      = number
-  sensitive = false
-}
-
-variable "wireguard_count" {
-  default   = 1
-  type      = number
-  sensitive = false
-}
-
-variable "bitwarden_count" {
-  default   = 1
-  type      = number
   sensitive = false
 }
 

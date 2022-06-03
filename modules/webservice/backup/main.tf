@@ -10,14 +10,26 @@
 #                                                    #
 ######################################################
 
-#!/bin/bash
+##############################
+### Required providers
+##############################
 
-echo nameserver 8.8.8.8 > /etc/resolv.conf
+terraform {
+  required_providers {
+    hcloud = {
+      source  = "hetznercloud/hcloud"
+      version = "~> 1.33.2"
+    }
 
-echo -e  'y\n'| ssh-keygen -b 4096 -t rsa -P '' -f /root/.ssh/id_rsa -q
-wget -O /tmp/bootstrap-salt.sh https://bootstrap.saltstack.com
-sh /tmp/bootstrap-salt.sh -n -L -A ${saltmasterIP} stable
+    bitwarden = {
+      source  = "maxlaverse/bitwarden"
+      version = "~> 0.2.0"
+    }
 
-echo '${serverName}' > /etc/salt/minion_id
-systemctl restart salt-minion
-systemctl enable salt-minion
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 3.15.0"
+    }
+  }
+}
+
