@@ -38,7 +38,7 @@ wget -O /tmp/install-salt.sh https://bootstrap.saltstack.com
 chmod +x /tmp/install-salt.sh
 
 # Install salt
-/tmp/install-salt.sh -n -M -L -A main stable   # Also install salt-master
+/tmp/install-salt.sh -n -M -L -N stable   # Also install salt-master
                                             # Also install salt-cloud and required python-libcloud package
                                             # Pass the salt-master DNS name or IP. This will be stored under ${BS_SALT_ETC_DIR}/minion.d/99-master-address.conf
 apt-get install salt-api -y
