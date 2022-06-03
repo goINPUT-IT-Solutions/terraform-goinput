@@ -85,3 +85,12 @@ variable "private_key" {
   type      = string
   sensitive = true
 }
+
+##############################
+### Cloudflare
+##############################
+
+variable "dns_zone" {
+  type      = string
+  sensitive = false
+}

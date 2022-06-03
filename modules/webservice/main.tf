@@ -76,4 +76,7 @@ module "servers" {
   ## SSH
   ssh_key     = var.ssh_key
   private_key = var.private_key
+
+  ## Cloudflare
+  dns_zone = var.dns_zone
 }
