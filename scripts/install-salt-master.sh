@@ -60,9 +60,9 @@ file_roots:
 reactor:
     - 'salt/auth':
         - /srv/salt/reactor/new_minion.sls
-        - /srv/salt/reactor/apply_state.sls
     - 'salt/engines/hook/hook/github':
         - /srv/salt/reactor/autodeploy.sls
+        - /srv/salt/reactor/apply_state.sls
     - 'salt/minion/*/start':     
         - /srv/salt/reactor/apply_state.sls
 
