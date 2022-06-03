@@ -118,6 +118,13 @@ resource "null_resource" "webservice_setup" {
     inline = [
       "bash /root/.tf_salt/install-salt-minion.sh"
     ]
+
+    connection {
+      private_key = self.triggers.privateKey
+      host        = self.triggers.serverIP
+      user        = "root"
+    }
+
   }
 
   provisioner "remote-exec" {
@@ -126,12 +133,13 @@ resource "null_resource" "webservice_setup" {
     inline = [
       "bash /root/.tf_salt/uninstall-salt-minion.sh"
     ]
-  }
 
-  connection {
-    private_key = self.triggers.privateKey
-    host        = self.triggers.serverIP
-    user        = "root"
+    connection {
+      private_key = self.triggers.privateKey
+      host        = self.triggers.serverIP
+      user        = "root"
+    }
+
   }
 
   # Remove key on destruction
