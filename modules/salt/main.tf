@@ -122,7 +122,11 @@ data "github_repository" "goinput-terraform" {
   full_name = "goINPUT-IT-Solutions/terraform-goinput"
 }
 
-resource "github_repository_webhook" "goinput-terraform_salt_hook" {
+output "test" {
+  value = data.github_repository.goinput-terraform.name
+}
+
+/*resource "github_repository_webhook" "goinput-terraform_salt_hook" {
   repository = "goINPUT-IT-Solutions/terraform-goinput"
 
   configuration {
@@ -134,4 +138,4 @@ resource "github_repository_webhook" "goinput-terraform_salt_hook" {
   active = true
 
   events = ["push"]
-}
+}*/
