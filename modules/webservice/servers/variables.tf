@@ -53,6 +53,11 @@ variable "network_id" {
   sensitive = false
 }
 
+variable "server_labels" {
+  type      = map(string)
+  sensitive = false
+}
+
 ##############################
 ### Saltmaster
 ##############################

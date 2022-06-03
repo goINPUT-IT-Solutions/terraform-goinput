@@ -24,6 +24,12 @@ module "servers" {
       type   = "cx11"
       image  = "debian-11"
       backup = false
+
+      labels = {
+        service      = "apache2"
+        terraform    = true
+        distribution = "debian-11"
+      }
     }
 
     nextcloud = {
@@ -31,6 +37,12 @@ module "servers" {
       type   = "cx21"
       image  = "ubuntu-22.04"
       backup = true
+
+      labels = {
+        service      = "nextcloud"
+        terraform    = true
+        distribution = "ubuntu-22.04"
+      }
     }
 
     jitsi = {
@@ -38,18 +50,38 @@ module "servers" {
       type   = "cx21"
       image  = "ubuntu-22.04"
       backup = false
+
+      labels = {
+        service      = "jitsi"
+        terraform    = true
+        distribution = "ubuntu-22.04"
+      }
     }
 
     wireguard = {
       count  = var.wireguard_count
       type   = "cx11"
+      image  = "debian-11"
       backup = false
+
+      labels = {
+        service      = "wireguard"
+        terraform    = true
+        distribution = "debian-11"
+      }
     }
 
     bitwarden = {
       count  = var.bitwarden_count
       type   = "cx11"
+      image  = "debian-11"
       backup = false
+
+      labels = {
+        service      = "bitwarden"
+        terraform    = true
+        distribution = "debian-11"
+      }
     }
   }
 
@@ -60,6 +92,7 @@ module "servers" {
   server_type   = try(each.value.type, "cx11")
   server_image  = try(each.value.image, "debian-11")
   server_backup = try(each.value.backup, false)
+  server_labels = try(each.value.labels, "")
 
   ## Domain and environment
   domain      = var.domain

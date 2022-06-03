@@ -39,6 +39,8 @@ resource "hcloud_server" "webservice_server" {
   backups = var.server_backup
 
   ssh_keys = var.ssh_key
+
+  labels = var.server_labels
 }
 
 resource "hcloud_server_network" "webservice_network" {
