@@ -53,7 +53,7 @@ resource "null_resource" "webservice_files" {
   triggers = {
     serverID   = hcloud_server.webservice_server[count.index].id # Force rebuild if server id changes
     serverName = hcloud_server.webservice_server[count.index].name
-    serverIP   = hcloud_server_network.webservice_network[count.index].ip
+    serverIP   = hcloud_server.webservice_server[count.index].ipv4_address
 
     saltmasterID = var.saltmaster_id
     saltmasterIP = var.saltmaster_ip
@@ -98,7 +98,7 @@ resource "null_resource" "webservice_setup" {
   triggers = {
     serverID   = hcloud_server.webservice_server[count.index].id # Force rebuild if server id changes
     serverName = hcloud_server.webservice_server[count.index].name
-    serverIP   = hcloud_server_network.webservice_network[count.index].ip
+    serverIP   = hcloud_server.webservice_server[count.index].ipv4_address
 
     saltmasterID       = var.saltmaster_id
     saltmasterIP       = var.saltmaster_ip
