@@ -155,19 +155,19 @@ resource "null_resource" "webservice_setup" {
 ##############################
 
 resource "hcloud_rdns" "webservice_rdns_ipv4" {
-  count = length(hcloud_server.webservice)
+  count = length(hcloud_server.webservice_server)
 
-  server_id  = hcloud_server.webservice[count.index].id
-  ip_address = hcloud_server.webservice[count.index].ipv4_address
-  dns_ptr    = hcloud_server.webservice[count.index].name
+  server_id  = hcloud_server.webservice_server[count.index].id
+  ip_address = hcloud_server.webservice_server[count.index].ipv4_address
+  dns_ptr    = hcloud_server.webservice_server[count.index].name
 }
 
 resource "hcloud_rdns" "webservice_rdns_ipv6" {
-  count = length(hcloud_server.webservice)
+  count = length(hcloud_server.webservice_server)
 
-  server_id  = hcloud_server.webservice[count.index].id
-  ip_address = hcloud_server.webservice[count.index].ipv6_address
-  dns_ptr    = hcloud_server.webservice[count.index].name
+  server_id  = hcloud_server.webservice_server[count.index].id
+  ip_address = hcloud_server.webservice_server[count.index].ipv6_address
+  dns_ptr    = hcloud_server.webservice_server[count.index].name
 }
 
 ##############################
@@ -175,21 +175,21 @@ resource "hcloud_rdns" "webservice_rdns_ipv6" {
 ##############################
 
 resource "cloudflare_record" "webservice_dns_ipv4" {
-  count = length(hcloud_server.webservice)
+  count = length(hcloud_server.webservice_server)
 
   zone_id = var.dns_zone
-  name    = hcloud_server.webservice[count.index].name
-  value   = hcloud_server.webservice[count.index].ipv4_address
+  name    = hcloud_server.webservice_server[count.index].name
+  value   = hcloud_server.webservice_server[count.index].ipv4_address
   type    = "A"
   ttl     = 3600
 }
 
 resource "cloudflare_record" "webservice_dns_ipv6" {
-  count = length(hcloud_server.webservice)
+  count = length(hcloud_server.webservice_server)
 
   zone_id = var.dns_zone
-  name    = hcloud_server.webservice[count.index].name
-  value   = hcloud_server.webservice[count.index].ipv6_address
+  name    = hcloud_server.webservice_server[count.index].name
+  value   = hcloud_server.webservice_server[count.index].ipv6_address
   type    = "AAAA"
   ttl     = 3600
 }
