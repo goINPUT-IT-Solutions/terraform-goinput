@@ -23,3 +23,9 @@ variable "mailserver_hostname" {
   type      = string
   sensitive = false
 }
+
+variable "ttl" {
+  type      = number
+  sensitive = false
+  default   = 1800
+}

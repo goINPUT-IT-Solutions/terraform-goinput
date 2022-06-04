@@ -14,7 +14,7 @@
 ### Servers
 ##############################
 
-module "webservice_servers" {
+module "servers" {
   source = "./servers"
 
   for_each = {
