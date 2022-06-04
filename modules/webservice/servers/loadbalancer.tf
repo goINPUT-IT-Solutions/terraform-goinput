@@ -36,5 +36,5 @@ resource "hcloud_load_balancer_target" "loadbalancer_target" {
   load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
   use_private_ip   = true
 
-  label_selector = tostring([for key, value in var.server_labels : (key == "service" ? "${key}=${value}" : "")])
+  label_selector = join("",[for key, value in var.server_labels : (key == "service" ? "${key}=${value}" : "")])
 }
