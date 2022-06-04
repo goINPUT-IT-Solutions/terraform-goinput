@@ -14,7 +14,7 @@
 ### Servers
 ##############################
 
-module "servers" {
+module "webservice_servers" {
   source = "./servers"
 
   for_each = {
@@ -113,3 +113,5 @@ module "servers" {
   ## Cloudflare
   dns_zone = var.dns_zone
 }
+
+

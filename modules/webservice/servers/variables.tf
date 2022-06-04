@@ -24,6 +24,10 @@ variable "domain" {
   sensitive = false
 }
 
+##############################
+### Servers
+##############################
+
 variable "server_name" {
   type      = string
   sensitive = false
@@ -48,15 +52,19 @@ variable "server_image" {
   sensitive = false
 }
 
+variable "server_labels" {
+  type      = map(string)
+  sensitive = false
+}
+
 variable "network_id" {
   type      = string
   sensitive = false
 }
 
-variable "server_labels" {
-  type      = map(string)
-  sensitive = false
-}
+##############################
+### Loadbalancer
+##############################
 
 ##############################
 ### Saltmaster
