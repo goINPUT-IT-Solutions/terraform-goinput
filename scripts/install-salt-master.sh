@@ -55,7 +55,8 @@ fi
 cat <<EOT > /etc/salt/master.d/reactor.conf
 file_roots:
     base:
-        - /srv/salt
+        - /srv/salt/states
+        - /srv/salt/pillar
 
 reactor:
     - 'salt/auth':
