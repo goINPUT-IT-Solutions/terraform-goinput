@@ -32,8 +32,8 @@ resource "hcloud_load_balancer_service" "loadbalancer_service_http" {
   load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
   protocol         = var.loadbalancer_protocol
   proxyprotocol    = var.loadbalancer_proxyprotocol
-  listen_port      = var.loadbalancer_port
-  destination_port = var.loadbalancer_port
+  listen_port      = var.loadbalancer_listen_port
+  destination_port = var.loadbalancer_destination_port
 
   http {
     certificates  = (var.loadbalancer_protocol == "https" ? [hcloud_uploaded_certificate.loadbalancer_certificate[count.index].id, var.goinput_certificate_id] : [])

@@ -243,7 +243,7 @@ module "servers" {
       loadbalancer_service = {
         proxyprotocol = false
         protocol      = "tcp"
-        port          = 3306
+        listen_port   = 3306
       }
 
       labels = {
@@ -273,9 +273,10 @@ module "servers" {
       backup = false
 
       loadbalancer_service = {
-        proxyprotocol = false
-        protocol      = "https"
-        port          = 443
+        proxyprotocol    = false
+        protocol         = "https"
+        listen_port      = 443
+        destination_port = 80
       }
 
       labels = {
@@ -360,9 +361,10 @@ module "servers" {
   saltmaster_public_ip = module.salt.saltstack_public_ipv4
 
   ## Loadbalancer
-  loadbalancer_protocol      = try(each.value.loadbalancer_service.protocol, "http")
-  loadbalancer_proxyprotocol = try(each.value.loadbalancer_service.proxyprotocol, false)
-  loadbalancer_port          = try(each.value.loadbalancer_service.port, 80)
+  loadbalancer_protocol         = try(each.value.loadbalancer_service.protocol, "http")
+  loadbalancer_proxyprotocol    = try(each.value.loadbalancer_service.proxyprotocol, false)
+  loadbalancer_listen_port      = try(each.value.loadbalancer_service.listen_port, 80)
+  loadbalancer_destination_port = (can(each.value.loadbalancer_service.destination_port) == true ? try(each.value.loadbalancer_service.destination_port, 80) : try(each.value.loadbalancer_service.listen_port, 80))
 
   ## SSH
   ssh_key = [

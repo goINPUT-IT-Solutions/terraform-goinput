@@ -146,7 +146,12 @@ variable "loadbalancer_protocol" {
   sensitive = false
 }
 
-variable "loadbalancer_port" {
+variable "loadbalancer_destination_port" {
+  type      = number
+  sensitive = false
+}
+
+variable "loadbalancer_listen_port" {
   type      = number
   sensitive = false
 }
