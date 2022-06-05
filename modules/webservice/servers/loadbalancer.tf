@@ -10,6 +10,10 @@
 #                                                    #
 ######################################################
 
+##############################
+### Loadbalancer
+##############################
+
 resource "hcloud_load_balancer" "loadbalancer" {
   count              = (var.server_count > 1 ? 1 : 0)
   name               = "${var.server_name}-lb.${var.environment}.${var.domain}"
@@ -41,4 +45,48 @@ resource "hcloud_load_balancer_target" "loadbalancer_target" {
   use_private_ip   = true
 
   label_selector = join("", [for key, value in var.server_labels : (key == "service" ? "${key}=${value}" : "")])
+}
+
+##############################
+### REVERSE DNS
+##############################
+
+resource "hcloud_rdns" "loadbalancer_rdns_ipv4" {
+  count = length(hcloud_load_balancer.loadbalancer)
+
+  load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
+  ip_address       = hcloud_load_balancer.loadbalancer[count.index].ipv4
+  dns_ptr          = hcloud_load_balancer.loadbalancer[count.index].name
+}
+
+resource "hcloud_rdns" "loadbalancer_rdns_ipv6" {
+  count = length(hcloud_load_balancer.loadbalancer)
+
+  load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
+  ip_address       = hcloud_load_balancer.loadbalancer[count.index].ipv6
+  dns_ptr          = hcloud_load_balancer.loadbalancer[count.index].name
+}
+
+##############################
+### DNS
+##############################
+
+resource "cloudflare_record" "loadbalancer_dns_ipv4" {
+  count = length(hcloud_load_balancer.loadbalancer)
+
+  zone_id = var.dns_zone
+  name    = hcloud_load_balancer.loadbalancer[count.index].name
+  value   = hcloud_load_balancer.loadbalancer[count.index].ipv4
+  type    = "A"
+  ttl     = 3600
+}
+
+resource "cloudflare_record" "loadbalancer_dns_ipv6" {
+  count = length(hcloud_load_balancer.loadbalancer)
+
+  zone_id = var.dns_zone
+  name    = hcloud_load_balancer.loadbalancer[count.index].name
+  value   = hcloud_load_balancer.loadbalancer[count.index].ipv6
+  type    = "AAAA"
+  ttl     = 3600
 }
