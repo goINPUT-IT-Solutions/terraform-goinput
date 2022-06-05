@@ -19,7 +19,7 @@ terraform {
     organization = "goINPUT"
 
     workspaces {
-      name = "infrastructure-main"
+      name = "infrastructure-staging"
     }
   }
 
@@ -378,7 +378,7 @@ module "dns" {
   zone_id = each.key
 
   ## Mailserver Hostname
-  mailserver_hostname = "mail01.live.goitservers.com"
+  mailserver_hostname = "mail01.staging.goitservers.com"
 
   ## Time To Live (in secounds)
   ttl = 1800
