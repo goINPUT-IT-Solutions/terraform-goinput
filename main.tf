@@ -248,8 +248,8 @@ module "servers" {
         health_check = {
           protocol = "tcp",
           port     = 80,
-          interval = 5,
-          timeout  = 15,
+          interval = 30,
+          timeout  = 30,
           retries  = 4
         }
       }
@@ -290,7 +290,7 @@ module "servers" {
           protocol = "http",
           port     = 80,
           interval = 5,
-          timeout  = 15,
+          timeout  = 5,
           retries  = 4
         }
       }
@@ -385,7 +385,7 @@ module "servers" {
   ### Health Check
   loadbalancer_hc_protocol = try(each.value.loadbalancer_service.health_check.protocol, "tcp")
   loadbalancer_hc_port     = try(each.value.loadbalancer_service.health_check.port, 80)
-  loadbalancer_hc_interval = try(each.value.loadbalancer_service.health_check.interval, 5)
+  loadbalancer_hc_interval = try(each.value.loadbalancer_service.health_check.interval, 30)
   loadbalancer_hc_timeout  = try(each.value.loadbalancer_service.health_check.timeout, 30)
   loadbalancer_hc_retries  = try(each.value.loadbalancer_service.health_check.retries, 10)
 
