@@ -1,5 +1,5 @@
-# Staging environment
-Used later.
+# goINPUT Terraform Infrastructure
+Repo beinhaltet die Definition unserer derzeitigen Infrastruktur.
 
 Powered by Terraform and SaltStack
 
