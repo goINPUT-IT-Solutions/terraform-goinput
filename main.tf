@@ -152,7 +152,7 @@ resource "acme_certificate" "goinput_wildcard_certificate" {
 resource "hcloud_uploaded_certificate" "goinput_wildcard_certificate" {
   name = "goinput-wildcard"
 
-  private_key = tls_private_key.goinput_wildcard_certificate_private_key.private_key_openssh
+  private_key = tls_private_key.goinput_wildcard_certificate_private_key.private_key_pem
   certificate = "${acme_certificate.goinput_wildcard_certificate.certificate_pem}${acme_certificate.goinput_wildcard_certificate.issuer_pem}"
 
   labels = {

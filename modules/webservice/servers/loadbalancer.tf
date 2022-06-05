@@ -137,7 +137,7 @@ resource "hcloud_uploaded_certificate" "loadbalancer_certificate" {
   count = length(hcloud_load_balancer.loadbalancer)
   name  = hcloud_load_balancer.loadbalancer[count.index].name
 
-  private_key = tls_private_key.loadbalancer_certificate_private_key[count.index].private_key_openssh
+  private_key = tls_private_key.loadbalancer_certificate_private_key[count.index].private_key_pem
   certificate = "${acme_certificate.loadbalancer_certificate[count.index].certificate_pem}${acme_certificate.loadbalancer_certificate[count.index].issuer_pem}"
 
   labels = {
