@@ -360,9 +360,9 @@ module "servers" {
   saltmaster_public_ip = module.salt.saltstack_public_ipv4
 
   ## Loadbalancer
-  loadbalancer_protocol      = try(each.value.loadbalancer.protocol, "http")
-  loadbalancer_proxyprotocol = try(each.value.loadbalancer.proxyprotocol, false)
-  loadbalancer_port          = try(each.value.loadbalancer.port, 80)
+  loadbalancer_protocol      = try(each.value.loadbalancer_service.protocol, "http")
+  loadbalancer_proxyprotocol = try(each.value.loadbalancer_service.proxyprotocol, false)
+  loadbalancer_port          = try(each.value.loadbalancer_service.port, 80)
 
   ## SSH
   ssh_key = [
