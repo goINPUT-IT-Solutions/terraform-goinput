@@ -371,11 +371,11 @@ module "servers" {
 module "dns" {
   source = "./modules/dns"
 
-  for_each = data.cloudflare_zone.dns_zones.zone_id
+  for_each = data.cloudflare_zone.dns_zones
 
   # Variables
   ## Zone ID
-  zone_id = each.key
+  zone_id = each.value.zone_id
 
   ## Mailserver Hostname
   mailserver_hostname = "mail01.live.goitservers.com"
