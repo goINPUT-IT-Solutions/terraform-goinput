@@ -47,7 +47,7 @@ resource "hcloud_server" "webservice_server" {
 
   labels = var.server_labels
 
-  placement_group_id = (length(hcloud_placement_group.webservice_placement_group) > 0 ? hcloud_placement_group.webservice_placement_group[0].id : "")
+  placement_group_id = hcloud_placement_group.webservice_placement_group.id
 }
 
 resource "hcloud_server_network" "webservice_network" {
@@ -58,7 +58,6 @@ resource "hcloud_server_network" "webservice_network" {
 }
 
 resource "hcloud_placement_group" "webservice_placement_group" {
-  count = (var.server_count > 1 ? 1 : 0)
   name = "${var.server_name}-placement"
   type = "spread"
   labels = var.server_labels
