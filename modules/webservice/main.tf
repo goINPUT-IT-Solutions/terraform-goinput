@@ -110,8 +110,12 @@ module "servers" {
   ssh_key     = var.ssh_key
   private_key = var.private_key
 
-  ## Cloudflare
-  dns_zone = var.dns_zone
+  ## Cloudflare and Let's Encrypt
+  dns_zone               = var.dns_zone
+  cloudflare_email       = var.cloudflare_email
+  cloudflare_api_key     = var.cloudflare_api_key
+  acme_account_key       = var.acme_account_key
+  goinput_certificate_id = var.goinput_certificate_id
 }
 
 

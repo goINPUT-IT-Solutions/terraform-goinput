@@ -25,6 +25,20 @@ variable "domain" {
 }
 
 ##############################
+### Let's Encrypt
+##############################
+
+variable "acme_account_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "goinput_certificate_id" {
+  type      = string
+  sensitive = false
+}
+
+##############################
 ### Servers
 ##############################
 
@@ -106,4 +120,14 @@ variable "private_key" {
 variable "dns_zone" {
   type      = string
   sensitive = false
+}
+
+variable "cloudflare_email" {
+  type      = string
+  sensitive = false
+}
+
+variable "cloudflare_api_key" {
+  type      = string
+  sensitive = true
 }

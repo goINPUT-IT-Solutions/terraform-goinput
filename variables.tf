@@ -93,6 +93,22 @@ variable "bitwarden_server" {
 }
 
 ##############################
+### Let's Encrypt
+##############################
+
+variable "acme_server_url" {
+  type      = string
+  sensitive = false
+  default   = "https://acme-staging-v02.api.letsencrypt.org/directory"
+}
+
+variable "acme_email" {
+  type      = string
+  sensitive = false
+  default   = "admin@goinput.de"
+}
+
+##############################
 ### GitHub
 ##############################
 

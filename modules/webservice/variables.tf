@@ -39,9 +39,23 @@ variable "firewall_webservice_id" {
   sensitive = false
 }
 
+##############################
+### Cloudflare
+##############################
+
 variable "dns_zone" {
   type      = string
   sensitive = false
+}
+
+variable "cloudflare_email" {
+  type      = string
+  sensitive = false
+}
+
+variable "cloudflare_api_key" {
+  type      = string
+  sensitive = true
 }
 
 ##############################
@@ -109,4 +123,18 @@ variable "ssh_key" {
 variable "private_key" {
   type      = string
   sensitive = true
+}
+
+##############################
+### Let's Encrypt
+##############################
+
+variable "acme_account_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "goinput_certificate_id" {
+  type      = string
+  sensitive = false
 }

@@ -21,6 +21,11 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 3.15.0"
     }
+
+    acme = {
+      source  = "vancluever/acme"
+      version = "~> 2.0"
+    }
   }
 }
 

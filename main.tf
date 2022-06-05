@@ -101,6 +101,68 @@ provider "bitwarden" {
 }
 
 ##############################
+### Let's Encrypt
+##############################
+
+provider "acme" {
+  server_url = var.acme_server_url
+}
+
+resource "tls_private_key" "acme_account_private_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "acme_registration" "acme_account_registration" {
+  account_key_pem = tls_private_key.acme_account_private_key.private_key_pem
+  email_address   = var.acme_email
+}
+
+resource "tls_private_key" "goinput_wildcard_certificate_private_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "tls_cert_request" "goinput_wildcard_certificate_request" {
+  private_key_pem = tls_private_key.goinput_wildcard_certificate_private_key.private_key_pem
+  dns_names = [
+    "goinput.de",
+    "*.goinput.de"
+  ]
+
+  subject {
+    common_name = "goinput.de"
+  }
+}
+
+resource "acme_certificate" "goinput_wildcard_certificate" {
+  account_key_pem         = acme_registration.acme_account_registration.account_key_pem
+  certificate_request_pem = tls_cert_request.goinput_wildcard_certificate_request.cert_request_pem
+
+  dns_challenge {
+    provider = "cloudflare"
+
+    config = {
+      CF_API_EMAIL = var.cloudflare_email
+      CF_API_KEY   = var.cloudflare_api_key
+    }
+  }
+}
+
+resource "hcloud_uploaded_certificate" "goinput_wildcard_certificate" {
+  name = "goinput-wildcard"
+
+  private_key = tls_private_key.goinput_wildcard_certificate_private_key.private_key_openssh
+  certificate = "${acme_certificate.goinput_wildcard_certificate.certificate_pem}${acme_certificate.goinput_wildcard_certificate.issuer_pem}"
+
+  labels = {
+    certificate = "goinput.de"
+    wildcard    = true
+    terraform   = true
+  }
+}
+
+##############################
 ### goINPUT Modules
 ##############################
 
@@ -275,6 +337,12 @@ module "webservice" {
   jitsi_count     = 1
   wireguard_count = 1
   bitwarden_count = 1
+
+  ## Let's Encrypt and Cloudflare
+  cloudflare_email       = var.cloudflare_email
+  cloudflare_api_key     = var.cloudflare_api_key
+  acme_account_key       = acme_registration.acme_account_registration.account_key_pem
+  goinput_certificate_id = hcloud_uploaded_certificate.goinput_wildcard_certificate.id
 
   ### Dependencies
 
