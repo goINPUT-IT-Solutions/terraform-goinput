@@ -62,11 +62,6 @@ variable "service_name" {
   sensitive = false
 }
 
-variable "environment" {
-  type      = string
-  sensitive = false
-}
-
 variable "domain" {
   type      = string
   sensitive = false
