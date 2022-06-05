@@ -19,7 +19,7 @@ terraform {
     organization = "goINPUT"
 
     workspaces {
-      name = "infrastructure-staging"
+      name = "infrastructure-main"
     }
   }
 
@@ -43,7 +43,20 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 3.15.0"
     }
+
+    github = {
+      source  = "integrations/github"
+      version = "~> 4.0"
+    }
   }
+}
+
+##############################
+### GitHub
+##############################
+
+provider "github" {
+  token = var.github_token
 }
 
 ##############################
@@ -89,6 +102,68 @@ provider "bitwarden" {
 }
 
 ##############################
+### Let's Encrypt
+##############################
+
+provider "acme" {
+  server_url = var.acme_server_url
+}
+
+resource "tls_private_key" "acme_account_private_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "acme_registration" "acme_account_registration" {
+  account_key_pem = tls_private_key.acme_account_private_key.private_key_pem
+  email_address   = var.acme_email
+}
+
+resource "tls_private_key" "goinput_wildcard_certificate_private_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "tls_cert_request" "goinput_wildcard_certificate_request" {
+  private_key_pem = tls_private_key.goinput_wildcard_certificate_private_key.private_key_pem
+  dns_names = [
+    "goinput.de",
+    "*.goinput.de"
+  ]
+
+  subject {
+    common_name = "goinput.de"
+  }
+}
+
+resource "acme_certificate" "goinput_wildcard_certificate" {
+  account_key_pem         = acme_registration.acme_account_registration.account_key_pem
+  certificate_request_pem = tls_cert_request.goinput_wildcard_certificate_request.cert_request_pem
+
+  dns_challenge {
+    provider = "cloudflare"
+
+    config = {
+      CF_API_EMAIL = var.cloudflare_email
+      CF_API_KEY   = var.cloudflare_api_key
+    }
+  }
+}
+
+resource "hcloud_uploaded_certificate" "goinput_wildcard_certificate" {
+  name = "goinput-wildcard"
+
+  private_key = tls_private_key.goinput_wildcard_certificate_private_key.private_key_pem
+  certificate = "${acme_certificate.goinput_wildcard_certificate.certificate_pem}${acme_certificate.goinput_wildcard_certificate.issuer_pem}"
+
+  labels = {
+    certificate = "goinput.de"
+    wildcard    = true
+    terraform   = true
+  }
+}
+
+##############################
 ### goINPUT Modules
 ##############################
 
@@ -121,8 +196,8 @@ module "networks" {
   ]
 }
 
-module "saltbastion" {
-  source = "./modules/saltbastion"
+module "salt" {
+  source = "./modules/salt"
 
   ###### Variables
 
@@ -131,10 +206,19 @@ module "saltbastion" {
   terraform_private_ssh_key_id = hcloud_ssh_key.terraform_private_key.id
   terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
 
-  domain                             = var.domain
-  environment                        = var.environment
-  firewall_default_id                = module.firewall.firewall_default_id
-  network_webservice_id              = module.networks.webservice_network_id
+  domain      = var.domain
+  environment = var.environment
+
+  // FIREWALLS
+  firewall_default_id     = module.firewall.firewall_default_id
+  firewall_saltbastion_id = module.firewall.firewall_saltbastion_id
+
+  // Networks
+  network_webservice_id = module.networks.webservice_network_id
+
+  // Cloudflare
+  cloudflare_email                   = var.cloudflare_email
+  cloudflare_api_key                 = var.cloudflare_api_key
   cloudflare_goitservers_com_zone_id = data.cloudflare_zone.dns_zones[var.domain].zone_id
 
   ##### Dependencies
@@ -145,110 +229,161 @@ module "saltbastion" {
   ]
 }
 
-module "database" {
-  source = "./modules/database"
+module "servers" {
+  source = "./modules/servers"
 
-  ###### Variables
+  for_each = {
 
-  // SSH
-  terraform_ssh_key_id         = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
-  terraform_private_ssh_key_id = hcloud_ssh_key.terraform_private_key.id
-  terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
+    mariadb = {
+      count  = 3
+      type   = "cx11"
+      image  = "debian-11"
+      backup = false
 
-  service_name = "db"
-  domain       = var.domain
-  environment  = var.environment
-  server_count = 1
+      labels = {
+        service      = "apache2"
+        terraform    = true
+        distribution = "debian-11"
+      }
+    }
 
-  saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
-  saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
+    mariadb = {
+      count  = 1
+      type   = "cx31"
+      image  = "debian-11"
+      backup = false
 
-  // Cloudflare
-  cloudflare_goitservers_com_zone_id = data.cloudflare_zone.dns_zones[var.domain].zone_id
+      labels = {
+        service      = "apache2"
+        terraform    = true
+        distribution = "debian-11"
+      }
+    }
 
-  /// Networks and Firewall configuration
-  network_webservice_id = module.networks.webservice_network_id
-  firewall_default_id   = module.firewall.firewall_default_id
+    apache = {
+      count  = 3
+      type   = "cx11"
+      image  = "debian-11"
+      backup = false
 
-  ##### Dependencies
+      labels = {
+        service      = "apache2"
+        terraform    = true
+        distribution = "debian-11"
+      }
+    }
+
+    nextcloud = {
+      count  = 1
+      type   = "cx21"
+      image  = "ubuntu-22.04"
+      backup = true
+
+      labels = {
+        service      = "nextcloud"
+        terraform    = true
+        distribution = "ubuntu-22.04"
+      }
+    }
+
+    jitsi = {
+      count  = 1
+      type   = "cx21"
+      image  = "ubuntu-22.04"
+      backup = false
+
+      labels = {
+        service      = "jitsi"
+        terraform    = true
+        distribution = "ubuntu-22.04"
+      }
+    }
+
+    wireguard = {
+      count  = 1
+      type   = "cx11"
+      image  = "debian-11"
+      backup = false
+
+      labels = {
+        service      = "wireguard"
+        terraform    = true
+        distribution = "debian-11"
+      }
+    }
+
+    bitwarden = {
+      count  = 1
+      type   = "cx11"
+      image  = "debian-11"
+      backup = false
+
+      labels = {
+        service      = "bitwarden"
+        terraform    = true
+        distribution = "debian-11"
+      }
+    }
+  }
+
+  # Variables
+  ## Server name and count
+  server_name   = each.key
+  server_count  = try(each.value.count, 0)
+  server_type   = try(each.value.type, "cx11")
+  server_image  = try(each.value.image, "debian-11")
+  server_backup = try(each.value.backup, false)
+  server_labels = try(each.value.labels, "")
+
+  ## Domain and environment
+  domain      = var.domain
+  environment = var.environment
+
+  ## Network
+  network_id = module.networks.webservice_network_id
+
+  ## Saltmaster
+  saltmaster_id        = module.salt.saltstack_id
+  saltmaster_ip        = module.salt.saltstack_webservice_network_ip
+  saltmaster_public_ip = module.salt.saltstack_public_ipv4
+
+  ## SSH
+  ssh_key = [
+    hcloud_ssh_key.terraform_private_key.id,
+    data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
+  ]
+  private_key = tls_private_key.terraform_private_key.private_key_openssh
+
+  ## Cloudflare and Let's Encrypt
+  dns_zone               = data.cloudflare_zone.dns_zones[var.domain].zone_id
+  cloudflare_email       = var.cloudflare_email
+  cloudflare_api_key     = var.cloudflare_api_key
+  acme_account_key       = acme_registration.acme_account_registration.account_key_pem
+  goinput_certificate_id = hcloud_uploaded_certificate.goinput_wildcard_certificate.id
 
   depends_on = [
     module.firewall,
     module.networks,
-    module.saltbastion
+    module.salt
   ]
 }
 
-module "mailserver" {
-  source = "./modules/mailserver"
+module "dns" {
+  source = "./modules/dns"
 
-  ###### Variables
+  for_each = data.cloudflare_zone.dns_zones
 
-  // SSH
-  terraform_ssh_key_id         = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
-  terraform_private_ssh_key_id = hcloud_ssh_key.terraform_private_key.id
-  terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
+  # Variables
+  ## Zone ID
+  zone_id = each.key
 
-  service_name = "mail"
-  domain       = var.domain
-  environment  = var.environment
-  server_count = 1
+  ## Mailserver Hostname
+  mailserver_hostname = "mail01.live.goitservers.com"
 
-  /// Networks and Firewall configuration
-  network_webservice_id  = module.networks.webservice_network_id
-  firewall_default_id    = module.firewall.firewall_default_id
-  firewall_mailserver_id = module.firewall.firewall_mailserver_id
-
-  saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
-  saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
-
-  // Cloudflare
-  cloudflare_goitservers_com_zone_id = data.cloudflare_zone.dns_zones[var.domain].zone_id
-  cloudflare_goinput_de_zone_id      = data.cloudflare_zone.goinput_de.zone_id
-
-  domains_zone_id = [
-    for domain in data.cloudflare_zone.dns_zones : domain.zone_id
-  ]
-
-  ##### Dependencies
+  ## Time To Live (in secounds)
+  ttl = 1800
 
   depends_on = [
-    module.firewall,
-    module.networks,
-    module.saltbastion,
-    module.database
-  ]
-}
-
-module "webservice" {
-  source = "./modules/webservice"
-
-  ###### Variables
-
-  // SSH
-  terraform_ssh_key_id         = data.hcloud_ssh_key.hcloud_terraform_ssh_key.id
-  terraform_private_ssh_key_id = hcloud_ssh_key.terraform_private_key.id
-  terraform_private_ssh_key    = tls_private_key.terraform_private_key.private_key_openssh
-
-  service_name = "web"
-  domain       = var.domain
-  environment  = var.environment
-  server_count = 1
-
-  saltmaster_ip        = module.saltbastion.saltstack_webservice_network_ip
-  saltmaster_public_ip = module.saltbastion.saltstack_public_ipv4
-
-  /// Networks and Firewall configuration
-  network_webservice_id = module.networks.webservice_network_id
-  firewall_default_id   = module.firewall.firewall_default_id
-
-  ##### Dependencies
-
-  depends_on = [
-    module.firewall,
-    module.networks,
-    module.mailserver,
-    module.saltbastion,
-    module.database
+    module.servers
   ]
 }

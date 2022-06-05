@@ -10,20 +10,23 @@
 #                                                    #
 ######################################################
 
-##############################
-### Volumes
-##############################
-
-resource "hcloud_volume" "log_volume" {
-  name     = "mailserver-log-volume"
-  size     = 10
-  format   = "ext4"
-  location = "fsn1"
+output "server_ipv4" {
+  value = {
+      "${var.server_name}" = [for server in hcloud_server.webservice_server : server.ipv4_address]
+  }
+  description = "IPv4 Address of Server"
 }
 
-resource "hcloud_volume" "mail_volume" {
-  name     = "mailserver-mail-volume"
-  size     = 20
-  format   = "ext4"
-  location = "fsn1"
+output "server_ipv6" {
+  value = {
+      "${var.server_name}" = [for server in hcloud_server.webservice_server : server.ipv6_address]
+  }
+  description = "IPv6 Address of Server"
+}
+
+output "server_name" {
+  value = {
+      "${var.server_name}" = [for server in hcloud_server.webservice_server : server.name]
+  }
+  description = "Hostname of Server"
 }

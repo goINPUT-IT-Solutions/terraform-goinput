@@ -11,49 +11,8 @@
 ######################################################
 
 ##############################
-### Hetzner
-##############################
-
-variable "terraform_ssh_key_id" {
-  type      = string
-  sensitive = false
-}
-
-variable "terraform_private_ssh_key_id" {
-  type      = string
-  sensitive = false
-}
-
-variable "terraform_private_ssh_key" {
-  type      = string
-  sensitive = true
-}
-
-variable "network_webservice_id" {
-  type      = string
-  sensitive = false
-}
-
-variable "firewall_default_id" {
-  type      = string
-  sensitive = false
-}
-
-##############################
 ### Defaults
 ##############################
-
-variable "server_count" {
-  default   = 1
-  type      = number
-  sensitive = false
-}
-
-variable "service_name" {
-  default   = "web"
-  type      = string
-  sensitive = false
-}
 
 variable "environment" {
   type      = string
@@ -65,12 +24,67 @@ variable "domain" {
   sensitive = false
 }
 
+##############################
+### Let's Encrypt
+##############################
+
+variable "acme_account_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "goinput_certificate_id" {
+  type      = string
+  sensitive = false
+}
 
 ##############################
-### Saltstack
+### Servers
 ##############################
 
-variable "saltmaster_ip" {
+variable "server_name" {
+  type      = string
+  sensitive = false
+}
+variable "server_count" {
+  type      = number
+  sensitive = false
+}
+
+variable "server_type" {
+  type      = string
+  sensitive = false
+}
+
+variable "server_backup" {
+  type      = bool
+  sensitive = false
+}
+
+variable "server_image" {
+  type      = string
+  sensitive = false
+}
+
+variable "server_labels" {
+  type      = map(string)
+  sensitive = false
+}
+
+variable "network_id" {
+  type      = string
+  sensitive = false
+}
+
+##############################
+### Loadbalancer
+##############################
+
+##############################
+### Saltmaster
+##############################
+
+variable "saltmaster_id" {
   type      = string
   sensitive = false
 }
@@ -80,3 +94,40 @@ variable "saltmaster_public_ip" {
   sensitive = false
 }
 
+variable "saltmaster_ip" {
+  type      = string
+  sensitive = false
+}
+
+##############################
+### SSH
+##############################
+
+variable "ssh_key" {
+  type      = list(number)
+  sensitive = false
+}
+
+variable "private_key" {
+  type      = string
+  sensitive = true
+}
+
+##############################
+### Cloudflare
+##############################
+
+variable "dns_zone" {
+  type      = string
+  sensitive = false
+}
+
+variable "cloudflare_email" {
+  type      = string
+  sensitive = false
+}
+
+variable "cloudflare_api_key" {
+  type      = string
+  sensitive = true
+}

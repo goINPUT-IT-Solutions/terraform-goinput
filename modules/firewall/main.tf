@@ -10,6 +10,10 @@
 #                                                    #
 ######################################################
 
+##############################
+### Required Providers
+##############################
+
 terraform {
   required_providers {
     hcloud = {
@@ -18,6 +22,10 @@ terraform {
     }
   }
 }
+
+##############################
+### Firewall: Default
+##############################
 
 resource "hcloud_firewall" "firewall_default" {
   name = "firewall-default"
@@ -41,6 +49,57 @@ resource "hcloud_firewall" "firewall_default" {
     ]
   }
 }
+
+##############################
+### Firewall: Webservice
+##############################
+
+resource "hcloud_firewall" "firewall_webservice" {
+  name = "firewall-webservice"
+
+  rule {
+    direction = "in"
+    protocol  = "icmp"
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
+  rule {
+    direction = "in"
+    protocol  = "tcp"
+    port      = 22
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
+  rule {
+    direction = "in"
+    protocol  = "tcp"
+    port      = 80
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
+  rule {
+    direction = "in"
+    protocol  = "tcp"
+    port      = 443
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+}
+
+##############################
+### Firewall: Mailserver
+##############################
 
 resource "hcloud_firewall" "firewall_mailserver" {
   name = "firewall-mailserver"
@@ -139,6 +198,43 @@ resource "hcloud_firewall" "firewall_mailserver" {
     direction = "in"
     protocol  = "tcp"
     port      = 80
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+}
+
+##############################
+### Firewall: Saltbastion
+##############################
+
+resource "hcloud_firewall" "firewall_saltbastion" {
+  name = "firewall-saltbastion"
+
+  rule {
+    direction = "in"
+    protocol  = "icmp"
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
+  rule {
+    direction = "in"
+    protocol  = "tcp"
+    port      = 22
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
+  rule {
+    direction = "in"
+    protocol  = "tcp"
+    port      = "9999"
     source_ips = [
       "0.0.0.0/0",
       "::/0"

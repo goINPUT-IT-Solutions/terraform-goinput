@@ -9,3 +9,19 @@
 #    |___/                                           #
 #                                                    #
 ######################################################
+
+#!/bin/bash
+
+# Remove and purge packages
+apt-get remove --purge salt-* -y
+apt-get autoremove -y
+apt-get autoclean -y
+
+# Remove directory
+if [ -d "/etc/salt " ]; then
+  rm -rf /etc/salt 
+fi
+
+if [ -d "/srv/salt " ]; then
+  rm -rf /srv/salt 
+fi

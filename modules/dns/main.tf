@@ -21,7 +21,6 @@ terraform {
 
 // Mailcow DNS Settings
 
-# DOMAIN: goitservers.com
 resource "cloudflare_record" "mailcow_dns_cnames" {
   zone_id = var.zone_id
 
@@ -35,7 +34,7 @@ resource "cloudflare_record" "mailcow_dns_cnames" {
   name  = each.key
   value = var.mailserver_hostname
   type  = "CNAME"
-  ttl   = 3600
+  ttl   = var.ttl
 }
 
 resource "cloudflare_record" "mailcow_dns_mx" {
@@ -49,7 +48,7 @@ resource "cloudflare_record" "mailcow_dns_mx" {
   name     = each.key
   value    = var.mailserver_hostname
   type     = "MX"
-  ttl      = 3600
+  ttl      = var.ttl
   priority = "10"
 }
 
@@ -65,7 +64,7 @@ resource "cloudflare_record" "mailcow_dns_txts" {
   name  = each.key
   value = each.value
   type  = "TXT"
-  ttl   = 3600
+  ttl   = var.ttl
 }
 
 resource "cloudflare_record" "mailcow_dns_srvs" {
@@ -86,7 +85,7 @@ resource "cloudflare_record" "mailcow_dns_srvs" {
 
   name = "@"
   type = "SRV"
-  ttl  = 3600
+  ttl  = var.ttl
 
   data {
     service  = each.key
