@@ -10,26 +10,23 @@
 #                                                    #
 ######################################################
 
-##############################
-### Required providers
-##############################
-
-terraform {
-  required_providers {
-    hcloud = {
-      source  = "hetznercloud/hcloud"
-      version = "~> 1.33.2"
-    }
-
-    bitwarden = {
-      source  = "maxlaverse/bitwarden"
-      version = "~> 0.2.0"
-    }
-
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 3.15.0"
-    }
+output "server_ipv4" {
+  value = {
+      "${var.server_name}" = [for server in hcloud_server.webservice_server : server.ipv4_address]
   }
+  description = "IPv4 Address of Server"
 }
 
+output "server_ipv6" {
+  value = {
+      "${var.server_name}" = [for server in hcloud_server.webservice_server : server.ipv6_address]
+  }
+  description = "IPv6 Address of Server"
+}
+
+output "server_name" {
+  value = {
+      "${var.server_name}" = [for server in hcloud_server.webservice_server : server.name]
+  }
+  description = "Hostname of Server"
+}

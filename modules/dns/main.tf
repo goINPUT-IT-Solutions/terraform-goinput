@@ -21,7 +21,6 @@ terraform {
 
 // Mailcow DNS Settings
 
-# DOMAIN: goitservers.com
 resource "cloudflare_record" "mailcow_dns_cnames" {
   zone_id = var.zone_id
 

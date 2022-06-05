@@ -118,7 +118,7 @@ resource "cloudflare_record" "saltbastion_dns_ipv6" {
 ### GitHub
 ##############################
 
-data "github_repository" "goinput-terraform" {
+/*data "github_repository" "goinput-terraform" {
   full_name = "goINPUT-IT-Solutions/terraform-goinput"
 }
 
@@ -126,7 +126,7 @@ output "test" {
   value = data.github_repository.goinput-terraform.name
 }
 
-/*resource "github_repository_webhook" "goinput-terraform_salt_hook" {
+resource "github_repository_webhook" "goinput-terraform_salt_hook" {
   repository = "goINPUT-IT-Solutions/terraform-goinput"
 
   configuration {
