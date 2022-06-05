@@ -12,21 +12,21 @@
 
 output "server_ipv4" {
   value = {
-      "${var.server_name}" = [for server in hcloud_server.webservice_server : server.ipv4_address]
+    "${var.server_name}" = [for server in hcloud_server.webservice_server : server.ipv4_address]
   }
   description = "IPv4 Address of Server"
 }
 
 output "server_ipv6" {
   value = {
-      "${var.server_name}" = [for server in hcloud_server.webservice_server : server.ipv6_address]
+    "${var.server_name}" = [for server in hcloud_server.webservice_server : server.ipv6_address]
   }
   description = "IPv6 Address of Server"
 }
 
 output "server_name" {
   value = {
-      "${var.server_name}" = [for server in hcloud_server.webservice_server : server.name]
+    "${var.server_name}" = [for server in hcloud_server.webservice_server : server.name]
   }
   description = "Hostname of Server"
 }

@@ -240,8 +240,14 @@ module "servers" {
       image  = "debian-11"
       backup = false
 
+      loadbalancer_service = {
+        proxyprotocol = false
+        protocol      = "tcp"
+        port          = 3306
+      }
+
       labels = {
-        service      = "apache2"
+        service      = "mariadb"
         terraform    = true
         distribution = "debian-11"
       }
@@ -265,6 +271,12 @@ module "servers" {
       type   = "cx11"
       image  = "debian-11"
       backup = false
+
+      loadbalancer_service = {
+        proxyprotocol = false
+        protocol      = "https"
+        port          = 443
+      }
 
       labels = {
         service      = "apache2"
@@ -346,6 +358,11 @@ module "servers" {
   saltmaster_id        = module.salt.saltstack_id
   saltmaster_ip        = module.salt.saltstack_webservice_network_ip
   saltmaster_public_ip = module.salt.saltstack_public_ipv4
+
+  ## Loadbalancer
+  loadbalancer_protocol      = try(each.value.loadbalancer.protocol, "http")
+  loadbalancer_proxyprotocol = try(each.value.loadbalancer.proxyprotocol, false)
+  loadbloadbalancer_port     = try(each.value.loadbalancer.port, 80)
 
   ## SSH
   ssh_key = [

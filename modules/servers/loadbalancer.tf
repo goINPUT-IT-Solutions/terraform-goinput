@@ -30,8 +30,9 @@ resource "hcloud_load_balancer_network" "loadbalancer_network" {
 resource "hcloud_load_balancer_service" "loadbalancer_service_http" {
   count            = length(hcloud_load_balancer.loadbalancer)
   load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
-  protocol         = "https"
-  proxyprotocol    = false
+  protocol         = var.loadbalancer_protocol
+  proxyprotocol    = var.loadbalancer_proxyprotocol
+  destination_port = var.loadbalancer_port
 
   http {
     certificates = [

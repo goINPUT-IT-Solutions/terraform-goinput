@@ -16,21 +16,21 @@
 
 output "server_ipv4" {
   value = [
-      for server,value in module.servers : value.server_ipv4
+    for server, value in module.servers : value.server_ipv4
   ]
   description = "IPv4 Address of Server"
 }
 
 output "server_ipv6" {
   value = [
-      for server,value in module.servers : value.server_ipv6
+    for server, value in module.servers : value.server_ipv6
   ]
   description = "IPv6 Address of Server"
 }
 
 output "server_name" {
   value = [
-      for server,value in module.servers : value.server_ipv6
+    for server, value in module.servers : value.server_ipv6
   ]
   description = "Hostname of Server"
 }

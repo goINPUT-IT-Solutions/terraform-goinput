@@ -131,3 +131,22 @@ variable "cloudflare_api_key" {
   type      = string
   sensitive = true
 }
+
+##############################
+### Loadbalancer
+##############################
+
+variable "loadbalancer_proxyprotocol" {
+  type      = bool
+  sensitive = false
+}
+
+variable "loadbalancer_protocol" {
+  type      = string
+  sensitive = false
+}
+
+variable "loadbalancer_port" {
+  type      = number
+  sensitive = false
+}
