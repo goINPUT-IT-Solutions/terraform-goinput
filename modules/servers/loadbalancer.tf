@@ -35,8 +35,8 @@ resource "hcloud_load_balancer_service" "loadbalancer_service_http" {
   destination_port = var.loadbalancer_port
 
   http {
-    certificates = (var.loadbalancer_protocol == "https" ? [hcloud_uploaded_certificate.loadbalancer_certificate[count.index].id,var.goinput_certificate_id] : [])
-    redirect_http = true
+    certificates  = (var.loadbalancer_protocol == "https" ? [hcloud_uploaded_certificate.loadbalancer_certificate[count.index].id,var.goinput_certificate_id] : [])
+    redirect_http = (var.loadbalancer_protocol == "https" ? true : false)
   }
 }
 
