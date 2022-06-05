@@ -364,7 +364,8 @@ module "servers" {
   depends_on = [
     module.firewall,
     module.networks,
-    module.salt
+    module.salt,
+    hcloud_uploaded_certificate.goinput_wildcard_certificate
   ]
 }
 
