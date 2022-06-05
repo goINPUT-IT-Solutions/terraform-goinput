@@ -247,16 +247,16 @@ module "servers" {
       }
     }
 
-    mariadb = {
+    mail = {
       count  = 1
       type   = "cx31"
-      image  = "debian-11"
+      image  = "ubuntu-22.04"
       backup = false
 
       labels = {
-        service      = "apache2"
+        service      = "mail"
         terraform    = true
-        distribution = "debian-11"
+        distribution = "ubuntu-22.04"
       }
     }
 
