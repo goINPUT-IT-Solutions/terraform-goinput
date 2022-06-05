@@ -55,6 +55,13 @@ resource "hcloud_server_network" "webservice_network" {
   network_id = var.network_id
 }
 
+resource "hcloud_placement_group" "webservice_placement_group" {
+  count = (var.server_count > 1 ? 1 : 0)
+  name = "${var.server_name}-placement"
+  type = "spread"
+  labels = var.server_labels
+}
+
 ##############################
 ### Configuration
 ##############################
