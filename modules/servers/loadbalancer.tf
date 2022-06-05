@@ -46,6 +46,14 @@ resource "hcloud_load_balancer_service" "loadbalancer_service_http" {
     interval = var.loadbalancer_hc_interval
     timeout  = var.loadbalancer_hc_timeout
     retries  = var.loadbalancer_hc_retries
+
+    http {
+      domain       = var.loadbalancer_hc_http_domain
+      path         = var.loadbalancer_hc_http_path
+      response     = var.loadbalancer_hc_http_response
+      tls          = var.loadbalancer_hc_http_tls
+      status_codes = var.loadbalancer_hc_http_status_codes
+    }
   }
 }
 

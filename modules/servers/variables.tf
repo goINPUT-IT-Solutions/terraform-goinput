@@ -192,7 +192,7 @@ variable "loadbalancer_hc_http_domain" {
 }
 
 variable "loadbalancer_hc_http_path" {
-  default   = ""
+  default   = "/"
   type      = string
   sensitive = false
 }

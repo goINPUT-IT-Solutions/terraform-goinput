@@ -246,10 +246,10 @@ module "servers" {
         listen_port   = 3306
 
         health_check = {
-          protocol = "tcp",
-          port     = 80,
-          interval = 30,
-          timeout  = 30,
+          protocol = "tcp"
+          port     = 3306
+          interval = 30
+          timeout  = 30
           retries  = 4
         }
       }
@@ -287,11 +287,15 @@ module "servers" {
         destination_port = 80
 
         health_check = {
-          protocol = "http",
-          port     = 80,
-          interval = 5,
-          timeout  = 5,
+          protocol = "http"
+          port     = 80
+          interval = 5
+          timeout  = 5
           retries  = 4
+
+          http = {
+            tls = false
+          }
         }
       }
 
@@ -388,6 +392,13 @@ module "servers" {
   loadbalancer_hc_interval = try(each.value.loadbalancer_service.health_check.interval, 30)
   loadbalancer_hc_timeout  = try(each.value.loadbalancer_service.health_check.timeout, 30)
   loadbalancer_hc_retries  = try(each.value.loadbalancer_service.health_check.retries, 10)
+
+  #### HC: HTTP
+  loadbalancer_hc_http_domain       = try(each.value.loadbalancer_service.health_check.http.domain, "")
+  loadbalancer_hc_http_path         = try(each.value.loadbalancer_service.health_check.http.path, "/")
+  loadbalancer_hc_http_response     = try(each.value.loadbalancer_service.health_check.http.response, "")
+  loadbalancer_hc_http_tls          = try(each.value.loadbalancer_service.health_check.http.tls, false)
+  loadbalancer_hc_http_status_codes = try(each.value.loadbalancer_service.health_check.http.status_codes, ["2??", "3??"])
 
   ## SSH
   ssh_key = [
