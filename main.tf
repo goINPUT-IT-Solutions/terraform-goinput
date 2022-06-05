@@ -244,6 +244,14 @@ module "servers" {
         proxyprotocol = false
         protocol      = "tcp"
         listen_port   = 3306
+
+        health_check = {
+          protocol = "tcp",
+          port     = 80,
+          interval = 5,
+          timeout  = 15,
+          retries  = 4
+        }
       }
 
       labels = {
@@ -277,6 +285,14 @@ module "servers" {
         protocol         = "https"
         listen_port      = 443
         destination_port = 80
+
+        health_check = {
+          protocol = "http",
+          port     = 80,
+          interval = 5,
+          timeout  = 15,
+          retries  = 4
+        }
       }
 
       labels = {
@@ -365,6 +381,13 @@ module "servers" {
   loadbalancer_proxyprotocol    = try(each.value.loadbalancer_service.proxyprotocol, false)
   loadbalancer_listen_port      = try(each.value.loadbalancer_service.listen_port, 80)
   loadbalancer_destination_port = (can(each.value.loadbalancer_service.destination_port) == true ? try(each.value.loadbalancer_service.destination_port, 80) : try(each.value.loadbalancer_service.listen_port, 80))
+
+  ### Health Check
+  loadbalancer_hc_protocol = try(each.value.loadbalancer_service.health_check.protocol, "tcp")
+  loadbalancer_hc_port     = try(each.value.loadbalancer_service.health_check.port, 80)
+  loadbalancer_hc_interval = try(each.value.loadbalancer_service.health_check.interval, 5)
+  loadbalancer_hc_timeout  = try(each.value.loadbalancer_service.health_check.timeout, 30)
+  loadbalancer_hc_retries  = try(each.value.loadbalancer_service.health_check.retries, 10)
 
   ## SSH
   ssh_key = [

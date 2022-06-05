@@ -155,3 +155,62 @@ variable "loadbalancer_listen_port" {
   type      = number
   sensitive = false
 }
+
+##############################
+### LB: Health Check
+##############################
+
+variable "loadbalancer_hc_protocol" {
+  type      = string
+  sensitive = false
+}
+
+variable "loadbalancer_hc_port" {
+  type      = number
+  sensitive = false
+}
+
+variable "loadbalancer_hc_interval" {
+  type      = number
+  sensitive = false
+}
+
+variable "loadbalancer_hc_timeout" {
+  type      = number
+  sensitive = false
+}
+
+variable "loadbalancer_hc_retries" {
+  type      = number
+  sensitive = false
+}
+
+variable "loadbalancer_hc_http_domain" {
+  default   = ""
+  type      = string
+  sensitive = false
+}
+
+variable "loadbalancer_hc_http_path" {
+  default   = ""
+  type      = string
+  sensitive = false
+}
+
+variable "loadbalancer_hc_http_response" {
+  default   = ""
+  type      = string
+  sensitive = false
+}
+
+variable "loadbalancer_hc_http_tls" {
+  default   = false
+  type      = bool
+  sensitive = false
+}
+
+variable "loadbalancer_hc_http_status_codes" {
+  default   = ["2??", "3??"]
+  type      = list(string)
+  sensitive = false
+}

@@ -22,7 +22,7 @@ resource "hcloud_load_balancer" "loadbalancer" {
 }
 
 resource "hcloud_load_balancer_network" "loadbalancer_network" {
-  count            = length(hcloud_load_balancer.loadbalancer) 
+  count            = length(hcloud_load_balancer.loadbalancer)
   load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
   network_id       = var.network_id
 }
@@ -39,6 +39,14 @@ resource "hcloud_load_balancer_service" "loadbalancer_service_http" {
     certificates  = (var.loadbalancer_protocol == "https" ? [hcloud_uploaded_certificate.loadbalancer_certificate[count.index].id, var.goinput_certificate_id] : [])
     redirect_http = (var.loadbalancer_protocol == "https" ? true : false)
   }
+
+  health_check {
+    protocol = var.loadbalancer_hc_protocol
+    port     = var.loadbalancer_hc_port
+    interval = var.loadbalancer_hc_interval
+    timeout  = var.loadbalancer_hc_timeout
+    retries  = var.loadbalancer_hc_retries
+  }
 }
 
 resource "hcloud_load_balancer_service" "loadbalancer_service_tcp" {
@@ -48,6 +56,14 @@ resource "hcloud_load_balancer_service" "loadbalancer_service_tcp" {
   proxyprotocol    = var.loadbalancer_proxyprotocol
   listen_port      = var.loadbalancer_listen_port
   destination_port = var.loadbalancer_destination_port
+
+  health_check {
+    protocol = var.loadbalancer_hc_protocol
+    port     = var.loadbalancer_hc_port
+    interval = var.loadbalancer_hc_interval
+    timeout  = var.loadbalancer_hc_timeout
+    retries  = var.loadbalancer_hc_retries
+  }
 }
 
 resource "hcloud_load_balancer_target" "loadbalancer_target" {
