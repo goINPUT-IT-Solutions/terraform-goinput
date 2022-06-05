@@ -271,10 +271,10 @@ module "webservice" {
 
   ## Server Counts
   apache_count    = 3
-  nextcloud_count = 1
-  jitsi_count     = 1
-  wireguard_count = 1
-  bitwarden_count = 1
+  nextcloud_count = 3
+  jitsi_count     = 3
+  wireguard_count = 3
+  bitwarden_count = 3
 
   ### Dependencies
 
