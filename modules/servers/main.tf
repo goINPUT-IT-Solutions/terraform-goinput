@@ -46,6 +46,8 @@ resource "hcloud_server" "webservice_server" {
   ssh_keys = var.ssh_key
 
   labels = var.server_labels
+
+  placement_group_id = (length(hcloud_placement_group.webservice_placement_group) > 0 ? hcloud_placement_group.webservice_placement_group[0].id : "")
 }
 
 resource "hcloud_server_network" "webservice_network" {
