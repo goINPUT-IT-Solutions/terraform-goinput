@@ -256,7 +256,7 @@ module "servers" {
   saltmaster_public_ip = module.salt.saltstack_public_ipv4
 
   ## Loadbalancer
-  loadbalancer_services = toset(try(each.value.loadbalancer_service, {}))
+  loadbalancer_services = try(each.value.loadbalancer_service, {})
 
   ## SSH
   ssh_key = [

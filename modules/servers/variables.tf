@@ -137,6 +137,6 @@ variable "cloudflare_api_key" {
 ##############################
 
 variable "loadbalancer_services" {
-  type      = set(string)
+  type      = map(any)
   sensitive = false
 }
