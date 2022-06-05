@@ -58,8 +58,8 @@ resource "hcloud_server_network" "webservice_network" {
 }
 
 resource "hcloud_placement_group" "webservice_placement_group" {
-  name = "${var.server_name}-placement"
-  type = "spread"
+  name   = "${var.server_name}-placement"
+  type   = "spread"
   labels = var.server_labels
 }
 

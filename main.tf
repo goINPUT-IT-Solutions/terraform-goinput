@@ -256,24 +256,26 @@ module "servers" {
   saltmaster_public_ip = module.salt.saltstack_public_ipv4
 
   ## Loadbalancer
-  loadbalancer_protocol         = try(each.value.loadbalancer_service.protocol, "http")
-  loadbalancer_proxyprotocol    = try(each.value.loadbalancer_service.proxyprotocol, false)
-  loadbalancer_listen_port      = try(each.value.loadbalancer_service.listen_port, 80)
-  loadbalancer_destination_port = (can(each.value.loadbalancer_service.destination_port) == true ? try(each.value.loadbalancer_service.destination_port, 80) : try(each.value.loadbalancer_service.listen_port, 80))
+  #loadbalancer_protocol         = try(each.value.loadbalancer_service.protocol, "http")
+  #loadbalancer_proxyprotocol    = try(each.value.loadbalancer_service.proxyprotocol, false)
+  #loadbalancer_listen_port      = try(each.value.loadbalancer_service.listen_port, 80)
+  #loadbalancer_destination_port = (can(each.value.loadbalancer_service.destination_port) == true ? try(each.value.loadbalancer_service.destination_port, 80) : try(each.value.loadbalancer_service.listen_port, 80))
+
+  loadbalancer_services = try(each.value.loadbalancer_service, {})
 
   ### Health Check
-  loadbalancer_hc_protocol = try(each.value.loadbalancer_service.health_check.protocol, "tcp")
-  loadbalancer_hc_port     = try(each.value.loadbalancer_service.health_check.port, 80)
-  loadbalancer_hc_interval = try(each.value.loadbalancer_service.health_check.interval, 30)
-  loadbalancer_hc_timeout  = try(each.value.loadbalancer_service.health_check.timeout, 30)
-  loadbalancer_hc_retries  = try(each.value.loadbalancer_service.health_check.retries, 10)
+  #loadbalancer_hc_protocol = try(each.value.loadbalancer_service.health_check.protocol, "tcp")
+  #loadbalancer_hc_port     = try(each.value.loadbalancer_service.health_check.port, 80)
+  #loadbalancer_hc_interval = try(each.value.loadbalancer_service.health_check.interval, 30)
+  #loadbalancer_hc_timeout  = try(each.value.loadbalancer_service.health_check.timeout, 30)
+  #loadbalancer_hc_retries  = try(each.value.loadbalancer_service.health_check.retries, 10)
 
   #### HC: HTTP
-  loadbalancer_hc_http_domain       = try(each.value.loadbalancer_service.health_check.http.domain, "")
-  loadbalancer_hc_http_path         = try(each.value.loadbalancer_service.health_check.http.path, "/")
-  loadbalancer_hc_http_response     = try(each.value.loadbalancer_service.health_check.http.response, "")
-  loadbalancer_hc_http_tls          = try(each.value.loadbalancer_service.health_check.http.tls, false)
-  loadbalancer_hc_http_status_codes = try(each.value.loadbalancer_service.health_check.http.status_codes, ["2??", "3??"])
+  #loadbalancer_hc_http_domain       = try(each.value.loadbalancer_service.health_check.http.domain, "")
+  #loadbalancer_hc_http_path         = try(each.value.loadbalancer_service.health_check.http.path, "/")
+  #loadbalancer_hc_http_response     = try(each.value.loadbalancer_service.health_check.http.response, "")
+  #loadbalancer_hc_http_tls          = try(each.value.loadbalancer_service.health_check.http.tls, false)
+  #loadbalancer_hc_http_status_codes = try(each.value.loadbalancer_service.health_check.http.status_codes, ["2??", "3??"])
 
   ## SSH
   ssh_key = [

@@ -27,53 +27,6 @@ resource "hcloud_load_balancer_network" "loadbalancer_network" {
   network_id       = var.network_id
 }
 
-resource "hcloud_load_balancer_service" "loadbalancer_service_http" {
-  count            = (var.loadbalancer_protocol == "https" ? length(hcloud_load_balancer.loadbalancer) : 0)
-  load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
-  protocol         = var.loadbalancer_protocol
-  proxyprotocol    = var.loadbalancer_proxyprotocol
-  listen_port      = var.loadbalancer_listen_port
-  destination_port = var.loadbalancer_destination_port
-
-  http {
-    certificates  = (var.loadbalancer_protocol == "https" ? [hcloud_uploaded_certificate.loadbalancer_certificate[count.index].id, var.goinput_certificate_id] : [])
-    redirect_http = (var.loadbalancer_protocol == "https" ? true : false)
-  }
-
-  health_check {
-    protocol = var.loadbalancer_hc_protocol
-    port     = var.loadbalancer_hc_port
-    interval = var.loadbalancer_hc_interval
-    timeout  = var.loadbalancer_hc_timeout
-    retries  = var.loadbalancer_hc_retries
-
-    http {
-      domain       = var.loadbalancer_hc_http_domain
-      path         = var.loadbalancer_hc_http_path
-      response     = var.loadbalancer_hc_http_response
-      tls          = var.loadbalancer_hc_http_tls
-      status_codes = var.loadbalancer_hc_http_status_codes
-    }
-  }
-}
-
-resource "hcloud_load_balancer_service" "loadbalancer_service_tcp" {
-  count            = (var.loadbalancer_protocol == "tcp" ? length(hcloud_load_balancer.loadbalancer) : 0)
-  load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
-  protocol         = var.loadbalancer_protocol
-  proxyprotocol    = var.loadbalancer_proxyprotocol
-  listen_port      = var.loadbalancer_listen_port
-  destination_port = var.loadbalancer_destination_port
-
-  health_check {
-    protocol = var.loadbalancer_hc_protocol
-    port     = var.loadbalancer_hc_port
-    interval = var.loadbalancer_hc_interval
-    timeout  = var.loadbalancer_hc_timeout
-    retries  = var.loadbalancer_hc_retries
-  }
-}
-
 resource "hcloud_load_balancer_target" "loadbalancer_target" {
   depends_on = [
     hcloud_load_balancer_network.loadbalancer_network
@@ -85,6 +38,52 @@ resource "hcloud_load_balancer_target" "loadbalancer_target" {
   use_private_ip   = true
 
   label_selector = join("", [for key, value in var.server_labels : (key == "service" ? "${key}=${value}" : "")])
+}
+
+##############################
+### SERVICES
+##############################
+
+module "lb_service" {
+  source = "./service"
+
+  for_each = var.loadbalancer_services
+
+  # Variables
+  ## Loadbalancer
+  loadbalancer_id = [
+    for loadbalancer in hcloud_load_balancer.loadbalancer : loadbalancer.id
+  ]
+  loadbalancer_count            = try(length(hcloud_load_balancer.loadbalancer), 0)
+  loadbalancer_protocol         = try(each.value.protocol, "http")
+  loadbalancer_proxyprotocol    = try(each.value.proxyprotocol, false)
+  loadbalancer_listen_port      = try(each.value.listen_port, 80)
+  loadbalancer_destination_port = (can(each.value.destination_port) == true ? try(each.value.destination_port, 80) : try(each.value.listen_port, 80))
+
+  ### Health Check
+  loadbalancer_hc_protocol = try(each.value.health_check.protocol, "tcp")
+  loadbalancer_hc_port     = try(each.value.health_check.port, 80)
+  loadbalancer_hc_interval = try(each.value.health_check.interval, 30)
+  loadbalancer_hc_timeout  = try(each.value.health_check.timeout, 30)
+  loadbalancer_hc_retries  = try(each.value.health_check.retries, 10)
+
+  #### HC: HTTP
+  loadbalancer_hc_http_domain       = try(each.value.health_check.http.domain, "")
+  loadbalancer_hc_http_path         = try(each.value.health_check.http.path, "/")
+  loadbalancer_hc_http_response     = try(each.value.health_check.http.response, "")
+  loadbalancer_hc_http_tls          = try(each.value.health_check.http.tls, false)
+  loadbalancer_hc_http_status_codes = try(each.value.health_check.http.status_codes, ["2??", "3??"])
+
+  ## Certificates
+  goinput_certificate_id = var.goinput_certificate_id
+  loadbalancer_certificate_id = [
+    for certificate in hcloud_uploaded_certificate.loadbalancer_certificate : certificate.id
+  ]
+
+  # Depends
+  depends_on = [
+    hcloud_load_balancer.loadbalancer
+  ]
 }
 
 ##############################

@@ -23,16 +23,18 @@ locals {
       backup = false
 
       loadbalancer_service = {
-        proxyprotocol = false
-        protocol      = "tcp"
-        listen_port   = 3306
+        service_1 = {
+          proxyprotocol = false
+          protocol      = "tcp"
+          listen_port   = 3306
 
-        health_check = {
-          protocol = "tcp"
-          port     = 3306
-          interval = 30
-          timeout  = 30
-          retries  = 4
+          health_check = {
+            protocol = "tcp"
+            port     = 3306
+            interval = 30
+            timeout  = 30
+            retries  = 4
+          }
         }
       }
 
@@ -49,6 +51,106 @@ locals {
       image  = "ubuntu-22.04"
       backup = false
 
+      loadbalancer_service = {
+        service_1 = {
+          proxyprotocol = false
+          protocol      = "tcp"
+          listen_port   = 143
+
+          health_check = {
+            protocol = "tcp"
+            port     = 143
+            interval = 30
+            timeout  = 30
+            retries  = 4
+          }
+        }
+
+        service_2 = {
+          proxyprotocol = false
+          protocol      = "tcp"
+          listen_port   = 993
+
+          health_check = {
+            protocol = "tcp"
+            port     = 993
+            interval = 30
+            timeout  = 30
+            retries  = 4
+          }
+        }
+
+        service_3 = {
+          proxyprotocol = false
+          protocol      = "tcp"
+          listen_port   = 110
+
+          health_check = {
+            protocol = "tcp"
+            port     = 110
+            interval = 30
+            timeout  = 30
+            retries  = 4
+          }
+        }
+
+        service_4 = {
+          proxyprotocol = false
+          protocol      = "tcp"
+          listen_port   = 995
+
+          health_check = {
+            protocol = "tcp"
+            port     = 995
+            interval = 30
+            timeout  = 30
+            retries  = 4
+          }
+        }
+
+        service_5 = {
+          proxyprotocol = false
+          protocol      = "tcp"
+          listen_port   = 4190
+
+          health_check = {
+            protocol = "tcp"
+            port     = 4190
+            interval = 30
+            timeout  = 30
+            retries  = 4
+          }
+        }
+
+        service_6 = {
+          proxyprotocol = false
+          protocol      = "tcp"
+          listen_port   = 465
+
+          health_check = {
+            protocol = "tcp"
+            port     = 465
+            interval = 30
+            timeout  = 30
+            retries  = 4
+          }
+        }
+
+        service_7 = {
+          proxyprotocol = false
+          protocol      = "tcp"
+          listen_port   = 587
+
+          health_check = {
+            protocol = "tcp"
+            port     = 587
+            interval = 30
+            timeout  = 30
+            retries  = 4
+          }
+        }
+      }
+
       labels = {
         service      = "mail"
         terraform    = true
@@ -63,20 +165,22 @@ locals {
       backup = false
 
       loadbalancer_service = {
-        proxyprotocol    = false
-        protocol         = "https"
-        listen_port      = 443
-        destination_port = 80
+        service_1 = {
+          proxyprotocol    = false
+          protocol         = "https"
+          listen_port      = 443
+          destination_port = 80
 
-        health_check = {
-          protocol = "http"
-          port     = 80
-          interval = 5
-          timeout  = 5
-          retries  = 4
+          health_check = {
+            protocol = "http"
+            port     = 80
+            interval = 5
+            timeout  = 5
+            retries  = 4
 
-          http = {
-            tls = false
+            http = {
+              tls = false
+            }
           }
         }
       }
