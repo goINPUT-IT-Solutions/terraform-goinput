@@ -362,7 +362,7 @@ module "servers" {
   ## Loadbalancer
   loadbalancer_protocol      = try(each.value.loadbalancer.protocol, "http")
   loadbalancer_proxyprotocol = try(each.value.loadbalancer.proxyprotocol, false)
-  loadbloadbalancer_port     = try(each.value.loadbalancer.port, 80)
+  loadbalancer_port          = try(each.value.loadbalancer.port, 80)
 
   ## SSH
   ssh_key = [
