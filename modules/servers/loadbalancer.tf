@@ -17,7 +17,7 @@
 resource "hcloud_load_balancer" "loadbalancer" {
   count              = (var.server_count > 1 ? 1 : 0)
   name               = (count.index >= 9 ? "${var.server_name}-lb${count.index + 1}.${var.environment}.${var.domain}" : "${var.server_name}-lb0${count.index + 1}.${var.environment}.${var.domain}")
-  load_balancer_type = (var.server_count > 75 ? "lb31" : var.server_count > 25 ? "lb21" : "lb11")
+  load_balancer_type = (var.server_count > 75 || length(var.loadbalancer_services) > 15 ? "lb31" : var.server_count > 25 || length(var.loadbalancer_services) > 5 ? "lb21" : "lb11")
   location           = (count.index % 2 == 0 ? "fsn1" : "nbg1")
 }
 
