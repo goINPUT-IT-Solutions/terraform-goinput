@@ -100,6 +100,10 @@ resource "null_resource" "webservice_files" {
 }
 
 resource "null_resource" "webservice_setup" {
+  depends_on = [
+    null_resource.webservice_files
+  ]
+
   count = length(hcloud_server.webservice_server)
 
   triggers = {

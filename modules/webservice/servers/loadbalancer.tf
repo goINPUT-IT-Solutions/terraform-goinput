@@ -31,6 +31,10 @@ resource "hcloud_load_balancer_service" "loadbalancer_service_http" {
 }
 
 resource "hcloud_load_balancer_target" "loadbalancer_target" {
+  depends_on = [
+    hcloud_load_balancer_network.loadbalancer_network
+  ]
+
   count            = length(hcloud_load_balancer.loadbalancer)
   type             = "label_selector"
   load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
