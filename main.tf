@@ -375,10 +375,10 @@ module "dns" {
 
   # Variables
   ## Zone ID
-  zone_id = each.key
+  zone_id = each.key.zone_id
 
   ## Mailserver Hostname
-  mailserver_hostname = "mail01.live.goitservers.com"
+  mailserver_hostname = "mail01.staging.goitservers.com"
 
   ## Time To Live (in secounds)
   ttl = 1800
