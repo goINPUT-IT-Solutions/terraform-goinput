@@ -232,7 +232,7 @@ module "salt" {
 module "servers" {
   source = "./modules/servers"
 
-  for_each = locals.servers
+  for_each = local.servers
 
   # Variables
   ## Server name and count

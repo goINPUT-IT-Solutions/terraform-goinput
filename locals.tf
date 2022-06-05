@@ -16,7 +16,6 @@
 
 locals {
   servers = {
-
     mariadb = {
       count  = 3
       type   = "cx11"
