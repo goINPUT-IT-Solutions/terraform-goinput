@@ -27,7 +27,7 @@ resource "hcloud_load_balancer_service" "loadbalancer_service_http" {
   count            = length(hcloud_load_balancer.loadbalancer)
   load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
   protocol         = "http"
-  proxyprotocol    = true
+  proxyprotocol    = false
 }
 
 resource "hcloud_load_balancer_target" "loadbalancer_target" {
