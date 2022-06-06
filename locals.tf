@@ -34,7 +34,7 @@ locals {
     }
 
     mariadb = {
-      count  = 3
+      count  = 1
       type   = "cx11"
       image  = "debian-11"
       backup = false
@@ -184,7 +184,7 @@ locals {
     }
 
     apache = {
-      count  = 3
+      count  = 1
       type   = "cx11"
       image  = "debian-11"
       backup = false
@@ -241,7 +241,7 @@ locals {
     }
 
     jitsi = {
-      count  = 1
+      count  = 0
       type   = "cx21"
       image  = "ubuntu-22.04"
       backup = false
@@ -254,7 +254,7 @@ locals {
     }
 
     wireguard = {
-      count  = 1
+      count  = 0
       type   = "cx11"
       image  = "debian-11"
       backup = false
@@ -267,7 +267,7 @@ locals {
     }
 
     bitwarden = {
-      count  = 1
+      count  = 0
       type   = "cx11"
       image  = "debian-11"
       backup = false
