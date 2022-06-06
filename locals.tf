@@ -16,6 +16,23 @@
 
 locals {
   servers = {
+    files = {
+      count  = 1
+      type   = "cx11"
+      image  = "debian-11"
+      backup = false
+
+      labels = {
+        service      = "files"
+        terraform    = true
+        distribution = "debian-11"
+      }
+
+      domains = [
+        "files.goinput.de"
+      ]
+    }
+
     mariadb = {
       count  = 3
       type   = "cx11"
