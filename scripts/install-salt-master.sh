@@ -53,6 +53,10 @@ fi
 
 # Enable Reactor
 cat <<EOT > /etc/salt/master.d/reactor.conf
+pillar_roots:
+    base:
+        - /srv/salt/pillar
+
 file_roots:
     base:
         - /srv/salt
