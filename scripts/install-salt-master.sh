@@ -61,6 +61,7 @@ file_roots:
     base:
         - /srv/salt
         - /srv/salt/states
+        - /etc/salt/gpgkeys
 
 reactor:
     - 'salt/auth':

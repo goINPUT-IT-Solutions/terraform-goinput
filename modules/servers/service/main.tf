@@ -73,3 +73,28 @@ resource "hcloud_load_balancer_service" "loadbalancer_service_https" {
     }
   }
 }
+
+resource "hcloud_load_balancer_service" "loadbalancer_service_http" {
+  count            = (var.loadbalancer_protocol == "http" ? var.loadbalancer_count : 0)
+  load_balancer_id = var.loadbalancer_id[count.index]
+  protocol         = var.loadbalancer_protocol
+  proxyprotocol    = var.loadbalancer_proxyprotocol
+  listen_port      = var.loadbalancer_listen_port
+  destination_port = var.loadbalancer_destination_port
+
+  health_check {
+    protocol = var.loadbalancer_hc_protocol
+    port     = var.loadbalancer_hc_port
+    interval = var.loadbalancer_hc_interval
+    timeout  = var.loadbalancer_hc_timeout
+    retries  = var.loadbalancer_hc_retries
+
+    http {
+      domain       = var.loadbalancer_hc_http_domain
+      path         = var.loadbalancer_hc_http_path
+      response     = var.loadbalancer_hc_http_response
+      tls          = false
+      status_codes = var.loadbalancer_hc_http_status_codes
+    }
+  }
+}
