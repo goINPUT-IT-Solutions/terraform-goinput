@@ -28,7 +28,13 @@ resource "cloudflare_record" "mailcow_dns_cnames" {
     "mails",
     "mail",
     "autodiscover",
-    "autoconfig"
+    "autoconfig",
+    "imap",
+    "imaps",
+    "pop3",
+    "pop3s",
+    "smtp",
+    "smtps"
   ])
 
   name  = each.key
