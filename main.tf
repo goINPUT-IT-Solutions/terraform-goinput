@@ -265,7 +265,11 @@ module "servers" {
   ]
   private_key = tls_private_key.terraform_private_key.private_key_openssh
 
+  ## Domains
+  domains = try(each.value.domains, [])
+
   ## Cloudflare and Let's Encrypt
+  goinputde_zone         = data.cloudflare_zone.goinput_de.zone_id
   dns_zone               = data.cloudflare_zone.dns_zones[var.domain].zone_id
   cloudflare_email       = var.cloudflare_email
   cloudflare_api_key     = var.cloudflare_api_key

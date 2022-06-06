@@ -43,6 +43,10 @@ locals {
         terraform    = true
         distribution = "debian-11"
       }
+
+      domains = [
+        "mariadb.goinput.de"
+      ]
     }
 
     mail = {
@@ -156,6 +160,10 @@ locals {
         terraform    = true
         distribution = "ubuntu-22.04"
       }
+
+      domains = [
+        "mail.goinput.de"
+      ]
     }
 
     apache = {
@@ -190,6 +198,11 @@ locals {
         terraform    = true
         distribution = "debian-11"
       }
+
+      domains = [
+        "www.goinput.de",
+        "goinput.de"
+      ]
     }
 
     nextcloud = {
@@ -203,6 +216,11 @@ locals {
         terraform    = true
         distribution = "ubuntu-22.04"
       }
+
+      domains = [
+        "nextcloud.goinput.de",
+        "cloud.goinput.de"
+      ]
     }
 
     jitsi = {

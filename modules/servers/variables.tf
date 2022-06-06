@@ -117,6 +117,11 @@ variable "private_key" {
 ### Cloudflare
 ##############################
 
+variable "goinputde_zone" {
+  type      = string
+  sensitive = false
+}
+
 variable "dns_zone" {
   type      = string
   sensitive = false
@@ -138,5 +143,14 @@ variable "cloudflare_api_key" {
 
 variable "loadbalancer_services" {
   type      = map(any)
+  sensitive = false
+}
+
+##############################
+### Domains
+##############################
+
+variable "domains" {
+  type      = list(string)
   sensitive = false
 }
