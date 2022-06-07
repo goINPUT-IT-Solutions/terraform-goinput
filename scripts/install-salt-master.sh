@@ -11,6 +11,7 @@
 ######################################################
 
 # File: install-salt-master.sh
+export DEBIAN_FRONTEND=noninteractive
 
 #!/bin/bash
 # Update system

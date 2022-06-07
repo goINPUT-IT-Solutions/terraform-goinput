@@ -11,6 +11,39 @@
 ######################################################
 
 ##############################
+### Terraform x SaltStack
+##############################
+
+resource "null_resource" "saltstack_project" {
+  depends_on = [
+    hcloud_server.saltbastion
+  ]
+
+  triggers = {
+    saltmasterid = "${hcloud_server.saltbastion.id}"
+    saltmasterip = hcloud_server.saltbastion.ipv4_address
+    private_key  = var.terraform_private_ssh_key
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir -pv /srv/salt/terraform"
+    ]
+  }
+
+  provisioner "file" {
+    source      = "${path.root}/salt/"
+    destination = "/srv/salt/terraform"
+  }
+
+  connection {
+    private_key = self.triggers.private_key
+    host        = self.triggers.saltmasterip
+    user        = "root"
+  }
+}
+
+##############################
 ### Salt master config
 ##############################
 
