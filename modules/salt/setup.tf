@@ -56,8 +56,8 @@ resource "null_resource" "saltstack_project" {
   }
 
   connection {
-    private_key = self.triggers.private_key
-    host        = self.triggers.saltmasterip
+    private_key = self.triggers.privateKey
+    host        = self.triggers.serverIP
     user        = "root"
   }
 }
