@@ -46,11 +46,11 @@ apt-get install salt-api -y
 
 
 # Clone git repo
-if [ -d "/srv/salt/base/.git" ]; then
-  echo "Repo is already here. Doing nothing..."
-else
-  git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner /srv/salt/base
-fi
+#if [ -d "/srv/salt/base/.git" ]; then
+#  echo "Repo is already here. Doing nothing..."
+#else
+#  git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner /srv/salt/base
+#fi
 
 # Enable Reactor
 cat <<EOT > /etc/salt/master.d/reactor.conf
@@ -58,7 +58,7 @@ reactor:
     - 'salt/auth':
         - /srv/salt/base/reactor/new_minion.sls
     - 'salt/engines/hook/hook/github':
-        - /srv/salt/base/reactor/autodeploy.sls
+#        - /srv/salt/base/reactor/autodeploy.sls
         - /srv/salt/base/reactor/apply_state_all.sls
     - 'salt/minion/*/start':     
         - /srv/salt/base/reactor/apply_state.sls
@@ -77,16 +77,31 @@ EOT
 
 # Enable File Roots
 cat <<EOT > /etc/salt/master.d/file_roots.conf
+fileserver_backend:
+  - roots
+  - gitfs
+
+gitfs_provider: pygit2
+gitfs_base: main
+
+gitfs_remotes:
+    - https://github.com/goINPUT-IT-Solutions/salt-hetzner.git:   # Git Repo
+        - name: salt_base_file                                     
+        - ssl_verify: True
+        - update_interval: 30
+    - https://github.com/goINPUT-IT-Solutions/salt-hetzner.git:   # Git Repo
+        - name: salt_state_files                                     
+        - root: states
+        - ssl_verify: True
+        - update_interval: 15
+
+
 pillar_roots:
-    base:
-        - /srv/salt/base/pillar
     terraform: 
         - /srv/salt/terraform/pillar
 
 file_roots:
     base:
-        - /srv/salt/base
-        - /srv/salt/base/states
         - /etc/salt/gpgkeys
     terraform: 
         - /srv/salt/terraform/states
