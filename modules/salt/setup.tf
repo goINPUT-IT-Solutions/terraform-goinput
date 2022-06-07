@@ -47,12 +47,12 @@ resource "null_resource" "saltstack_project" {
 
   provisioner "file" {
     content     = self.triggers.file_top_sls
-    destination = "/srv/salt/terraform/salt/states/top.sls"
+    destination = "/srv/salt/terraform/states/top.sls"
   }
 
   provisioner "file" {
     content     = self.triggers.file_mounts_sls
-    destination = "/srv/salt/terraform/salt/states/mounts.sls"
+    destination = "/srv/salt/terraform/states/mounts.sls"
   }
 
   connection {
