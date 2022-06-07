@@ -52,7 +52,7 @@ variable "server_count" {
 }
 
 variable "server_volumes" {
-  type      = map(string)
+  type      = map(any)
   sensitive = false
 }
 
