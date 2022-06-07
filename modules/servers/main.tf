@@ -251,6 +251,9 @@ module "volumes" {
   volume_size  = each.value.size
   volume_fs    = each.value.fs
 
+  ## Labels
+  volume_labels = each.value.labels
+
   ## ServerID, ServerName
   server_name = var.server_name
   volume_serverid = [

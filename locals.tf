@@ -37,11 +37,21 @@ locals {
           size  = 10
           fs    = "ext4"
           mount = "/media/www-data"
+
+          labels = {
+            data      = "Websites"
+            terraform = true
+          }
         }
         log-data = {
           size  = 10
           fs    = "ext4"
           mount = "/var/log"
+
+          labels = {
+            data      = "Logs"
+            terraform = true
+          }
         }
       }
     }
@@ -83,6 +93,11 @@ locals {
           size  = 10
           fs    = "ext4"
           mount = "/var/log"
+
+          labels = {
+            data      = "Logs"
+            terraform = true
+          }
         }
       }
     }
@@ -208,6 +223,11 @@ locals {
           size  = 10
           fs    = "ext4"
           mount = "/var/log"
+
+          labels = {
+            data      = "Logs"
+            terraform = true
+          }
         }
       }
     }
@@ -255,6 +275,11 @@ locals {
           size  = 10
           fs    = "ext4"
           mount = "/var/log"
+
+          labels = {
+            data      = "Logs"
+            terraform = true
+          }
         }
       }
     }
@@ -281,6 +306,11 @@ locals {
           size  = 10
           fs    = "ext4"
           mount = "/var/log"
+
+          labels = {
+            data      = "Logs"
+            terraform = true
+          }
         }
       }
     }
@@ -302,6 +332,11 @@ locals {
           size  = 10
           fs    = "ext4"
           mount = "/var/log"
+
+          labels = {
+            data      = "Logs"
+            terraform = true
+          }
         }
       }
     }
@@ -323,6 +358,11 @@ locals {
           size  = 10
           fs    = "ext4"
           mount = "/var/log"
+
+          labels = {
+            data      = "Logs"
+            terraform = true
+          }
         }
       }
     }
@@ -344,6 +384,11 @@ locals {
           size  = 10
           fs    = "ext4"
           mount = "/var/log"
+
+          labels = {
+            data      = "Logs"
+            terraform = true
+          }
         }
       }
     }

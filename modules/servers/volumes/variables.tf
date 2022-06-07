@@ -29,6 +29,11 @@ variable "volume_name" {
   sensitive = false
 }
 
+variable "volume_labels" {
+  type      = map(string)
+  sensitive = false
+}
+
 variable "volume_size" {
   type      = number
   sensitive = false
