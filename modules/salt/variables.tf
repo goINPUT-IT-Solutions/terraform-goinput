@@ -72,6 +72,11 @@ variable "environment" {
   sensitive = false
 }
 
+variable "salt_servers" {
+  type      = any
+  sensitive = false
+}
+
 ##############################
 ### Cloudflare
 ##############################

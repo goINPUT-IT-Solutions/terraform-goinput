@@ -19,5 +19,12 @@ wget -O /tmp/bootstrap-salt.sh https://bootstrap.saltstack.com
 sh /tmp/bootstrap-salt.sh -n -L -A ${saltmasterIP} stable
 
 echo '${serverName}' > /etc/salt/minion_id
+
+
+echo <<EOT > /etc/salt/minion.d/new_module_run.conf
+use_superseded:
+    - module.run
+EOT
+
 systemctl restart salt-minion
 systemctl enable salt-minion

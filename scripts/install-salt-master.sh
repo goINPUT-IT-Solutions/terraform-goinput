@@ -59,12 +59,12 @@ apt-get install salt-api -y
 cat <<EOT > /etc/salt/master.d/reactor.conf
 reactor:
     - 'salt/auth':
-        - /srv/salt/base/reactor/new_minion.sls
+        - salt://reactor/new_minion.sls
     - 'salt/engines/hook/hook/github':
-#        - /srv/salt/base/reactor/autodeploy.sls
-        - /srv/salt/base/reactor/apply_state_all.sls
+        - /srv/salt/base/reactor/autodeploy.sls
+        - salt://reactor/apply_state_all.sls
     - 'salt/minion/*/start':     
-        - /srv/salt/base/reactor/apply_state.sls
+        - salt://reactor/apply_state.sls
 
 EOT
 
@@ -81,14 +81,24 @@ EOT
 # Enable File Roots
 cat <<EOT > /etc/salt/master.d/file_roots.conf
 fileserver_backend:
-  - roots
-  - gitfs
+    - roots
+    - gitfs
+
+gitfs_global_lock: False
 
 gitfs_provider: pygit2
+gitfs_update_interval: 60
 gitfs_base: main
+
+file_roots:
+    base:
+        - /etc/salt/gpgkeys
+    terraform: 
+        - /srv/salt/terraform/states
 
 gitfs_remotes:
     - https://github.com/goINPUT-IT-Solutions/salt-hetzner.git:   # Git Repo
+        - mountpoint: salt://
 
 ext_pillar:
     - git:
@@ -100,13 +110,6 @@ ext_pillar:
 pillar_roots:
     terraform: 
         - /srv/salt/terraform/pillar
-
-file_roots:
-    base:
-        - /etc/salt/gpgkeys
-    terraform: 
-        - /srv/salt/terraform/states
-
 EOT
 
 # Enable Presence

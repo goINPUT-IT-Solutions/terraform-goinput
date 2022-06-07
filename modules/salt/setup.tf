@@ -14,34 +14,53 @@
 ### Terraform x SaltStack
 ##############################
 
-#resource "null_resource" "saltstack_project" {
-#  depends_on = [
-#    hcloud_server.saltbastion
-#  ]
-#
-#  triggers = {
-#    saltmasterid = "${hcloud_server.saltbastion.id}"
-#    saltmasterip = hcloud_server.saltbastion.ipv4_address
-#    private_key  = var.terraform_private_ssh_key
-#  }
-#
-#  provisioner "remote-exec" {
-#    inline = [
-#      "mkdir -pv /srv/salt/terraform"
-#    ]
-#  }
-#
-#  provisioner "file" {
-#    source      = "${path.root}/salt/"
-#    destination = "/srv/salt/terraform"
-#  }
-#
-#  connection {
-#    private_key = self.triggers.private_key
-#    host        = self.triggers.saltmasterip
-#    user        = "root"
-#  }
-#}
+resource "null_resource" "saltstack_project" {
+  depends_on = [
+    hcloud_server.saltbastion
+  ]
+
+  triggers = {
+    serverID    = hcloud_server.saltbastion.id # Force rebuild if server id changes
+    serverName  = hcloud_server.saltbastion.name
+    serverIP    = hcloud_server.saltbastion.ipv4_address
+    privateKey  = var.terraform_private_ssh_key
+
+    file_top_sls = templatefile("${path.root}/salt/states/top.sls", {
+      servers = [
+        "testa",
+        "testb",
+        "testc"
+      ]
+    })
+
+    file_mounts_sls = templatefile("${path.root}/salt/states/mounts.sls", {
+    })
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir -pv /srv/salt/terraform",
+      "mkdir -pv /srv/salt/terraform/pillar",
+      "mkdir -pv /srv/salt/terraform/states",
+    ]
+  }
+
+  provisioner "file" {
+    content     = self.triggers.file_top_sls
+    destination = "/srv/salt/terraform/salt/states/top.sls"
+  }
+
+  provisioner "file" {
+    content     = self.triggers.file_mounts_sls
+    destination = "/srv/salt/terraform/salt/states/mounts.sls"
+  }
+
+  connection {
+    private_key = self.triggers.private_key
+    host        = self.triggers.saltmasterip
+    user        = "root"
+  }
+}
 
 ##############################
 ### Salt master config
@@ -53,9 +72,11 @@ resource "null_resource" "saltmaster_files" {
   ]
 
   triggers = {
-    saltmasterid = "${hcloud_server.saltbastion.id}"
-    saltmasterip = hcloud_server.saltbastion.ipv4_address
-    private_key  = var.terraform_private_ssh_key
+    serverID   = hcloud_server.saltbastion.id # Force rebuild if server id changes
+    serverName = hcloud_server.saltbastion.name
+    serverIP   = hcloud_server.saltbastion.ipv4_address
+    privateKey = var.terraform_private_ssh_key
+
 
     # Load files and watch for changes on disk
     file_cloudflare_ini = templatefile("${path.root}/files/cloudflare.ini", {
@@ -64,6 +85,10 @@ resource "null_resource" "saltmaster_files" {
     })
 
     file_install_saltmaster = file("${path.root}/scripts/install-salt-master.sh")
+
+    file_generate_gpg_key = templatefile("${path.root}/scripts/generate_gpg_key.sh", {
+      salthost = hcloud_server.saltbastion.name
+    })
   }
 
   provisioner "file" {
@@ -81,9 +106,14 @@ resource "null_resource" "saltmaster_files" {
     destination = "/tmp/install-salt-master.sh"
   }
 
+  provisioner "file" {
+    content     = self.triggers.file_generate_gpg_key
+    destination = "/tmp/generate_gpg_key.sh"
+  }
+
   connection {
-    private_key = self.triggers.private_key
-    host        = self.triggers.saltmasterip
+    private_key = self.triggers.privateKey
+    host        = self.triggers.serverIP
     user        = "root"
   }
 }

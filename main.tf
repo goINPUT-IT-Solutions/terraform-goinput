@@ -221,6 +221,9 @@ module "salt" {
   cloudflare_api_key                 = var.cloudflare_api_key
   cloudflare_goitservers_com_zone_id = data.cloudflare_zone.dns_zones[var.domain].zone_id
 
+  // SaltServers
+  salt_servers = local.servers
+
   ##### Dependencies
 
   depends_on = [

@@ -11,6 +11,7 @@
 ######################################################
 
 #!/bin/bash
+export DEBIAN_FRONTEND=noninteractive
 
 # Remove and purge packages
 apt-get remove --purge salt-* -y

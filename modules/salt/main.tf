@@ -35,12 +35,23 @@ terraform {
       source  = "integrations/github"
       version = "~> 4.0"
     }
+
+    gpg = {
+      source  = "Olivr/gpg"
+      version = "0.2.1"
+    }
   }
 }
 
 ##############################
-### Random names and passwords
+### GPG Private Key
 ##############################
+
+resource "gpg_private_key" "saltbastion_secure_key" {
+  name     = hcloud_server.saltbastion.name
+  email    = "admin@goinput.de"
+  rsa_bits = 4096
+}
 
 ##############################
 ### Salt Bastion server
