@@ -45,32 +45,22 @@ apt-get install salt-api -y
 
 
 # Clone git repo
-if [ -d "/srv/salt/.git" ]; then
+if [ -d "/srv/salt/base/.git" ]; then
   echo "Repo is already here. Doing nothing..."
 else
-  git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner /srv/salt
+  git clone https://github.com/goINPUT-IT-Solutions/salt-hetzner /srv/salt/base
 fi
 
 # Enable Reactor
 cat <<EOT > /etc/salt/master.d/reactor.conf
-pillar_roots:
-    base:
-        - /srv/salt/pillar
-
-file_roots:
-    base:
-        - /srv/salt
-        - /srv/salt/states
-        - /etc/salt/gpgkeys
-
 reactor:
     - 'salt/auth':
-        - /srv/salt/reactor/new_minion.sls
+        - /srv/salt/base/reactor/new_minion.sls
     - 'salt/engines/hook/hook/github':
-        - /srv/salt/reactor/autodeploy.sls
-        - /srv/salt/reactor/apply_state_all.sls
+        - /srv/salt/base/reactor/autodeploy.sls
+        - /srv/salt/base/reactor/apply_state_all.sls
     - 'salt/minion/*/start':     
-        - /srv/salt/reactor/apply_state.sls
+        - /srv/salt/base/reactor/apply_state.sls
 
 EOT
 
@@ -81,16 +71,37 @@ engines:
         port: 9999
         ssl_crt: /etc/letsencrypt/live/$(hostname -f)/fullchain.pem
         ssl_key: /etc/letsencrypt/live/$(hostname -f)/privkey.pem
+
+EOT
+
+# Enable File Roots
+cat <<EOT > /etc/salt/master.d/file_roots.conf
+pillar_roots:
+    base:
+        - /srv/salt/base/pillar
+    terraform: 
+        - /srv/salt/terraform/pillar
+
+file_roots:
+    base:
+        - /srv/salt/base
+        - /srv/salt/base/states
+        - /etc/salt/gpgkeys
+    terraform: 
+        - /srv/salt/terraform/states
+
 EOT
 
 # Enable Presence
 cat <<EOT > /etc/salt/master.d/presence.conf
 presence_events: True
+
 EOT
 
 # Enable Debug
 cat <<EOT > /etc/salt/master.d/debug.conf
 log_level: debug
+
 EOT
 
 # Restart Salt-Master

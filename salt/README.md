@@ -1,0 +1,2 @@
+# Saltstack Projekt für Terraform
+Wird dazu genutzt, um u. a. von Terraform angelegte Volumes in die Systeme zu mounten. Die Kontrolle hierbei hat Terraform. Das Projekt beinhaltet nur Templates, die von Terraform gepflegt und generiert werden.
