@@ -42,9 +42,9 @@ wget -O /tmp/install-salt.sh https://bootstrap.saltstack.com
 chmod +x /tmp/install-salt.sh
 
 # Install salt
-/tmp/install-salt.sh -n -M -L -A $(hostname -f) stable   # Also install salt-master
-                                            # Also install salt-cloud and required python-libcloud package
-                                            # Pass the salt-master DNS name or IP. This will be stored under ${BS_SALT_ETC_DIR}/minion.d/99-master-address.conf
+/tmp/install-salt.sh -a -n -M -L -A $(hostname -f) stable   # Also install salt-master
+                                                            # Also install salt-cloud and required python-libcloud package
+                                                            # Pass the salt-master DNS name or IP. This will be stored under ${BS_SALT_ETC_DIR}/minion.d/99-master-address.conf
 apt-get install salt-api -y
 
 
@@ -95,6 +95,7 @@ ext_pillar:
         # Use 'prod' instead of the branch name 'production' as the environment
         - main https://github.com/goINPUT-IT-Solutions/salt-hetzner.git
             - env: base
+            - root: pillar
 
 pillar_roots:
     terraform: 
