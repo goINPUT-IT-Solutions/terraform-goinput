@@ -89,26 +89,12 @@ gitfs_base: main
 
 gitfs_remotes:
     - https://github.com/goINPUT-IT-Solutions/salt-hetzner.git:   # Git Repo
-        - name: salt_orchestrate_files        
-        - root: orchestrate                             
-        - ssl_verify: True
-        - update_interval: 30
-    - https://github.com/goINPUT-IT-Solutions/salt-hetzner.git:   # Git Repo
-        - name: salt_reactor_files        
-        - root: reactor                             
-        - ssl_verify: True
-        - update_interval: 30
-    - https://github.com/goINPUT-IT-Solutions/salt-hetzner.git:   # Git Repo
-        - name: salt_state_files                                     
-        - root: states
-        - ssl_verify: True
-        - update_interval: 15
 
 ext_pillar:
-  - git:
-    # Use 'prod' instead of the branch name 'production' as the environment
-    - main https://github.com/goINPUT-IT-Solutions/salt-hetzner.git
-      - env: base
+    - git:
+        # Use 'prod' instead of the branch name 'production' as the environment
+        - main https://github.com/goINPUT-IT-Solutions/salt-hetzner.git
+            - env: base
 
 pillar_roots:
     terraform: 
