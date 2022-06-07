@@ -51,6 +51,11 @@ variable "server_count" {
   sensitive = false
 }
 
+variable "server_volumes" {
+  type      = map(string)
+  sensitive = false
+}
+
 variable "server_type" {
   type      = string
   sensitive = false

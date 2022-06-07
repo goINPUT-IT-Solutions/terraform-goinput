@@ -234,3 +234,26 @@ module "dns" {
   domain_ipv6 = (length(hcloud_load_balancer.loadbalancer) > 0 ? hcloud_load_balancer.loadbalancer[0].ipv6 : hcloud_server.webservice_server[0].ipv6_address)
   domain_ttl  = 3600
 }
+
+##############################
+### Volumes
+##############################
+
+module "volumes" {
+  source = "./volumes"
+
+  for_each = var.server_volumes
+
+  # Variables
+  ## Count, Name, Size, Filesystem
+  volume_count = length(hcloud_server.webservice_server)
+  volume_name  = each.key
+  volume_size  = each.value.size
+  volume_fs    = each.value.fs
+
+  ## ServerID, ServerName
+  server_name = var.server_name
+  volume_serverid = [
+    for server in hcloud_server.webservice_server : server.id
+  ]
+}

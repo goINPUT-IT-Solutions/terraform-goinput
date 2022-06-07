@@ -250,6 +250,9 @@ module "servers" {
   ## Network
   network_id = module.networks.webservice_network_id
 
+  ## Volumes
+  server_volumes = try(each.value.volumes, {})
+
   ## Saltmaster
   saltmaster_id        = module.salt.saltstack_id
   saltmaster_ip        = module.salt.saltstack_webservice_network_ip

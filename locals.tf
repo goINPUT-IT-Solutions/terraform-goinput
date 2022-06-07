@@ -31,6 +31,19 @@ locals {
       domains = [
         "files.goinput.de"
       ]
+
+      volumes = {
+        www-data = {
+          size  = 10
+          fs    = "ext4"
+          mount = "/media/www-data"
+        }
+        log-data = {
+          size  = 10
+          fs    = "ext4"
+          mount = "/var/log"
+        }
+      }
     }
 
     mariadb = {
@@ -64,6 +77,14 @@ locals {
       domains = [
         "mariadb.goinput.de"
       ]
+
+      volumes = {
+        log-data = {
+          size  = 10
+          fs    = "ext4"
+          mount = "/var/log"
+        }
+      }
     }
 
     mail = {
@@ -181,6 +202,14 @@ locals {
       domains = [
         "mail.goinput.de"
       ]
+
+      volumes = {
+        log-data = {
+          size  = 10
+          fs    = "ext4"
+          mount = "/var/log"
+        }
+      }
     }
 
     apache = {
@@ -220,6 +249,14 @@ locals {
         "www.goinput.de",
         "goinput.de"
       ]
+
+      volumes = {
+        log-data = {
+          size  = 10
+          fs    = "ext4"
+          mount = "/var/log"
+        }
+      }
     }
 
     nextcloud = {
@@ -238,6 +275,14 @@ locals {
         "nextcloud.goinput.de",
         "cloud.goinput.de"
       ]
+
+      volumes = {
+        log-data = {
+          size  = 10
+          fs    = "ext4"
+          mount = "/var/log"
+        }
+      }
     }
 
     jitsi = {
@@ -250,6 +295,14 @@ locals {
         service      = "jitsi"
         terraform    = true
         distribution = "ubuntu-22.04"
+      }
+
+      volumes = {
+        log-data = {
+          size  = 10
+          fs    = "ext4"
+          mount = "/var/log"
+        }
       }
     }
 
@@ -264,6 +317,14 @@ locals {
         terraform    = true
         distribution = "debian-11"
       }
+
+      volumes = {
+        log-data = {
+          size  = 10
+          fs    = "ext4"
+          mount = "/var/log"
+        }
+      }
     }
 
     bitwarden = {
@@ -276,6 +337,14 @@ locals {
         service      = "bitwarden"
         terraform    = true
         distribution = "debian-11"
+      }
+
+      volumes = {
+        log-data = {
+          size  = 10
+          fs    = "ext4"
+          mount = "/var/log"
+        }
       }
     }
   }
