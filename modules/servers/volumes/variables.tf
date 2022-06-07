@@ -34,7 +34,7 @@ variable "volume_size" {
   sensitive = false
 
   validation {
-    condition     = length(var.volume_size) >= 10
+    condition     = var.volume_size >= 10
     error_message = "Volume minium size is 10 GB."
   }
 }
