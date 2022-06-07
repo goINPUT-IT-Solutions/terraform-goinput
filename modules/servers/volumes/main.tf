@@ -27,7 +27,7 @@ resource "hcloud_volume" "webservice_volume" {
   count     = var.volume_count
   name      = (count.index >= 9 ? "${var.server_name}${count.index}-${var.volume_name}" : "${var.server_name}0${count.index}-${var.volume_name}")
   size      = var.volume_size
-  server_id = var.server_id[count.index]
+  server_id = var.volume_serverid[count.index]
   automount = false
   format    = var.volume_fs
 }
