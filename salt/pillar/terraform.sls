@@ -10,8 +10,4 @@
 #                                                    #
 ######################################################
 
-terraform:
-%{ for key,value in servers }
-    '${key}.${environment}.${domain}':
-        - mounts
-%{ endfor }
+terraform: true

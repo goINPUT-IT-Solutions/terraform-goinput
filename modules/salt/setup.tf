@@ -25,6 +25,15 @@ resource "null_resource" "saltstack_project" {
     serverIP    = hcloud_server.saltbastion.ipv4_address
     privateKey  = var.terraform_private_ssh_key
 
+    file_top_pillar = templatefile("${path.root}/salt/pillar/top.sls", {
+      servers = var.salt_servers
+      environment = var.environment
+      domain = var.domain
+    })
+
+    file_terraform_pillar = templatefile("${path.root}/salt/pillar/terraform.sls", {
+    })
+
     file_top_sls = templatefile("${path.root}/salt/states/top.sls", {
       servers = var.salt_servers
       environment = var.environment
@@ -42,6 +51,17 @@ resource "null_resource" "saltstack_project" {
       "mkdir -pv /srv/salt/terraform/states",
     ]
   }
+
+  provisioner "file" {
+    content     = self.triggers.file_top_pillar
+    destination = "/srv/salt/terraform/pillar/top.sls"
+  }
+
+  provisioner "file" {
+    content     = self.triggers.file_terraform_pillar
+    destination = "/srv/salt/terraform/pillar/terraform.sls"
+  }
+
 
   provisioner "file" {
     content     = self.triggers.file_top_sls

@@ -9,3 +9,9 @@
 #    |___/                                           #
 #                                                    #
 ######################################################
+
+terraform:
+%{ for key,value in servers }
+    '${key}.${environment}.${domain}':
+        - terraform
+%{ endfor }
