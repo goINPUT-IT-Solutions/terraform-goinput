@@ -27,6 +27,8 @@ resource "null_resource" "saltstack_project" {
 
     file_top_sls = templatefile("${path.root}/salt/states/top.sls", {
       servers = var.salt_servers
+      environment = var.environment
+      domain = var.domain
     })
 
     file_mounts_sls = templatefile("${path.root}/salt/states/mounts.sls", {
