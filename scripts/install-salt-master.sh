@@ -97,13 +97,23 @@ file_roots:
         - /srv/salt/terraform/states
 
 gitfs_remotes:
-    - https://github.com/goINPUT-IT-Solutions/salt-hetzner.git:   # Git Repo
+    - https://github.com/goINPUT-IT-Solutions/salt-hetzner.git:   
+        - name: git_states
+        - root: states
         - mountpoint: salt://
+    - https://github.com/goINPUT-IT-Solutions/salt-hetzner.git:   
+        - name: git_reactor
+        - root: reactor
+        - mountpoint: salt://reactor
+    - https://github.com/goINPUT-IT-Solutions/salt-hetzner.git:   
+        - name: git_orchestrate
+        - root: orchestrate
+        - mountpoint: salt://orchestrate
 
 ext_pillar:
     - git:
         # Use 'prod' instead of the branch name 'production' as the environment
-        - main https://github.com/goINPUT-IT-Solutions/salt-hetzner.git
+        - main https://github.com/goINPUT-IT-Solutions/salt-hetzner.git:
             - env: base
             - root: pillar
 
