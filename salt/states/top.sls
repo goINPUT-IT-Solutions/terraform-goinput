@@ -12,6 +12,6 @@
 
 terraform:
 %{ for key,value in servers }
-    '${key}.${environment}.${domain}':
+    '${key}*.${environment}.${domain}':
         - mounts
 %{ endfor }
