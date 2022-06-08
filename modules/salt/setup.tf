@@ -26,11 +26,7 @@ resource "null_resource" "saltstack_project" {
     privateKey  = var.terraform_private_ssh_key
 
     file_top_sls = templatefile("${path.root}/salt/states/top.sls", {
-      servers = [
-        "testa",
-        "testb",
-        "testc"
-      ]
+      servers = var.salt_servers
     })
 
     file_mounts_sls = templatefile("${path.root}/salt/states/mounts.sls", {

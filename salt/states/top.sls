@@ -11,7 +11,7 @@
 ######################################################
 
 terraform:
-%{ for server in servers }
-    '${server}':
+%{ for key,value in servers }
+    '${key}':
         - mounts
 %{ endfor }
