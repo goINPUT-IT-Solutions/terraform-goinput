@@ -17,7 +17,7 @@
 locals {
   servers = {
     files = {
-      count  = 1
+      count  = 0
       type   = "cx11"
       image  = "debian-11"
       backup = false
@@ -103,7 +103,7 @@ locals {
     }
 
     mail = {
-      count  = 1
+      count  = 0
       type   = "cx31"
       image  = "ubuntu-22.04"
       backup = false
@@ -285,7 +285,7 @@ locals {
     }
 
     nextcloud = {
-      count  = 1
+      count  = 0
       type   = "cx21"
       image  = "ubuntu-22.04"
       backup = true
@@ -342,7 +342,7 @@ locals {
     }
 
     wireguard = {
-      count  = 0
+      count  = 1
       type   = "cx11"
       image  = "debian-11"
       backup = false
