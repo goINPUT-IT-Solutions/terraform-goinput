@@ -103,7 +103,7 @@ locals {
     }
 
     mail = {
-      count  = 0
+      count  = 1
       type   = "cx31"
       image  = "ubuntu-22.04"
       backup = false
