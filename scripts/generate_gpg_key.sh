@@ -24,7 +24,7 @@ if [ ! -f "/etc/salt/gpgkeys/.done" ]; then
 
     apt-get install gnupg gnupg2 -y
 
-    echo <<EOT > /etc/salt/gpgkeys/unattended-gpg-key
+    cat <<EOT > /etc/salt/gpgkeys/unattended-gpg-key
 Key-Type: 1
 Key-Length: 4096
 Name-Real: ${salthost} (AUTOGEN)
