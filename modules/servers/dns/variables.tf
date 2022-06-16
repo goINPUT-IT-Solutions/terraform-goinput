@@ -23,7 +23,7 @@ variable "dns_zone" {
 ### Default
 ##############################
 
-variable "count" {
+variable "srv_count" {
   type      = number
   sensitive = false
 }
