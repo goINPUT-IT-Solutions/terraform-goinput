@@ -135,7 +135,7 @@ resource "null_resource" "webservice_setup" {
     privateKey = var.private_key
 
     # Files
-    files_id = null_resource.webservice_files.id # Force rebuild if files change
+    files_id = null_resource.webservice_files[count.index].id # Force rebuild if files change
   }
 
   provisioner "remote-exec" {
