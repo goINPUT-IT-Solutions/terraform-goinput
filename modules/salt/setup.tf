@@ -155,7 +155,9 @@ resource "null_resource" "saltmaster_config" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/install-salt-master.sh",
-      "/tmp/install-salt-master.sh"
+      "/tmp/install-salt-master.sh",
+      "chmod +x /tmp/generate_gpg_key.sh",
+      "/tmp/generate_gpg_key.sh"
     ]
 
     connection {

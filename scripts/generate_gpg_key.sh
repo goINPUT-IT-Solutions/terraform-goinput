@@ -18,6 +18,10 @@ if [ ! -f "/etc/salt/gpgkeys/.done" ]; then
         mkdir -pv /etc/salt/gpgkeys
     fi
 
+     if [ ! -d "/srv/salt" ]; then
+        mkdir -pv /srv/salt
+    fi
+
     apt-get install gnupg gnupg2 -y
 
     echo <<EOT > /tmp/unattended-gpg-key
@@ -35,13 +39,15 @@ EOT
         mkdir -pv /srv/salt/public-key
     fi
 
-    gpg --homedir /etc/salt/gpgkeys --armor --export > /srv/salt/public-keyexported_pubkey.gpg
+    gpg --homedir /etc/salt/gpgkeys --armor --export > /srv/salt/public-key/key.gpg
 
     if [ ! -d "/srv/salt/private-key" ]; then
         mkdir -pv /srv/salt/private-key
     fi
 
-    gpg --homedir /etc/salt/gpgkeys --export-secret-keys --armor > /srv/salt/exported_private.key
+    gpg --homedir /etc/salt/gpgkeys --export-secret-keys --armor > /srv/salt/private-key/key.gpg
+
+    gpg --import /srv/salt/public-key/key.gpg
 
     echo "DONE" > /etc/salt/gpgkeys/.done
 fi
