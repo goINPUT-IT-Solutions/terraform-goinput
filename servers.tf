@@ -233,7 +233,7 @@ locals {
     }
 
     apache = {
-      count  = 3
+      count  = 1
       type   = "cx11"
       image  = "debian-11"
       backup = false
