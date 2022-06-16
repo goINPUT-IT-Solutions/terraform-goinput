@@ -81,8 +81,8 @@ resource "null_resource" "webservice_files" {
     privateKey = var.private_key
 
     files_install_salt_minion = templatefile("${path.root}/scripts/install-salt-minion.sh", {
-      saltmasterIP = self.triggers.saltmasterIP
-      serverName   = self.triggers.serverName
+      saltmasterIP = var.saltmaster_ip
+      serverName   = hcloud_server.webservice_server[count.index].name
     })
 
     files_uninstall_salt_minion = templatefile("${path.root}/scripts/uninstall-salt-minion.sh", {
