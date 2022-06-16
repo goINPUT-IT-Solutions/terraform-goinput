@@ -92,6 +92,7 @@ gitfs_base: main
 
 file_roots:
     base:
+        - /srv/salt
         - /etc/salt/gpgkeys
     terraform: 
         - /srv/salt/terraform/states

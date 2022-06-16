@@ -230,9 +230,9 @@ module "dns" {
   # Variables
   domain_name = each.key
   dns_zone    = var.goinputde_zone
-  domain_ipv4 = (length(hcloud_load_balancer.loadbalancer) > 0 ? hcloud_load_balancer.loadbalancer[0].ipv4 : hcloud_server.webservice_server[0].ipv4_address)
-  domain_ipv6 = (length(hcloud_load_balancer.loadbalancer) > 0 ? hcloud_load_balancer.loadbalancer[0].ipv6 : hcloud_server.webservice_server[0].ipv6_address)
-  domain_ttl  = 3600
+  domain_ipv4 = (length(hcloud_load_balancer.loadbalancer) > 0 ? try(hcloud_load_balancer.loadbalancer[0].ipv4, 0) : try(hcloud_server.webservice_server[0].ipv4_address, 0))
+  domain_ipv6 = (length(hcloud_load_balancer.loadbalancer) > 0 ? try(hcloud_load_balancer.loadbalancer[0].ipv6, 0) : try(hcloud_server.webservice_server[0].ipv6_address, 0))
+  domain_ttl  = 1800
 }
 
 ##############################

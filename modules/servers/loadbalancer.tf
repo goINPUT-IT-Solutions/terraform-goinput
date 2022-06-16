@@ -15,14 +15,14 @@
 ##############################
 
 resource "hcloud_load_balancer" "loadbalancer" {
-  count              = try((var.server_count > 1 ? 1 : 0), 0)
+  count              = var.server_count > 1 ? 1 : 0
   name               = (count.index >= 9 ? "${var.server_name}-lb${count.index + 1}.${var.environment}.${var.domain}" : "${var.server_name}-lb0${count.index + 1}.${var.environment}.${var.domain}")
   load_balancer_type = (var.server_count > 75 || length(var.loadbalancer_services) > 15 ? "lb31" : var.server_count > 25 || length(var.loadbalancer_services) > 5 ? "lb21" : "lb11")
   location           = (count.index % 2 == 0 ? "fsn1" : "nbg1")
 }
 
 resource "hcloud_load_balancer_network" "loadbalancer_network" {
-  count            = try(length(hcloud_load_balancer.loadbalancer), 0)
+  count            = length(hcloud_load_balancer.loadbalancer)
   load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
   network_id       = var.network_id
 }
@@ -32,7 +32,7 @@ resource "hcloud_load_balancer_target" "loadbalancer_target" {
     hcloud_load_balancer_network.loadbalancer_network
   ]
 
-  count            = try(length(hcloud_load_balancer.loadbalancer), 0)
+  count            = length(hcloud_load_balancer.loadbalancer)
   type             = "label_selector"
   load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
   use_private_ip   = true
@@ -54,7 +54,8 @@ module "lb_service" {
   loadbalancer_id = [
     for loadbalancer in hcloud_load_balancer.loadbalancer : loadbalancer.id
   ]
-  loadbalancer_count            = try(length(hcloud_load_balancer.loadbalancer), 0)
+  
+  loadbalancer_count            = length(hcloud_load_balancer.loadbalancer)
   loadbalancer_protocol         = try(each.value.protocol, "http")
   loadbalancer_proxyprotocol    = try(each.value.proxyprotocol, false)
   loadbalancer_listen_port      = try(each.value.listen_port, 80)
@@ -91,7 +92,7 @@ module "lb_service" {
 ##############################
 
 resource "hcloud_rdns" "loadbalancer_rdns_ipv4" {
-  count = try(length(hcloud_load_balancer.loadbalancer), 0)
+  count = length(hcloud_load_balancer.loadbalancer)
 
   load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
   ip_address       = hcloud_load_balancer.loadbalancer[count.index].ipv4
@@ -99,7 +100,7 @@ resource "hcloud_rdns" "loadbalancer_rdns_ipv4" {
 }
 
 resource "hcloud_rdns" "loadbalancer_rdns_ipv6" {
-  count = try(length(hcloud_load_balancer.loadbalancer), 0)
+  count = length(hcloud_load_balancer.loadbalancer)
 
   load_balancer_id = hcloud_load_balancer.loadbalancer[count.index].id
   ip_address       = hcloud_load_balancer.loadbalancer[count.index].ipv6
@@ -111,7 +112,7 @@ resource "hcloud_rdns" "loadbalancer_rdns_ipv6" {
 ##############################
 
 resource "cloudflare_record" "loadbalancer_dns_ipv4" {
-  count = try(length(hcloud_load_balancer.loadbalancer), 0)
+  count = length(hcloud_load_balancer.loadbalancer)
 
   zone_id = var.dns_zone
   name    = hcloud_load_balancer.loadbalancer[count.index].name
@@ -121,7 +122,7 @@ resource "cloudflare_record" "loadbalancer_dns_ipv4" {
 }
 
 resource "cloudflare_record" "loadbalancer_dns_ipv6" {
-  count = try(length(hcloud_load_balancer.loadbalancer), 0)
+  count = length(hcloud_load_balancer.loadbalancer)
 
   zone_id = var.dns_zone
   name    = hcloud_load_balancer.loadbalancer[count.index].name
@@ -135,13 +136,13 @@ resource "cloudflare_record" "loadbalancer_dns_ipv6" {
 ##############################
 
 resource "tls_private_key" "loadbalancer_certificate_private_key" {
-  count     = try(length(hcloud_load_balancer.loadbalancer), 0)
+  count     = length(hcloud_load_balancer.loadbalancer)
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
 resource "tls_cert_request" "loadbalancer_certificate_request" {
-  count           = try(length(hcloud_load_balancer.loadbalancer), 0)
+  count           = length(hcloud_load_balancer.loadbalancer)
   private_key_pem = tls_private_key.loadbalancer_certificate_private_key[count.index].private_key_pem
 
   subject {
@@ -150,7 +151,7 @@ resource "tls_cert_request" "loadbalancer_certificate_request" {
 }
 
 resource "acme_certificate" "loadbalancer_certificate" {
-  count                   = try(length(hcloud_load_balancer.loadbalancer), 0)
+  count                   = length(hcloud_load_balancer.loadbalancer)
   account_key_pem         = var.acme_account_key
   certificate_request_pem = tls_cert_request.loadbalancer_certificate_request[count.index].cert_request_pem
 
@@ -165,7 +166,7 @@ resource "acme_certificate" "loadbalancer_certificate" {
 }
 
 resource "hcloud_uploaded_certificate" "loadbalancer_certificate" {
-  count = try(length(hcloud_load_balancer.loadbalancer), 0)
+  count = length(hcloud_load_balancer.loadbalancer)
   name  = hcloud_load_balancer.loadbalancer[count.index].name
 
   private_key = tls_private_key.loadbalancer_certificate_private_key[count.index].private_key_pem

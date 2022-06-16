@@ -14,7 +14,7 @@
 ### Terraform x SaltStack
 ##############################
 
-resource "null_resource" "saltstack_project" {
+/*resource "null_resource" "saltstack_project" {
   depends_on = [
     hcloud_server.saltbastion
   ]
@@ -78,7 +78,7 @@ resource "null_resource" "saltstack_project" {
     host        = self.triggers.serverIP
     user        = "root"
   }
-}
+}*/
 
 ##############################
 ### Salt master config
