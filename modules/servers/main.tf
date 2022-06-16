@@ -228,6 +228,7 @@ module "dns" {
   for_each = toset(var.domains)
 
   # Variables
+  count       = var.server_count > 0 ? 1 : 0
   domain_name = each.key
   dns_zone    = var.goinputde_zone
   domain_ipv4 = (length(hcloud_load_balancer.loadbalancer) > 0 ? try(hcloud_load_balancer.loadbalancer[0].ipv4, 0) : try(hcloud_server.webservice_server[0].ipv4_address, 0))
