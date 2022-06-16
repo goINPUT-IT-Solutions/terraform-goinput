@@ -133,6 +133,9 @@ resource "null_resource" "webservice_setup" {
     saltmasterPublicIP = var.saltmaster_public_ip
 
     privateKey = var.private_key
+
+    # Files
+    files_id = null_resource.webservice_files.id # Force rebuild if files change
   }
 
   provisioner "remote-exec" {
