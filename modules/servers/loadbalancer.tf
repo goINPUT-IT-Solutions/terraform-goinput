@@ -54,7 +54,7 @@ module "lb_service" {
   loadbalancer_id = [
     for loadbalancer in hcloud_load_balancer.loadbalancer : loadbalancer.id
   ]
-  
+
   loadbalancer_count            = length(hcloud_load_balancer.loadbalancer)
   loadbalancer_protocol         = try(each.value.protocol, "http")
   loadbalancer_proxyprotocol    = try(each.value.proxyprotocol, false)

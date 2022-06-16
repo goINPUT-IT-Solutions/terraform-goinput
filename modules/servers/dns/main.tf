@@ -20,8 +20,7 @@ terraform {
 }
 
 resource "cloudflare_record" "domain_dns_ipv4" {
-  count = var.count
-
+  count   = var.srv_count
   zone_id = var.dns_zone
   name    = var.domain_name
   value   = var.domain_ipv4
@@ -30,8 +29,7 @@ resource "cloudflare_record" "domain_dns_ipv4" {
 }
 
 resource "cloudflare_record" "domain_dns_ipv6" {
-  count = var.count
-
+  count   = var.srv_count
   zone_id = var.dns_zone
   name    = var.domain_name
   value   = var.domain_ipv6

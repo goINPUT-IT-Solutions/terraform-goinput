@@ -26,7 +26,7 @@ terraform {
 ### TCP
 
 resource "hcloud_load_balancer_service" "loadbalancer_service_tcp" {
-  count            = (var.loadbalancer_protocol == "tcp" ? var.loadbalancer_count : 0)
+  count = (var.loadbalancer_protocol == "tcp" ? var.loadbalancer_count : 0)
 
   load_balancer_id = var.loadbalancer_id[count.index]
   protocol         = var.loadbalancer_protocol
@@ -46,7 +46,7 @@ resource "hcloud_load_balancer_service" "loadbalancer_service_tcp" {
 ### HTTPS
 
 resource "hcloud_load_balancer_service" "loadbalancer_service_https" {
-  count            = (var.loadbalancer_protocol == "https" ? var.loadbalancer_count : 0)
+  count = (var.loadbalancer_protocol == "https" ? var.loadbalancer_count : 0)
 
   load_balancer_id = var.loadbalancer_id[count.index]
   protocol         = var.loadbalancer_protocol
@@ -77,7 +77,7 @@ resource "hcloud_load_balancer_service" "loadbalancer_service_https" {
 }
 
 resource "hcloud_load_balancer_service" "loadbalancer_service_http" {
-  count            = (var.loadbalancer_protocol == "http" ? try(var.loadbalancer_count, 0) : 0)
+  count = (var.loadbalancer_protocol == "http" ? try(var.loadbalancer_count, 0) : 0)
 
   load_balancer_id = var.loadbalancer_id[count.index]
   protocol         = var.loadbalancer_protocol
