@@ -19,10 +19,14 @@ terraform {
   }
 }
 
+data "cloudflare_zone" "dns_zone" {
+  name = var.domain_name
+}
+
 resource "cloudflare_record" "domain_dns_ipv4" {
   count   = var.srv_count
-  zone_id = var.dns_zone
-  name    = var.domain_name
+  zone_id = data.cloudflare_zone.dns_zone.zone_id
+  name    = var.domain_subdomain
   value   = var.domain_ipv4
   type    = "A"
   ttl     = var.domain_ttl
@@ -30,8 +34,8 @@ resource "cloudflare_record" "domain_dns_ipv4" {
 
 resource "cloudflare_record" "domain_dns_ipv6" {
   count   = var.srv_count
-  zone_id = var.dns_zone
-  name    = var.domain_name
+  zone_id = data.cloudflare_zone.dns_zone.zone_id
+  name    = var.domain_subdomain
   value   = var.domain_ipv6
   type    = "AAAA"
   ttl     = var.domain_ttl

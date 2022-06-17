@@ -218,7 +218,8 @@ locals {
       }
 
       domains = [
-        "mail.goinput.de"
+        "mail.goinput.de",
+        "smtp.goitservers.com"
       ]
 
       volumes = {
@@ -237,7 +238,7 @@ locals {
     }
 
     apache = {
-      count  = 2
+      count  = 3
       type   = "cx11"
       image  = local.distro.debian
       backup = false
@@ -362,9 +363,9 @@ locals {
 
       volumes = {
         log-data = {
-          size  = 10
-          fs    = "ext4"
-          mount = "/var/log"
+          size    = 10
+          fs      = "ext4"
+          mount   = "/var/log"
           systemd = "var-log.mount"
 
           labels = {

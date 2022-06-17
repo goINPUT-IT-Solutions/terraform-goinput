@@ -37,9 +37,9 @@ resource "hcloud_volume" "webservice_volume" {
 resource "null_resource" "webservice_volume_mount" {
   count = length(hcloud_volume.webservice_volume)
   triggers = {
-    volumeID   = hcloud_volume.webservice_volume[count.index].id # Rebuild if id changes
-    volumeName = hcloud_volume.webservice_volume[count.index].name
-    volumeMount = var.volume_mountpoint
+    volumeID      = hcloud_volume.webservice_volume[count.index].id # Rebuild if id changes
+    volumeName    = hcloud_volume.webservice_volume[count.index].name
+    volumeMount   = var.volume_mountpoint
     volumeSystemd = var.volume_systemd
 
     serverIP   = var.volume_serverip[count.index]
@@ -69,7 +69,7 @@ resource "null_resource" "webservice_volume_mount" {
 
     inline = [
       "mkdir -pv ${self.triggers.volumeMount}",
-      "systemctl start ${self.triggers.volumeSystemd}"
+      "systemctl start ${self.triggers.volumeSystemd}",
     ]
 
     connection {

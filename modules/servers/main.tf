@@ -228,15 +228,18 @@ resource "cloudflare_record" "webservice_dns_ipv6" {
   ttl     = 3600
 }
 
+
 module "dns" {
   source = "./dns"
 
   for_each = toset(var.domains)
 
+  # Domain
+  domain_name      = "${element(split(".", each.key), length(split(".", each.key)) - 2)}.${element(split(".", each.key), length(split(".", each.key)) - 1)}"
+  domain_subdomain = trimsuffix(each.key, ".${element(split(".", each.key), length(split(".", each.key)) - 2)}.${element(split(".", each.key), length(split(".", each.key)) - 1)}")
+
   # Variables
   srv_count   = var.server_count > 0 ? 1 : 0
-  domain_name = each.key
-  dns_zone    = var.goinputde_zone
   domain_ipv4 = (length(hcloud_load_balancer.loadbalancer) > 0 ? try(hcloud_load_balancer.loadbalancer[0].ipv4, 0) : try(hcloud_server.webservice_server[0].ipv4_address, 0))
   domain_ipv6 = (length(hcloud_load_balancer.loadbalancer) > 0 ? try(hcloud_load_balancer.loadbalancer[0].ipv6, 0) : try(hcloud_server.webservice_server[0].ipv6_address, 0))
   domain_ttl  = 1800
@@ -265,7 +268,7 @@ module "volumes" {
 
   ## ServerID, ServerName
   server_name = var.server_name
-  volume_serverip   = [
+  volume_serverip = [
     for server in hcloud_server.webservice_server : server.ipv4_address
   ]
 
@@ -278,3 +281,4 @@ module "volumes" {
     hcloud_server.webservice_server
   ]
 }
+

@@ -14,7 +14,7 @@
 ### Servers
 ##############################
 
-output "server_ipv4" {
+/*output "server_ipv4" {
   value = [
     for server, value in module.servers : value.server_ipv4
   ]
@@ -33,4 +33,4 @@ output "server_name" {
     for server, value in module.servers : value.server_ipv6
   ]
   description = "Hostname of Server"
-}
+}*/

@@ -14,11 +14,6 @@
 ### Cloudflare
 ##############################
 
-variable "dns_zone" {
-  type      = string
-  sensitive = false
-}
-
 ##############################
 ### Default
 ##############################
@@ -33,6 +28,11 @@ variable "srv_count" {
 ##############################
 
 variable "domain_name" {
+  type      = string
+  sensitive = false
+}
+
+variable "domain_subdomain" {
   type      = string
   sensitive = false
 }
