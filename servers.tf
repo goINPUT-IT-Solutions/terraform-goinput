@@ -106,7 +106,7 @@ locals {
     }
 
     mail = {
-      count  = 1
+      count  = 2
       type   = "cx31"
       image  = local.distro.ubuntu
       backup = false
