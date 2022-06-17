@@ -54,12 +54,9 @@ resource "null_resource" "webservice_volume_mount" {
     })
   }
 
-  provisioner "remote-exec" {
-
-    inline = [
-      "mkdir -pv ${self.triggers.volumeMount}",
-      "systemctl start ${self.triggers.volumeSystemd}"
-    ]
+  provisioner "file" {
+    content     = self.triggers.file_mount_template
+    destination = "/etc/systemd/system/${self.triggers.volumeSystemd}"
 
     connection {
       private_key = self.triggers.privateKey
@@ -68,9 +65,12 @@ resource "null_resource" "webservice_volume_mount" {
     }
   }
 
-  provisioner "file" {
-    content     = self.triggers.file_mount_template
-    destination = "/etc/systemd/system/${self.triggers.volumeSystemd}"
+  provisioner "remote-exec" {
+
+    inline = [
+      "mkdir -pv ${self.triggers.volumeMount}",
+      "systemctl start ${self.triggers.volumeSystemd}"
+    ]
 
     connection {
       private_key = self.triggers.privateKey
