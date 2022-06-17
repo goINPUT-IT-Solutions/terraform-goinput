@@ -39,9 +39,12 @@ resource "null_resource" "webservice_volume_mount" {
   triggers = {
     volumeID   = hcloud_volume.webservice_volume[count.index].id # Rebuild if id changes
     volumeName = hcloud_volume.webservice_volume[count.index].name
+    volumeMount = var.volume_mountpoint
+    volumeSystemd = var.volume_systemd
 
     serverIP   = var.volume_serverip[count.index]
     privateKey = var.private_key
+
 
     file_mount_template = templatefile("${path.root}/files/mount.template", {
       mountDescription = hcloud_volume.webservice_volume[count.index].name
@@ -52,9 +55,12 @@ resource "null_resource" "webservice_volume_mount" {
   }
 
   provisioner "remote-exec" {
-    inline = [
 
+    inline = [
+      "mkdir -pv ${self.triggers.volumeMount}",
+      "systemctl start ${self.triggers.volumeSystemd}"
     ]
+
     connection {
       private_key = self.triggers.privateKey
       host        = self.triggers.serverIP
@@ -64,7 +70,7 @@ resource "null_resource" "webservice_volume_mount" {
 
   provisioner "file" {
     content     = self.triggers.file_mount_template
-    destination = "/etc/systemd/system/${var.volume_systemd}"
+    destination = "/etc/systemd/system/${self.triggers.volumeSystemd}"
 
     connection {
       private_key = self.triggers.privateKey
