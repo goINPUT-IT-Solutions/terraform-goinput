@@ -106,7 +106,7 @@ locals {
     }
 
     mail = {
-      count  = 2
+      count  = 1
       type   = "cx31"
       image  = local.distro.ubuntu
       backup = false
@@ -239,7 +239,7 @@ locals {
     }
 
     apache = {
-      count  = 3
+      count  = 1
       type   = "cx11"
       image  = local.distro.debian
       backup = false
