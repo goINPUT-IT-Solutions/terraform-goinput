@@ -99,12 +99,12 @@ resource "null_resource" "webservice_files" {
 
   # Upload files
   provisioner "file" {
-    content = self.triggers.files_install_salt_minion
+    content     = self.triggers.files_install_salt_minion
     destination = "/root/.tf_salt/install-salt-minion.sh"
   }
 
   provisioner "file" {
-    content = self.triggers.files_uninstall_salt_minion
+    content     = self.triggers.files_uninstall_salt_minion
     destination = "/root/.tf_salt/uninstall-salt-minion.sh"
   }
 

@@ -19,13 +19,13 @@ locals {
     files = {
       count  = 0
       type   = "cx11"
-      image  = "debian-11"
+      image  = local.distro.debian
       backup = false
 
       labels = {
         service      = "files"
         terraform    = true
-        distribution = "debian-11"
+        distribution = local.distro.debian
       }
 
       domains = [
@@ -59,7 +59,7 @@ locals {
     mariadb = {
       count  = 1
       type   = "cx11"
-      image  = "debian-11"
+      image  = local.distro.debian
       backup = false
 
       loadbalancer_service = {
@@ -81,7 +81,7 @@ locals {
       labels = {
         service      = "mariadb"
         terraform    = true
-        distribution = "debian-11"
+        distribution = local.distro.debian
       }
 
       domains = [
@@ -105,7 +105,7 @@ locals {
     mail = {
       count  = 1
       type   = "cx31"
-      image  = "ubuntu-20.04"
+      image  = local.distro.ubuntu
       backup = false
 
       loadbalancer_service = {
@@ -211,7 +211,7 @@ locals {
       labels = {
         service      = "mail"
         terraform    = true
-        distribution = "ubuntu-22.04"
+        distribution = local.distro.ubuntu
       }
 
       domains = [
@@ -235,7 +235,7 @@ locals {
     apache = {
       count  = 2
       type   = "cx11"
-      image  = "debian-11"
+      image  = local.distro.debian
       backup = false
 
       loadbalancer_service = {
@@ -262,7 +262,7 @@ locals {
       labels = {
         service      = "apache2"
         terraform    = true
-        distribution = "debian-11"
+        distribution = local.distro.debian
       }
 
       domains = [
@@ -287,13 +287,13 @@ locals {
     nextcloud = {
       count  = 0
       type   = "cx21"
-      image  = "ubuntu-22.04"
+      image  = local.distro.ubuntu
       backup = true
 
       labels = {
         service      = "nextcloud"
         terraform    = true
-        distribution = "ubuntu-22.04"
+        distribution = local.distro.ubuntu
       }
 
       domains = [
@@ -318,13 +318,13 @@ locals {
     jitsi = {
       count  = 0
       type   = "cx21"
-      image  = "ubuntu-22.04"
+      image  = local.distro.ubuntu
       backup = false
 
       labels = {
         service      = "jitsi"
         terraform    = true
-        distribution = "ubuntu-22.04"
+        distribution = local.distro.ubuntu
       }
 
       volumes = {
@@ -344,13 +344,13 @@ locals {
     wireguard = {
       count  = 1
       type   = "cx11"
-      image  = "debian-11"
+      image  = local.distro.debian
       backup = false
 
       labels = {
         service      = "wireguard"
         terraform    = true
-        distribution = "debian-11"
+        distribution = local.distro.debian
       }
 
       volumes = {
@@ -370,13 +370,13 @@ locals {
     bitwarden = {
       count  = 0
       type   = "cx11"
-      image  = "debian-11"
+      image  = local.distro.debian
       backup = false
 
       labels = {
         service      = "bitwarden"
         terraform    = true
-        distribution = "debian-11"
+        distribution = local.distro.debian
       }
 
       volumes = {
