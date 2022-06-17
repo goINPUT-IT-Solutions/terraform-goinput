@@ -246,6 +246,26 @@ module "dns" {
 }
 
 ##############################
+### Mail DNS
+##############################
+
+module "mail_dns" {
+  source = "./mail_dns"
+
+  for_each = var.mail_domains
+
+  # Variables
+  ## Zone ID
+  domain_name = each.key
+
+  ## Mailserver Hostname
+  mailserver_hostname = (length(hcloud_load_balancer.loadbalancer) > 0 ? try(hcloud_load_balancer.loadbalancer[0].name, 0) : try(hcloud_server.webservice_server[0].name, 0))
+
+  ## Time To Live (in secounds)
+  ttl = 1800
+}
+
+##############################
 ### Volumes
 ##############################
 

@@ -217,8 +217,11 @@ locals {
         distribution = local.distro.ubuntu
       }
 
+
       domains = [
       ]
+
+      mail_domains = var.domains
 
       volumes = {
         log-data = {

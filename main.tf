@@ -250,6 +250,9 @@ module "servers" {
   domain      = var.domain
   environment = var.environment
 
+  # Mails
+  mail_domains = (each.key == "mail" ? each.value.mail_domains : [])
+
   ## Network
   network_id = module.networks.webservice_network_id
 
@@ -290,7 +293,7 @@ module "servers" {
   ]
 }
 
-module "dns" {
+/*module "dns" {
   source = "./modules/dns"
 
   for_each = data.cloudflare_zone.dns_zones
@@ -308,4 +311,4 @@ module "dns" {
   depends_on = [
     module.servers
   ]
-}
+}*/

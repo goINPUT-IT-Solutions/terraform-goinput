@@ -159,3 +159,8 @@ variable "domains" {
   type      = list(string)
   sensitive = false
 }
+
+variable "mail_domains" {
+  type      = set(string)
+  sensitive = false
+}

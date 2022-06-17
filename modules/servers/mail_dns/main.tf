@@ -19,10 +19,14 @@ terraform {
   }
 }
 
+data "cloudflare_zone" "dns_zone" {
+  name = var.domain_name
+}
+
 // Mailcow DNS Settings
 
 resource "cloudflare_record" "mailcow_dns_cnames" {
-  zone_id = var.zone_id
+  zone_id = data.cloudflare_zone.dns_zone.zone_id
 
   for_each = toset([
     "mails",
@@ -44,7 +48,7 @@ resource "cloudflare_record" "mailcow_dns_cnames" {
 }
 
 resource "cloudflare_record" "mailcow_dns_mx" {
-  zone_id = var.zone_id
+  zone_id = data.cloudflare_zone.dns_zone.zone_id
 
   for_each = toset([
     "@",
@@ -59,7 +63,7 @@ resource "cloudflare_record" "mailcow_dns_mx" {
 }
 
 resource "cloudflare_record" "mailcow_dns_txts" {
-  zone_id = var.zone_id
+  zone_id = data.cloudflare_zone.dns_zone.zone_id
 
   for_each = tomap({
     "@"               = "v=spf1 mx a ~all"
@@ -74,7 +78,7 @@ resource "cloudflare_record" "mailcow_dns_txts" {
 }
 
 resource "cloudflare_record" "mailcow_dns_srvs" {
-  zone_id = var.zone_id
+  zone_id = data.cloudflare_zone.dns_zone.zone_id
 
   for_each = tomap({
     "_autodiscover" = "443"
