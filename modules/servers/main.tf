@@ -253,17 +253,28 @@ module "volumes" {
 
   # Variables
   ## Count, Name, Size, Filesystem
-  volume_count = length(hcloud_server.webservice_server)
-  volume_name  = each.key
-  volume_size  = each.value.size
-  volume_fs    = each.value.fs
+  volume_count      = length(hcloud_server.webservice_server)
+  volume_name       = each.key
+  volume_size       = each.value.size
+  volume_fs         = each.value.fs
+  volume_mountpoint = each.value.mount
+  volume_systemd    = each.value.systemd
 
   ## Labels
   volume_labels = each.value.labels
 
   ## ServerID, ServerName
   server_name = var.server_name
+  volume_serverip   = [
+    for server in hcloud_server.webservice_server : server.ipv4_address
+  ]
+
   volume_serverid = [
     for server in hcloud_server.webservice_server : server.id
+  ]
+  private_key = var.private_key
+
+  depends_on = [
+    hcloud_server.webservice_server
   ]
 }

@@ -1,0 +1,22 @@
+######################################################
+#               _____ _   _ _____  _    _ _______    #
+#              |_   _| \ | |  __ \| |  | |__   __|   #
+#     __ _  ___  | | |  \| | |__) | |  | |  | |      #
+#    / _` |/ _ \ | | | . ` |  ___/| |  | |  | |      #
+#   | (_| | (_) || |_| |\  | |    | |__| |  | |      #
+#    \__, |\___/_____|_| \_|_|     \____/   |_|      #
+#     __/ |                                          #
+#    |___/                                           #
+#                                                    #
+######################################################
+
+# Controlled by Terraform. PLEASE DONT EDIT!
+
+[Unit]
+Description=${mountDescription}
+
+[Mount]
+Type=${mountFilesystem}
+What=${mountDevice}
+Where=${mountPoint}
+Options=discard,nofail,defaults

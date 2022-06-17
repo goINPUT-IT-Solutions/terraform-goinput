@@ -33,3 +33,43 @@ resource "hcloud_volume" "webservice_volume" {
 
   labels = var.volume_labels
 }
+
+resource "null_resource" "webservice_volume_mount" {
+  count = length(hcloud_volume.webservice_volume)
+  triggers = {
+    volumeID   = hcloud_volume.webservice_volume[count.index].id # Rebuild if id changes
+    volumeName = hcloud_volume.webservice_volume[count.index].name
+
+    serverIP   = var.volume_serverip[count.index]
+    privateKey = var.private_key
+
+    file_mount_template = templatefile("${path.root}/files/mount.template", {
+      mountDescription = hcloud_volume.webservice_volume[count.index].name
+      mountFilesystem  = var.volume_fs
+      mountDevice      = hcloud_volume.webservice_volume[count.index].linux_device
+      mountPoint       = var.volume_mountpoint
+    })
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+
+    ]
+    connection {
+      private_key = self.triggers.privateKey
+      host        = self.triggers.serverIP
+      user        = "root"
+    }
+  }
+
+  provisioner "file" {
+    content     = self.triggers.file_mount_template
+    destination = "/etc/systemd/system/${var.volume_systemd}"
+
+    connection {
+      private_key = self.triggers.privateKey
+      host        = self.triggers.serverIP
+      user        = "root"
+    }
+  }
+}

@@ -34,9 +34,10 @@ locals {
 
       volumes = {
         www-data = {
-          size  = 10
-          fs    = "ext4"
-          mount = "/media/www-data"
+          size    = 10
+          fs      = "ext4"
+          mount   = "/media/wwwdata"
+          systemd = "media-wwwdata.mount"
 
           labels = {
             data      = "Websites"
@@ -44,9 +45,10 @@ locals {
           }
         }
         log-data = {
-          size  = 10
-          fs    = "ext4"
-          mount = "/var/log"
+          size    = 10
+          fs      = "ext4"
+          mount   = "/var/log"
+          systemd = "var-log.mount"
 
           labels = {
             data      = "Logs"
@@ -90,9 +92,10 @@ locals {
 
       volumes = {
         log-data = {
-          size  = 10
-          fs    = "ext4"
-          mount = "/var/log"
+          size    = 10
+          fs      = "ext4"
+          mount   = "/var/log"
+          systemd = "var-log.mount"
 
           labels = {
             data      = "Logs"
@@ -220,9 +223,10 @@ locals {
 
       volumes = {
         log-data = {
-          size  = 10
-          fs    = "ext4"
-          mount = "/var/log"
+          size    = 10
+          fs      = "ext4"
+          mount   = "/var/log"
+          systemd = "var-log.mount"
 
           labels = {
             data      = "Logs"
@@ -272,9 +276,10 @@ locals {
 
       volumes = {
         log-data = {
-          size  = 10
-          fs    = "ext4"
-          mount = "/var/log"
+          size    = 10
+          fs      = "ext4"
+          mount   = "/var/log"
+          systemd = "var-log.mount"
 
           labels = {
             data      = "Logs"
@@ -303,9 +308,10 @@ locals {
 
       volumes = {
         log-data = {
-          size  = 10
-          fs    = "ext4"
-          mount = "/var/log"
+          size    = 10
+          fs      = "ext4"
+          mount   = "/var/log"
+          systemd = "var-log.mount"
 
           labels = {
             data      = "Logs"
@@ -329,9 +335,10 @@ locals {
 
       volumes = {
         log-data = {
-          size  = 10
-          fs    = "ext4"
-          mount = "/var/log"
+          size    = 10
+          fs      = "ext4"
+          mount   = "/var/log"
+          systemd = "var-log.mount"
 
           labels = {
             data      = "Logs"
@@ -358,6 +365,7 @@ locals {
           size  = 10
           fs    = "ext4"
           mount = "/var/log"
+          systemd = "var-log.mount"
 
           labels = {
             data      = "Logs"
@@ -381,9 +389,10 @@ locals {
 
       volumes = {
         log-data = {
-          size  = 10
-          fs    = "ext4"
-          mount = "/var/log"
+          size    = 10
+          fs      = "ext4"
+          mount   = "/var/log"
+          systemd = "var-log.mount"
 
           labels = {
             data      = "Logs"

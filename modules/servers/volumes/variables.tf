@@ -19,12 +19,27 @@ variable "server_name" {
   sensitive = false
 }
 
+variable "volume_serverip" {
+  type      = list(string)
+  sensitive = false
+}
+
 variable "volume_count" {
   type      = number
   sensitive = false
 }
 
 variable "volume_name" {
+  type      = string
+  sensitive = false
+}
+
+variable "volume_mountpoint" {
+  type      = string
+  sensitive = false
+}
+
+variable "volume_systemd" {
   type      = string
   sensitive = false
 }
@@ -57,4 +72,9 @@ variable "volume_fs" {
     condition     = var.volume_fs == "ext4" || var.volume_fs == "xfs"
     error_message = "Filesystem needs to be ext4 or xfs."
   }
+}
+
+variable "private_key" {
+  type      = string
+  sensitive = true
 }
