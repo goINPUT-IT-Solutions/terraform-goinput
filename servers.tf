@@ -105,7 +105,7 @@ locals {
     mail = {
       count  = 1
       type   = "cx31"
-      image  = "ubuntu-22.04"
+      image  = "ubuntu-20.04"
       backup = false
 
       loadbalancer_service = {
