@@ -218,8 +218,6 @@ locals {
       }
 
       domains = [
-        "mail.goinput.de",
-        "smtp.goitservers.com"
       ]
 
       volumes = {
