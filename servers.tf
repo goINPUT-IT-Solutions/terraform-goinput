@@ -58,6 +58,61 @@ locals {
       }
     }
 
+    minio = {
+      count  = 0
+      type   = "cx11"
+      image  = local.distro.debian
+      backup = false
+
+      labels = {
+        service      = "minio"
+        terraform    = true
+        distribution = local.distro.debian
+      }
+
+      domains = [
+        "minio.goinput.de"
+      ]
+
+      volumes = {
+        data01-drive = {
+          size    = 20
+          fs      = "ext4"
+          mount   = "/media/data01"
+          systemd = "media-data01.mount"
+
+          labels = {
+            data      = "Websites"
+            terraform = true
+          }
+        }
+
+        data02-drive = {
+          size    = 20
+          fs      = "ext4"
+          mount   = "/media/data02"
+          systemd = "media-data02.mount"
+
+          labels = {
+            data      = "Websites"
+            terraform = true
+          }
+        }
+
+        log-data = {
+          size    = 10
+          fs      = "ext4"
+          mount   = "/var/log"
+          systemd = "var-log.mount"
+
+          labels = {
+            data      = "Logs"
+            terraform = true
+          }
+        }
+      }
+    }
+
     mariadb = {
       count  = 1
       type   = "cx11"
