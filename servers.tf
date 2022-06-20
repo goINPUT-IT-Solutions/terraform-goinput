@@ -59,7 +59,7 @@ locals {
     }
 
     minio = {
-      count  = 0
+      count  = 1
       type   = "cx11"
       image  = local.distro.debian
       backup = false
