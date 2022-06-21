@@ -292,23 +292,3 @@ module "servers" {
     hcloud_uploaded_certificate.goinput_wildcard_certificate
   ]
 }
-
-/*module "dns" {
-  source = "./modules/dns"
-
-  for_each = data.cloudflare_zone.dns_zones
-
-  # Variables
-  ## Zone ID
-  zone_id = each.value.zone_id
-
-  ## Mailserver Hostname
-  mailserver_hostname = "mail01.live.goitservers.com"
-
-  ## Time To Live (in secounds)
-  ttl = 1800
-
-  depends_on = [
-    module.servers
-  ]
-}*/

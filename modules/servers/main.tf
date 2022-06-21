@@ -30,6 +30,20 @@ terraform {
 }
 
 ##############################
+### Volumes
+##############################
+
+module "volumes" {
+  source = "./volumes"
+
+  count = var.server_count
+
+  # Variables
+  volumes      = var.server_volumes
+  server_count = count.index+1
+}
+
+##############################
 ### Servers
 ##############################
 
@@ -41,13 +55,31 @@ resource "hcloud_server" "webservice_server" {
   server_type = var.server_type
   location    = (count.index % 2 == 0 ? "fsn1" : "nbg1")
 
-  backups = var.server_backup
-
-  ssh_keys = var.ssh_key
-
-  labels = var.server_labels
-
+  backups            = var.server_backup
+  ssh_keys           = var.ssh_key
+  labels             = var.server_labels
   placement_group_id = hcloud_placement_group.webservice_placement_group.id
+
+  user_data = templatefile("${path.module}/cloud-init.tmpl", {
+    saltmasterIP  = var.saltmaster_ip
+    serverName    = (count.index >= 9 ? "${var.server_name}${count.index + 1}.${var.environment}.${var.domain}" : "${var.server_name}0${count.index + 1}.${var.environment}.${var.domain}"),
+    serverVolumes = module.volumes[count.index].volume_meta
+  })
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'Waiting for cloud-init to complete...'",
+      "cloud-init status --wait > /dev/null",
+      "echo 'Completed cloud-init!'",
+    ]
+
+    connection {
+      type        = "ssh"
+      host        = self.ipv4_address
+      user        = "root"
+      private_key = var.private_key
+    }
+  }
 }
 
 resource "hcloud_server_network" "webservice_network" {
@@ -61,127 +93,6 @@ resource "hcloud_placement_group" "webservice_placement_group" {
   name   = "${var.server_name}-placement"
   type   = "spread"
   labels = var.server_labels
-}
-
-##############################
-### Configuration
-##############################
-
-resource "null_resource" "webservice_files" {
-  count = length(hcloud_server.webservice_server)
-
-  triggers = {
-    serverID   = hcloud_server.webservice_server[count.index].id # Force rebuild if server id changes
-    serverName = hcloud_server.webservice_server[count.index].name
-    serverIP   = hcloud_server.webservice_server[count.index].ipv4_address
-
-    saltmasterID = var.saltmaster_id
-    saltmasterIP = var.saltmaster_ip
-
-    privateKey = var.private_key
-
-    files_install_salt_minion = templatefile("${path.root}/scripts/install-salt-minion.sh", {
-      saltmasterIP = var.saltmaster_ip
-      serverName   = hcloud_server.webservice_server[count.index].name
-    })
-
-    files_uninstall_salt_minion = templatefile("${path.root}/scripts/uninstall-salt-minion.sh", {
-    })
-  }
-
-  # Create directories
-  provisioner "remote-exec" {
-    inline = [
-      "mkdir -pv /root/.tf_salt",
-      "chmod 0700 /root/.tf_salt"
-    ]
-  }
-
-  # Upload files
-  provisioner "file" {
-    content     = self.triggers.files_install_salt_minion
-    destination = "/root/.tf_salt/install-salt-minion.sh"
-  }
-
-  provisioner "file" {
-    content     = self.triggers.files_uninstall_salt_minion
-    destination = "/root/.tf_salt/uninstall-salt-minion.sh"
-  }
-
-  connection {
-    private_key = self.triggers.privateKey
-    host        = self.triggers.serverIP
-    user        = "root"
-  }
-}
-
-resource "null_resource" "webservice_setup" {
-  depends_on = [
-    null_resource.webservice_files,
-    hcloud_server.webservice_server
-  ]
-
-  count = length(hcloud_server.webservice_server)
-
-  triggers = {
-    serverID   = hcloud_server.webservice_server[count.index].id # Force rebuild if server id changes
-    serverName = hcloud_server.webservice_server[count.index].name
-    serverIP   = hcloud_server.webservice_server[count.index].ipv4_address
-
-    saltmasterID       = var.saltmaster_id
-    saltmasterIP       = var.saltmaster_ip
-    saltmasterPublicIP = var.saltmaster_public_ip
-
-    privateKey = var.private_key
-
-    # Files
-    files_id = null_resource.webservice_files[count.index].id # Force rebuild if files change
-  }
-
-  provisioner "remote-exec" {
-    when = create
-
-    inline = [
-      "bash /root/.tf_salt/install-salt-minion.sh"
-    ]
-
-    connection {
-      private_key = self.triggers.privateKey
-      host        = self.triggers.serverIP
-      user        = "root"
-    }
-
-  }
-
-  provisioner "remote-exec" {
-    when = destroy
-
-    inline = [
-      "bash /root/.tf_salt/uninstall-salt-minion.sh"
-    ]
-
-    connection {
-      private_key = self.triggers.privateKey
-      host        = self.triggers.serverIP
-      user        = "root"
-    }
-
-  }
-
-  # Remove key on destruction
-  provisioner "remote-exec" {
-    when = destroy
-
-    inline = [
-      "salt-key -y -d '${self.triggers.serverName}'"
-    ]
-
-    connection {
-      private_key = self.triggers.privateKey
-      host        = self.triggers.saltmasterPublicIP
-      user        = "root"
-    }
-  }
 }
 
 ##############################
@@ -264,41 +175,3 @@ module "mail_dns" {
   ## Time To Live (in secounds)
   ttl = 1800
 }
-
-##############################
-### Volumes
-##############################
-
-module "volumes" {
-  source = "./volumes"
-
-  for_each = var.server_volumes
-
-  # Variables
-  ## Count, Name, Size, Filesystem
-  volume_count      = length(hcloud_server.webservice_server)
-  volume_name       = each.key
-  volume_size       = each.value.size
-  volume_fs         = each.value.fs
-  volume_mountpoint = each.value.mount
-  volume_systemd    = each.value.systemd
-
-  ## Labels
-  volume_labels = each.value.labels
-
-  ## ServerID, ServerName
-  server_name = var.server_name
-  volume_serverip = [
-    for server in hcloud_server.webservice_server : server.ipv4_address
-  ]
-
-  volume_serverid = [
-    for server in hcloud_server.webservice_server : server.id
-  ]
-  private_key = var.private_key
-
-  depends_on = [
-    hcloud_server.webservice_server
-  ]
-}
-

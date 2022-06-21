@@ -10,21 +10,12 @@
 #                                                    #
 ######################################################
 
-#!/bin/bash
-
-echo nameserver 8.8.8.8 > /etc/resolv.conf
-
-echo -e  'y\n'| ssh-keygen -b 4096 -t rsa -P '' -f /root/.ssh/id_rsa -q
-wget -O /tmp/bootstrap-salt.sh https://bootstrap.saltstack.com
-sh /tmp/bootstrap-salt.sh -n -L -A ${saltmasterIP} stable
-
-echo '${serverName}' > /etc/salt/minion_id
-
-
-cat <<EOT > /etc/salt/minion.d/new_module_run.conf
-use_superseded:
-    - module.run
-EOT
-
-systemctl restart salt-minion
-systemctl enable salt-minion
+output "volume_meta" {
+  value = [for volume in hcloud_volume.webservice_volume : {
+    "id"            = volume.id
+    "name"          = volume.name
+    "device"        = volume.linux_device
+    "fs"            = var.volumes[substr(volume.name, 0, length(volume.name)-2)].fs
+    "mountpoint"    = var.volumes[substr(volume.name, 0, length(volume.name)-2)].mount
+  }]
+}
