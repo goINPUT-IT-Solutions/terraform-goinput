@@ -24,6 +24,11 @@ variable "server_count" {
   sensitive = false
 }
 
+variable "server_name" {
+  type      = string
+  sensitive = false
+}
+
 /*variable "volume_name" {
   type      = string
   sensitive = false

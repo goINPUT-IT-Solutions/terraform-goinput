@@ -41,6 +41,7 @@ module "volumes" {
   # Variables
   volumes      = var.server_volumes
   server_count = count.index+1
+  server_name  = var.server_name
 }
 
 ##############################

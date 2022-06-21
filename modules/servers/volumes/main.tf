@@ -26,7 +26,7 @@ terraform {
 resource "hcloud_volume" "webservice_volume" {
   for_each = var.volumes
 
-  name      = var.server_count < 10 ? "${each.key}0${var.server_count}" : "${each.key}${var.server_count}"
+  name      = var.server_count < 10 ? "${var.server_name}-${each.key}0${var.server_count}" : "${var.server_name}-${each.key}${var.server_count}"
   size      = each.value.size
   location  = "fsn1"
   automount = false
