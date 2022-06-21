@@ -28,6 +28,7 @@ resource "hcloud_volume" "webservice_volume" {
 
   name      = var.server_count < 10 ? "${each.key}0${var.server_count}" : "${each.key}${var.server_count}"
   size      = each.value.size
+  location  = (count.index % 2 == 0 ? "fsn1" : "nbg1")
   automount = false
   format    = each.value.fs
   labels    = each.value.labels
