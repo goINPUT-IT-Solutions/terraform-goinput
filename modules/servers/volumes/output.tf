@@ -15,7 +15,7 @@ output "volume_meta" {
     "id"            = volume.id
     "name"          = volume.name
     "device"        = volume.linux_device
-    "fs"            = var.volumes[substr(volume.name, 0, length(volume.name)-2)].fs
-    "mountpoint"    = var.volumes[substr(volume.name, 0, length(volume.name)-2)].mount
+    "fs"            = var.volumes[ trimprefix( substr( volume.name, 0, length(volume.name)-2 ),"${var.server_name}-" ) ].fs
+    "mountpoint"    = var.volumes[ trimprefix( substr( volume.name, 0, length(volume.name)-2 ),"${var.server_name}- ") ].mount
   }]
 }
